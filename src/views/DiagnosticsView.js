@@ -30,10 +30,13 @@ export default class DiagnosticsView extends React.Component<Props, State> {
      */
     constructor(props: Props) {
         super(props);
+        let showDiagnostics = true;
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            showDiagnostics = false;
         this.state = {
             stats: diagnosticsService.getActiveRecord(),
             toggleDiagnosticsOldVal: false,
-            toggleDiagnostics: false
+            toggleDiagnostics: showDiagnostics
         };
     }
     /**
