@@ -30,18 +30,12 @@ type State = {
     simulationViewsHeight: number,
     centerPanelHeight: number,
     centerPanelWidth: number,
-    imagesViewWidthRatio: number,
-    orgImagesViewWidthRatio: number,
     imagesViewWidth: number,
     imagesViewHeight: number,
     cameraViewWidth: number,
     cameraViewHeight: number,
-    viewerViewHeightRatio: number,
-    orgViewerViewHeightRatio: number,
     viewerViewWidth: number,
-    viewerViewHeight: number,
-    verticalBarStartX: number,
-    horizontalBarStartY: number
+    viewerViewHeight: number
 };
 
 /**
@@ -60,6 +54,12 @@ export default class CenterPanel extends React.Component<Props, State> {
     body: HTMLElement;
     diagnosticsElm: HTMLElement;
     simulationsViewElm: HTMLElement;
+    verticalBarStartX: number = 0;
+    horizontalBarStartY: number = 0;
+    orgImagesViewWidthRatio: number = 0.3;
+    imagesViewWidthRatio: number = 0.3;
+    viewerViewHeightRatio: number = 0.4;
+    orgViewerViewHeightRatio: number = 0.4;
     /**
      * Component constructor
      */
@@ -75,18 +75,12 @@ export default class CenterPanel extends React.Component<Props, State> {
             simulationViewsHeight: 0,
             centerPanelHeight: 0,
             centerPanelWidth: 0,
-            imagesViewWidthRatio: 0.3,
-            orgImagesViewWidthRatio: 0.3,
             imagesViewWidth: 100,
             imagesViewHeight: 100,
             cameraViewWidth: 100,
             cameraViewHeight: 100,
-            viewerViewHeightRatio: 0.4,
-            orgViewerViewHeightRatio: 0.4,
             viewerViewWidth: 100,
             viewerViewHeight: 100,
-            verticalBarStartX: 0,
-            horizontalBarStartY: 0
         };
     }
     /**
@@ -101,8 +95,11 @@ export default class CenterPanel extends React.Component<Props, State> {
         this.body = document.body;
         // $FlowFixMe ignore null
         this.NAVIGATION_HEIGHT = document.getElementById('center-panel-navigation').offsetHeight + document.getElementById('simulation-header').offsetHeight;
-        this.state.centerPanelWidth = this.props.centerPanelWidth;
-        this.state.centerPanelHeight = this.props.centerPanelHeight;
+        this.setState({
+            centerPanelWidth: this.props.centerPanelWidth,
+            centerPanelHeight: this.props.centerPanelHeight
+        });
+
         this.updateViewsSize();
         // register event listeners
         this.exportListener = function(payload) {
@@ -136,8 +133,8 @@ export default class CenterPanel extends React.Component<Props, State> {
      */
     updateViewsSize = () => {
         let simulationViewsHeight = this.props.centerPanelHeight - this.diagnosticsElm.clientHeight - this.NAVIGATION_HEIGHT,
-            newViewerViewHeight = Math.floor(simulationViewsHeight * this.state.viewerViewHeightRatio),
-            newImagesViewWidth = Math.floor(this.props.centerPanelWidth * this.state.imagesViewWidthRatio),
+            newViewerViewHeight = Math.floor(simulationViewsHeight * this.viewerViewHeightRatio),
+            newImagesViewWidth = Math.floor(this.props.centerPanelWidth * this.imagesViewWidthRatio),
             newCameraViewWidth = this.props.centerPanelWidth - newImagesViewWidth,
             newCameraHeight = simulationViewsHeight - newViewerViewHeight;
 
@@ -191,9 +188,6 @@ export default class CenterPanel extends React.Component<Props, State> {
         postProcessingDAO.setActiveRecord(modelID);
         sceneObjectDAO.setActiveRecord(modelID);
         diagnosticsDAO.setActiveRecord(modelID);
-        visualizationBuilder.updateActiveModel();
-
-        dispatcher.dispatch('modelSwitch', {modelID: modelID});
     }
     /**
      * Opens warning window which ensures that you really want to delete selected model.
@@ -223,10 +217,18 @@ export default class CenterPanel extends React.Component<Props, State> {
             let defaultActiveModel = 0;
             CenterPanel._setNewActiveModel(defaultActiveModel);
             this.setState({ modalRemoveModelIsOpen: false, activeModelID: defaultActiveModel });
+            visualizationBuilder.updateActiveModel();
+            dispatcher.dispatch('modelSwitch', {modelID: defaultActiveModel});
         } else {
-            if (this.state.activeModelID > this.state.modelIDToRemove)
-                this.state.activeModelID--;
-            this.setState({ modalRemoveModelIsOpen: false });
+            if (this.state.activeModelID > this.state.modelIDToRemove) {
+                CenterPanel._setNewActiveModel(this.state.activeModelID - 1);
+                this.setState((prev) => ({
+                    modalRemoveModelIsOpen: false,
+                    activeModelID: (prev.activeModelID - 1)
+                }));
+            } else {
+                this.setState({ modalRemoveModelIsOpen: false });
+            }
         }
     };
     /* Open modal window for adding new model */
@@ -251,6 +253,8 @@ export default class CenterPanel extends React.Component<Props, State> {
 
         this.setState({ activeModelID: newModelID });
         CenterPanel._setNewActiveModel(newModelID);
+        visualizationBuilder.updateActiveModel();
+        dispatcher.dispatch('modelSwitch', {modelID: newModelID});
         this.handleAddModelClose();
     };
     /**
@@ -259,6 +263,8 @@ export default class CenterPanel extends React.Component<Props, State> {
     handleOpenModel = (e: MouseEvent | Touch, modelID: number) => {
         this.setState({ activeModelID: modelID });
         CenterPanel._setNewActiveModel(modelID);
+        visualizationBuilder.updateActiveModel();
+        dispatcher.dispatch('modelSwitch', {modelID: modelID});
     };
     /**
      * Registers event listeners for vertical bar movement and setups used variables.
@@ -266,7 +272,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      */
     handleVerticalBarMoveStart = (e: MouseEvent | Touch) => {
         // NOTE: here ve use state directly because we not there will be no update in the DOM
-        this.state.verticalBarStartX = e.clientX;
+        this.verticalBarStartX = e.clientX;
         this.body.addEventListener('mousemove', this.handleVerticalBarMove, window.passiveEventListener);
         this.body.addEventListener('touchmove', this.handleVerticalBarTouchMove, window.passiveEventListener);
         this.body.addEventListener('mouseup', this.handleVerticalBarMoveEnd);
@@ -278,8 +284,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      * @param {Event} e
      */
     handleVerticalBarMove = (e: MouseEvent | Touch) => {
-        this.state.imagesViewWidthRatio = this.state.orgImagesViewWidthRatio +
-            (((this.state.verticalBarStartX - e.clientX) / (this.state.centerPanelWidth/100))/100);
+        this.imagesViewWidthRatio = this.orgImagesViewWidthRatio + (((this.verticalBarStartX - e.clientX) / (this.state.centerPanelWidth/100))/100);
         this.updateViewsSize();
     };
     /**
@@ -293,7 +298,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      * Unregisters event listeners for vertical bar movement and updates state.
      */
     handleVerticalBarMoveEnd = () => {
-        this.state.orgImagesViewWidthRatio = this.state.imagesViewWidthRatio;
+        this.orgImagesViewWidthRatio = this.imagesViewWidthRatio;
         this.body.removeEventListener('mousemove', this.handleVerticalBarMove, window.passiveEventListener);
         this.body.removeEventListener('touchmove', this.handleVerticalBarTouchMove, window.passiveEventListener);
         this.body.removeEventListener('mouseup', this.handleVerticalBarMoveEnd, window.passiveEventListener);
@@ -305,7 +310,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      * @param {Event} e
      */
     handleHorizontalBarMoveStart = (e: MouseEvent | Touch) => {
-        this.state.horizontalBarStartY = e.clientY;
+        this.horizontalBarStartY = e.clientY;
         this.body.addEventListener('mousemove', this.handleHorizontalBarMove, window.passiveEventListener);
         this.body.addEventListener('touchmove', this.handleHorizontalBarTouchMove, window.passiveEventListener);
         this.body.addEventListener('mouseup', this.handleHorizontalBarMoveEnd, window.passiveEventListener);
@@ -317,9 +322,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      * @param {Event} e
      */
     handleHorizontalBarMove = (e: MouseEvent | Touch) => {
-        let orgViewerViewHeightRatio = this.state.orgViewerViewHeightRatio;
-        orgViewerViewHeightRatio += (((this.state.horizontalBarStartY - e.clientY) / (this.state.simulationViewsHeight/100))/100);
-        this.setState({ viewerViewHeightRatio: orgViewerViewHeightRatio });
+        this.viewerViewHeightRatio = this.orgViewerViewHeightRatio + (((this.horizontalBarStartY - e.clientY) / (this.state.simulationViewsHeight/100))/100);
         this.updateViewsSize();
     };
     /**
@@ -333,7 +336,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      * Unregisters event listeners for horizontal bar movement and updates state.
      */
     handleHorizontalBarMoveEnd = () => {
-        this.state.orgViewerViewHeightRatio = this.state.viewerViewHeightRatio;
+        this.orgViewerViewHeightRatio = this.viewerViewHeightRatio;
         this.body.removeEventListener('mousemove', this.handleHorizontalBarMove, window.passiveEventListener);
         this.body.removeEventListener('touchmove', this.handleHorizontalBarTouchMove, window.passiveEventListener);
         this.body.removeEventListener('mouseup', this.handleHorizontalBarMoveEnd, window.passiveEventListener);

@@ -30,6 +30,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
     TAB_INDEX: number = 0;
     checkColumnsSize: boolean = false;
     modelSwitchListener: Function;
+    sceneConfigurationUpdate: Function;
     /**
      * Component constructor
      */
@@ -49,6 +50,10 @@ export default class SceneConfiguration extends React.Component<Props, State> {
         }.bind(this);
         dispatcher.register('modelSwitch', this.modelSwitchListener);
         dispatcher.register('paste', this.modelSwitchListener);
+        this.sceneConfigurationUpdate = function(payload) {
+            this.forceUpdate();
+        }.bind(this);
+        dispatcher.register('sceneConfigurationUpdate', this.sceneConfigurationUpdate);
     }
     /**
      * After the component is removed from the DOM unregister listeners
@@ -56,6 +61,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
     componentWillUnmount() {
         dispatcher.unregister('modelSwitch', this.modelSwitchListener);
         dispatcher.register('paste', this.modelSwitchListener);
+        dispatcher.unregister('sceneConfigurationUpdate', this.sceneConfigurationUpdate);
     }
     /**
      * Fired after component DOM update and checks if column size must be updated.

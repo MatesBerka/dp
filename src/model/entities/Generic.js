@@ -13,7 +13,7 @@ export default class Generic {
      */
     getValueForControl(varName) {
         if (typeof this[varName + 'Unit'] !== 'undefined') {
-            return this[varName] / unitDefinition[this[varName + 'Unit']].value;
+            return Math.round((this[varName] / unitDefinition[this[varName + 'Unit']].value) * 100000)/100000;
         } else {
             return this[varName];
         }

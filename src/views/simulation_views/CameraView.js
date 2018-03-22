@@ -367,6 +367,7 @@ export default class CameraView extends React.Component<Props, State> {
         if (this.state.cameraSideView) { this.focusedObj.setObjectRotX(deg); } else {  this.focusedObj.setObjectRotY(deg); }
         // this.setState({ objCtrlRot: deg });
         visualizationBuilder.updateScene();
+        dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
     /**
@@ -451,6 +452,7 @@ export default class CameraView extends React.Component<Props, State> {
         });
 
         visualizationBuilder.updateScene();
+        dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
     /**
@@ -503,6 +505,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.focusedObj.setDepth(newDepth);
 
         visualizationBuilder.updateScene();
+        dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
 
         let objWidth = this.state.objCtrlWidth + 2 * disChange;
@@ -554,6 +557,7 @@ export default class CameraView extends React.Component<Props, State> {
         }
 
         visualizationBuilder.updateScene();
+        dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
 
         let objHeight = this.state.objCtrlHeight + 2 * disChange;
@@ -612,6 +616,7 @@ export default class CameraView extends React.Component<Props, State> {
         });
 
         visualizationBuilder.updateScene();
+        dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
     /**
