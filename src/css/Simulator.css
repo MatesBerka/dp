@@ -1,0 +1,552 @@
+/*
+    @author Matej Berka <matejb@students.zcu.cz>
+*/
+
+* { box-sizing: border-box }
+
+.ui.input input.short-input {
+    width: 60px;
+    padding: .67857143em 0.5em
+}
+
+.ui.input input.mini-input {
+    width: 45px;
+}
+
+.ui.selection.dropdown >.delete.icon, .ui.selection.dropdown >.dropdown.icon, .ui.selection.dropdown>.search.icon,
+.ui.selection.dropdown,
+.ui.input input,
+.ui.input input.short-input,
+.ui.label {
+    padding: 0 .5833em !important;
+    line-height: 2em;
+}
+
+.ui.selection.dropdown >.delete.icon, .ui.selection.dropdown >.dropdown.icon, .ui.selection.dropdown>.search.icon {
+    top: .98571429em;
+    right: .78571429em;
+}
+
+.ui.selection.dropdown {
+    padding-right: 20px !important;
+    min-height: 1px;
+}
+
+.ui.input input[type="number"] {
+    padding: 0 0 0 .5833em !important;
+}
+
+.ui.checkbox .box:before, .ui.checkbox label:before {
+    border-color: #999999;
+}
+
+.ui.button, .ui.buttons .button, .ui.buttons .or {
+    font-size: inherit;
+}
+
+.ui.input input.right-border {
+    border-right-color: rgba(34,36,38,.15) !important;
+}
+
+.option-group-line {
+    margin: 7px 0;
+}
+
+.configuration-item,
+.canvas-wrapper {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+.canvas-wrapper {
+    box-sizing: border-box;
+    float: left;
+    display: block;
+    position: relative;
+}
+
+canvas {
+    display: block;
+    background-color: white;
+}
+
+.warning-label {
+    line-height: 1.2em !important;
+    border-radius: 20px !important;
+    margin: 0 3px !important;
+}
+
+#daw-calculation .warning-label {
+    line-height: 1.0em;
+    padding: 0 5px !important;
+}
+
+.views-bar {
+    background-color: #bdbdbd;
+    display: block;
+    float: left;
+    font-size: 20px;
+    position: relative;
+}
+
+.views-bar#views-vertical-bar {
+    width: 20px;
+    border-left: 1px solid #ababab;
+    border-right: 1px solid #ababab;
+    vertical-align: middle;
+    cursor: col-resize;
+}
+
+.views-bar#views-vertical-bar i.icon {
+    width: 20px;
+}
+
+.views-bar#views-horizontal-bar {
+    height: 20px;
+    border-top: 1px solid #ababab;
+    border-bottom: 1px solid #ababab;
+    text-align: center;
+    cursor: row-resize;
+}
+
+.view-controls {
+    background-color: #e2e1e1;
+    border-top: 1px solid #ababab;
+    padding: 1px 7px;
+    width: 100%;
+    height: 28px;
+    position: relative;
+}
+#camera-view-controls {
+    min-width: 410px;
+}
+#images-view-controls {
+    min-width: 265px;
+}
+#viewer-view-controls {
+    min-width: 505px;
+}
+.zoom-controls {
+    position: absolute;
+    bottom: 38px;
+    right: 10px;
+}
+
+.view-controls .ui {
+    margin-right: 9px;
+}
+
+.view-controls strong.ui {
+    line-height: 25px;
+}
+
+.view-controls .ui.selection.dropdown {
+    margin-top: -2px;
+    line-height: 1.45em;
+}
+
+.view-controls .ui.selection.dropdown > .dropdown.icon {
+    line-height: 1.45em;
+}
+
+.option-group-line > * {
+    float: left;
+    display: inline-block;
+}
+
+.option-group-line::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel #simulation-views::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#left-column,
+#stereoscopy-simulator > section .ui.accordion {
+    height: 100%;
+    position: relative;
+}
+
+#daw-calculation {
+    font-size: 11px;
+}
+
+#left-column > .side-panel-column {
+    position: relative;
+    height: calc(100% - 48px);
+    float: left;
+    overflow-x: auto;
+}
+
+#left-column > .side-panel-column > .ui.accordion > .object-item,
+#scene-configuration-item {
+    overflow-y: auto;
+}
+
+#left-column > .side-panel-column > .ui.accordion > .configuration-item {
+    position: relative;
+    max-height: 100%;
+    background-color: white;
+}
+
+#simulation-wrapper, #stereoscopy-simulator, body, html {
+    height: 100%;
+    color: black;
+}
+
+#stereoscopy-simulator {
+    overflow: hidden;
+}
+
+#stereoscopy-simulator > section {
+    display: block;
+    float: left;
+    overflow: hidden;
+    height: 100%;
+}
+
+#stereoscopy-simulator > section .ui.accordion {
+    border-radius: 0;
+    box-shadow: none !important;
+}
+
+#stereoscopy-simulator > section .ui.accordion > .title > button,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title > button,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .title > button {
+    margin-top: -2px;
+    text-align: center;
+    margin-right: -3px;
+}
+
+#stereoscopy-simulator > section.side-panel h2 > button i.icon,
+#stereoscopy-simulator > section .ui.accordion > .title > button i.icon,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title > button i.icon,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .title > button i.icon {
+    margin: 0 0 0 .25rem;
+}
+
+#stereoscopy-simulator > section .ui.accordion > .title,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .title {
+    padding: 10px;
+}
+
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title {
+
+}
+
+#stereoscopy-simulator > section .ui.accordion > .content.active,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .content.active,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .content.active,
+#stereoscopy-simulator > section .ui.accordion > .title,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .title {
+    border-top: none;
+    border-bottom: 1px solid rgba(34,36,38,.15);
+}
+
+#stereoscopy-simulator > section .ui.accordion > .content,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .content,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .content {
+    padding: 8px 10px;
+}
+
+#stereoscopy-simulator > section .ui.accordion > .title > button,
+#stereoscopy-simulator > section .ui.accordion > div.object-item > .title > button,
+#stereoscopy-simulator > section .ui.accordion > div.configuration-item > .title > button {
+    float: right;
+}
+
+#stereoscopy-simulator > section #simulation-objects-list.ui.accordion > .object-item > .title {
+    background-color: #383f42;
+    color: white;
+}
+
+#stereoscopy-simulator > section #simulation-objects-list.ui.accordion > .object-item > .content {
+    background-color: #ededed;
+    border: 1px solid #d2cece;
+}
+
+#stereoscopy-simulator > section.side-panel h2 {
+    width: 100%;
+    background-color: #d8d8d8;
+    color: black;
+    font-size: 1.15rem;
+    line-height: 2.5;
+    margin: 0;
+    position: relative;
+    text-align: center;
+    border-bottom: 1px solid #c3c3c3;
+}
+
+#stereoscopy-simulator > section.side-panel h2 > .ui.button {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+}
+
+.ui.dropdown .menu>.item {
+    font-size: 11px;
+}
+
+.ui.selection.dropdown .menu {
+    width: calc(100% + 21px);
+}
+
+/*#stereoscopy-simulator > section,*/
+/*.canvas-wrapper,*/
+/*#stereoscopy-simulator #simulator-simulation footer#diagnostics {*/
+    /*-webkit-transition: width 0.2s ease-in-out;*/
+    /*-moz-transition: width 0.2s ease-in-out;*/
+    /*-o-transition: width 0.2s ease-in-out;*/
+    /*transition: width 0.2s ease-in-out;*/
+/*}*/
+
+/* SIDE PANELS */
+#simulator-settings .option-group-line {
+    color: black;
+    padding: 10px;
+    border-bottom: 1px solid rgba(34,36,38,.15);
+    background-color: white;
+    cursor: pointer;
+    margin: 0;
+}
+
+/*#stereoscopy-simulator #simulator-settings,*/
+/*#stereoscopy-simulator #simulator-configuration {*/
+    /*background-color: #383f42;*/
+/*}*/
+
+/* CENTER PANEL */
+#stereoscopy-simulator #simulator-simulation footer#diagnostics #diagnostics-header {
+    height: 28px;
+    line-height: 28px;
+    padding: 0 7px;
+    font-weight: bold;
+    background-color: #bdbdbd;
+    border-top: 1px solid #a2a2a2;
+    border-bottom: 1px solid #9c9c9c;
+}
+
+#stereoscopy-simulator #simulator-simulation footer#diagnostics #diagnostics-body {
+    height: 165px;
+    padding: 7px;
+    background-color: #e2e1e1;
+}
+
+#stereoscopy-simulator #simulator-simulation {
+    background-color: #ededed;
+    box-sizing: border-box;
+    border-left: 1px solid #bdbdbd;
+    border-right: 1px solid #bdbdbd;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel {
+    height: 100%;
+    display: block;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel nav {
+    background-color: #333333;
+    border-bottom: 1px solid #ababab;
+    z-index: 999;
+    position: relative;
+    box-sizing: border-box;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel nav > span {
+    padding: 6px 7px;
+    background-color: #dcdcdc;
+    border-right: 1px solid #797979;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel nav > span.active {
+    background-color: white;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel nav > button {
+    margin-left: 10px;
+}
+
+#stereoscopy-simulator #simulator-simulation #center-panel nav .view-model-item i {
+    margin: 0 0 0 7px;
+}
+
+#stereoscopy-simulator #simulator-simulation #visualizations {
+    padding: 15px;
+}
+
+#stereoscopy-simulator #simulator-simulation header {
+    position: relative;
+    z-index: 999;
+    text-align: center;
+    box-sizing: border-box;
+    background: white;
+    border-bottom: 1px solid #bbbbbb;
+}
+
+#stereoscopy-simulator #simulator-simulation header > h1 {
+    margin: 0;
+    line-height: 35px;
+    font-size: 1.3rem;
+}
+
+#stereoscopy-simulator #simulator-simulation header button {
+    position: absolute;
+    border-radius: 0;
+    margin: 0;
+    color: black;
+    height: 35px;
+    padding: .78571429em;
+    background-color: white;
+}
+
+#stereoscopy-simulator #simulator-simulation header button:active {
+    background-color: #babbbc;
+}
+#stereoscopy-simulator #simulator-simulation header button:focus,
+#stereoscopy-simulator #simulator-simulation header button:hover {
+    background-color: #cacbcd;
+}
+
+#stereoscopy-simulator #simulator-simulation header button#simulator-configuration-btn,
+#stereoscopy-simulator #simulator-simulation header button#simulator-settings-btn {
+    top: 0;
+}
+
+#stereoscopy-simulator #simulator-simulation header button#simulator-configuration-btn {
+    left: 0;
+}
+
+#stereoscopy-simulator #simulator-simulation header button#simulator-settings-btn {
+    right: 0;
+}
+
+/* Range component CSS update */
+.rangeslider-horizontal,
+.rangeslider-horizontal .rangeslider__fill {
+    border-radius: 0;
+}
+
+.rangeslider-horizontal {
+    height: 5px;
+}
+
+.rangeslider-horizontal .rangeslider__handle {
+    width: 19px;
+    height: 19px;
+    border-radius: 19px;
+    outline: none;
+}
+
+.rangeslider-horizontal .rangeslider__handle:after {
+    width: 9px;
+    height: 9px;
+    top: 4px;
+    left: 4px;
+}
+
+/* Semantic UI general settings change */
+.ui.label,
+.ui.selection.dropdown,
+.ui.input input {
+    border-radius: 0;
+}
+
+.ui.selection.dropdown {
+    max-width: 90px;
+    white-space: nowrap;
+    /*overflow: hidden;*/
+}
+
+#left-column .ui.selection.dropdown > .text {
+    max-width: 67px;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+}
+
+.ui.label {
+    border: 1px solid rgba(34,36,38,.15);
+}
+
+h3 {
+    font-size: 0.9rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+h3, h4 {
+    display: inline-block;
+    margin: 0;
+}
+
+.rangeslider {
+    width: 130px;
+    margin: 10px 10px 10px 0;
+}
+
+#scene-object-control {
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    cursor: move;
+    border: 2px solid #9c9999;
+}
+
+#scene-object-control .ui.circular.button {
+    padding: 4px;
+    position: absolute;
+    border: 1px solid #6d6d6d;
+}
+
+#scene-object-control #object-control-close {
+    top: -12px;
+    right: -12px;
+}
+
+#scene-object-control #object-control-rotate {
+    bottom: -9px;
+    right: -12px;
+}
+
+#scene-object-control #object-control-scale {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    top: -10px;
+    left: -10px;
+}
+
+#scene-object-control #object-control-resy {
+    top: -12px;
+    left: calc(50% - 11px);
+}
+
+#scene-object-control #object-control-resx {
+    top: calc(50% - 11px);
+    left: -12px;
+}
+
+.ui.icon.button, .ui.icon.buttons .button {
+    padding: 4px;
+}
+
+#simulation-upload-input {
+    padding: 0px !important;
+}
