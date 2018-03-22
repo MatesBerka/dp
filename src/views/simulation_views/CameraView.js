@@ -53,7 +53,6 @@ export default class CameraView extends React.Component<Props, State> {
     // objCtrlCenterY: number = 0;
     // actionStartDistance: number = 0;
     _activeTouchMoveFunction: Function;
-    _activeTouchEndFunction: Function;
     // DOM elements
     body: HTMLElement;
     cameraElm: HTMLCanvasElement;
@@ -317,10 +316,9 @@ export default class CameraView extends React.Component<Props, State> {
         // $FlowFixMe Flow can not resolve function from string
         this.objectControlElm.addEventListener('mousemove', this[moveFunction], window.passiveEventListener);
         this.objectControlElm.addEventListener('touchmove', this._activeTouchMoveFunction, window.passiveEventListener);
-        this._activeTouchEndFunction = this._touchEventTransform.bind(this, endFunction);
         // $FlowFixMe Flow can not resolve function from string
         this.body.addEventListener('mouseup', this[endFunction], window.passiveEventListener);
-        this.body.addEventListener('touchend', this._activeTouchEndFunction, window.passiveEventListener);
+        this.body.addEventListener('touchend', this[endFunction], window.passiveEventListener);
     };
     /**
      * Helper function to remove event listeners for specific object control frame action.
@@ -336,7 +334,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.objectControlElm.removeEventListener('touchmove', this._activeTouchMoveFunction, window.passiveEventListener);
         // $FlowFixMe Flow can not resolve function from string
         this.body.removeEventListener('mouseup', this[endFunction], window.passiveEventListener);
-        this.body.removeEventListener('touchend', this._activeTouchEndFunction, window.passiveEventListener);
+        this.body.removeEventListener('touchend', this[endFunction], window.passiveEventListener);
     };
     /**
      * Helper function to start selected object rotation.
@@ -352,6 +350,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.rotationCenterPoint = [centerX, centerY];
         this._addControlListeners('handleObjectRotate', 'handleObjectEndRotate');
         e.stopPropagation();
+        e.preventDefault();
     };
     /**
      * Helper function used to handle selected object rotation.
@@ -392,6 +391,7 @@ export default class CameraView extends React.Component<Props, State> {
         }
         this._addControlListeners('handleObjectScale', 'handleObjectEndScale');
         e.stopPropagation();
+        e.preventDefault();
     };
     /**
      * Helper function used to handle selected object scale.
@@ -483,6 +483,7 @@ export default class CameraView extends React.Component<Props, State> {
         if (e.constructor.name === 'SyntheticTouchEvent') { this.trnsStartX = e.touches[0].clientX; } else { this.trnsStartX = e.clientX; }
         this._addControlListeners('handleObjectXResize', 'handleObjectEndXResize');
         e.stopPropagation();
+        e.preventDefault();
     };
     /**
      * Helper function used to handle selected object X resize.
@@ -529,6 +530,7 @@ export default class CameraView extends React.Component<Props, State> {
         if (e.constructor.name === 'SyntheticTouchEvent') { this.trnsStartY = e.touches[0].clientY; } else { this.trnsStartY = e.clientY; }
         this._addControlListeners('handleObjectYResize', 'handleObjectEndYResize');
         e.stopPropagation();
+        e.preventDefault();
     };
     /**
      * Helper function used to handle selected object Y resize.
@@ -574,6 +576,7 @@ export default class CameraView extends React.Component<Props, State> {
      */
     handleObjectStartTranslate = (e: Object) => {
         e.stopPropagation();
+        e.preventDefault();
         if (e.constructor.name === 'SyntheticTouchEvent') {
             this.trnsStartX = e.touches[0].clientX;
             this.trnsStartY = e.touches[0].clientY;
@@ -632,7 +635,7 @@ export default class CameraView extends React.Component<Props, State> {
                      style={{width: objCtrlWidth, height: objCtrlHeight, top: objCtrlPosY, left: objCtrlPosX, display: objCtrlShow}}>
                      {/*style={{transform: `rotate(${objCtrlRot}deg)`, width: objCtrlWidth, height: objCtrlHeight, top: objCtrlPosY, left: objCtrlPosX, display: objCtrlShow}}>*/}
                     <Button circular color="red" icon='close' id="object-control-close" onMouseUp={this.handleCloseObjectControl} onTouchEnd={this.handleCloseObjectControl}
-                        onMouseDown={(e)=>e.stopPropagation()} onTouchStart={(e)=>e.stopPropagation()} size='mini'/>
+                        onMouseDown={(e)=>e.stopPropagation()} onTouchStart={(e)=>{e.stopPropagation();e.preventDefault()}} size='mini'/>
                     <Button circular color="green" icon='undo' id="object-control-rotate" onMouseDown={this.handleObjectStartRotate} onTouchStart={this.handleObjectStartRotate} size='mini'/>
                     <Button circular color="green" icon='resize vertical' id="object-control-scale" onMouseDown={this.handleObjectStartScale} onTouchStart={this.handleObjectStartScale} size='mini'/>
                     <Button circular color="green" icon='resize vertical' id="object-control-resy" onMouseDown={this.handleObjectStartYResize} onTouchStart={this.handleObjectStartYResize} size='mini'/>
@@ -640,7 +643,7 @@ export default class CameraView extends React.Component<Props, State> {
                 </div>
                 <canvas id="camera-view" width={width} height={(height - 28)}
                         onMouseDown={this.handleTranslatingStart} onMouseUp={this.handleObjSelectionAndTrnsEnd} onMouseLeave={this.handleTranslationEnd}
-                        onTouchStart={(e) => this.handleTranslatingStart(e.touches[0])} onTouchEnd={this.handleTranslationEnd}>
+                        onTouchStart={(e) => {e.preventDefault();this.handleTranslatingStart(e.touches[0])}} onTouchEnd={(e) => {this.handleObjSelectionAndTrnsEnd(e.changedTouches[0])}}>
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="camera-view-controls">

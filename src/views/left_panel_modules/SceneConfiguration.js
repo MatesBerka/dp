@@ -224,7 +224,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                             <Popup trigger={<label className="ui label label">Object Type:</label>}
                                    content='Hello. This is an inverted popup' inverted />
                             <Select compact onChange={(e, data) => this.handleObjectTypeChange(data.value, modelID)}
-                                options={objTypeIdxMenu} defaultValue={objModel.getObjectType()} />
+                                options={objTypeIdxMenu} defaultValue={objModel.getObjectType()} style={{minWidth: '120px'}} />
                         </div>
                     </div>
                     <div className="option-group-line">

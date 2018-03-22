@@ -394,12 +394,12 @@ export default class CenterPanel extends React.Component<Props, State> {
                     <CameraView width={cameraViewWidth - 20} height={cameraViewHeight} activeModelID={activeModelID}/>
                     <div className="views-bar" style={{height: cameraViewHeight, lineHeight: cameraViewHeight + 'px'}}
                          onMouseDown={this.handleVerticalBarMoveStart}
-                         onTouchStart={(e) => this.handleVerticalBarMoveStart(e.touches[0])}
+                         onTouchStart={(e) => {e.preventDefault();this.handleVerticalBarMoveStart(e.touches[0])}}
                          id="views-vertical-bar"><Icon name='ellipsis vertical'/></div>
                     <ImagesView width={imagesViewWidth} height={imagesViewHeight} activeModelID={activeModelID}/>
                     <div className="views-bar" style={{width: viewerViewWidth}}
                          onMouseDown={this.handleHorizontalBarMoveStart}
-                         onTouchStart={(e) => this.handleHorizontalBarMoveStart(e.touches[0])}
+                         onTouchStart={(e) => {e.preventDefault();this.handleHorizontalBarMoveStart(e.touches[0])}}
                          id="views-horizontal-bar"><Icon name='ellipsis horizontal'/></div>
                     <ViewerView width={viewerViewWidth} height={viewerViewHeight - 20} activeModelID={activeModelID}/>
                 </div>

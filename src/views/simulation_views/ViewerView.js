@@ -208,7 +208,7 @@ export default class ViewerView extends React.Component<Props, State> {
             <div className="canvas-wrapper" id="viewer-view-wrapper" style={{width: width, height: height}}>
                 <canvas id="viewer-view" width={width} height={(height - 28)} onMouseDown={this.handleTranslatingStart}
                     onMouseUp={this.handleTranslationEnd} onMouseLeave={this.handleTranslationEnd}
-                    onTouchStart={(e) => this.handleTranslatingStart(e.touches[0])}>
+                    onTouchStart={(e) => {e.preventDefault();this.handleTranslatingStart(e.touches[0])}}>
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="viewer-view-controls">

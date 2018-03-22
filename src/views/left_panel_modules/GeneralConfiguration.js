@@ -90,7 +90,7 @@ export default class GeneralConfiguration extends React.Component<Props, State> 
                     <div className="option-group-line">
                         <div className="ui mini labeled input">
                             <Popup trigger={<label className="ui label label">Color Scheme:</label>}
-                                   content='Hello. This is an inverted popup' inverted />
+                                   content='If you have stereoscopy glasses then you can pick matching color scheme and zoom in images composition view to see the final image.' inverted />
                             <Select label='sdf' compact onChange={(e, data) => this.handleColorSchemeChange(data.value)}
                                 options={colorSchemeMenu} defaultValue={general.getColorSchemeIdx()} />
                         </div>

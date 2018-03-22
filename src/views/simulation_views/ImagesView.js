@@ -166,7 +166,7 @@ export default class ImagesView extends React.Component<Props, State> {
             <div className="canvas-wrapper" id="images-view-wrapper" style={{width: width, height: height}}>
                 <canvas id="images-view" width={width} height={(height - 28)} onMouseDown={this.handleTranslatingStart}
                     onMouseUp={this.handleTranslationEnd} onMouseLeave={this.handleTranslationEnd}
-                    onTouchStart={(e) => this.handleTranslatingStart(e.touches[0])}>
+                    onTouchStart={(e) => {e.preventDefault();this.handleTranslatingStart(e.touches[0])}}>
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="images-view-controls">

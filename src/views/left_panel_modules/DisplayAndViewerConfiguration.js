@@ -236,7 +236,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                         </div>
                         <div className="option-group-line">
                             <Input labelPosition='right' size='mini'>
-                                <Label style={{borderRight: 0}}>Offset:</Label>
+                                <Label>Offset:</Label>
                                 <input onChange={(e) => this.handleDisplayCameraOffsetChange(e.target.value)}
                                     step={DAW.getDisplayCameraOffsetControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayCameraOffsetControl(ctlSetLoc.inputTypes)]}
