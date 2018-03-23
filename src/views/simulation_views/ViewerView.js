@@ -124,13 +124,11 @@ export default class ViewerView extends React.Component<Props, State> {
     handleZoomIn = () => {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.viewerElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT2;
             trns.scaleY *= Math.SQRT2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT2) + trns.translateX * Math.SQRT2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT2) + trns.translateY * Math.SQRT2;
+            trns.translateX = trns.translateX * Math.SQRT2;
+            trns.translateY = trns.translateY * Math.SQRT2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
@@ -150,8 +148,8 @@ export default class ViewerView extends React.Component<Props, State> {
             // apply scaling
             trns.scaleX *= Math.SQRT1_2;
             trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT1_2) + trns.translateX * Math.SQRT1_2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT1_2) + trns.translateY * Math.SQRT1_2;
+            trns.translateX = trns.translateX * Math.SQRT1_2;
+            trns.translateY = trns.translateY * Math.SQRT1_2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {

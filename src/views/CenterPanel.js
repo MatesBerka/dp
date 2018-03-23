@@ -101,6 +101,11 @@ export default class CenterPanel extends React.Component<Props, State> {
         });
 
         this.updateViewsSize();
+        // center images composition view at the beginning
+        let trns = visualizationBuilder.getImagesTrns();
+        trns.translateX = Math.floor(this.props.centerPanelWidth * this.imagesViewWidthRatio) / 2;
+        trns.translateY = Math.floor((this.props.centerPanelHeight - this.diagnosticsElm.clientHeight - this.NAVIGATION_HEIGHT) * (1 - this.viewerViewHeightRatio)) /2;
+        visualizationBuilder.setImagesTrns(trns);
         // register event listeners
         this.exportListener = function(payload) {
             payload['centerPanel'] = [this.state.models, this.state.activeModelID]

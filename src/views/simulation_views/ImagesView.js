@@ -23,6 +23,7 @@ export default class ImagesView extends React.Component<Props, State> {
     // component constants
     ZOOM_LOWER_LIMIT: number = 20;
     ZOOM_UPPER_LIMIT: number = 550;
+    CONTROLS_PANEL_HEIGHT: number = 28;
     // component variables
     translating: boolean = false;
     trnsStartX: number = 0;
@@ -72,7 +73,7 @@ export default class ImagesView extends React.Component<Props, State> {
     /**
      * Re-render images visualization after component update.
      */
-    componentDidUpdate = () =>{
+    componentDidUpdate = () => {
         visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
     };
     /**
@@ -82,13 +83,11 @@ export default class ImagesView extends React.Component<Props, State> {
     handleZoomIn = () => {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.imagesElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT2;
             trns.scaleY *= Math.SQRT2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT2) + trns.translateX * Math.SQRT2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT2) + trns.translateY * Math.SQRT2;
+            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - Math.SQRT2) + trns.translateX * Math.SQRT2;
+            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - Math.SQRT2) + trns.translateY * Math.SQRT2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
@@ -103,13 +102,11 @@ export default class ImagesView extends React.Component<Props, State> {
     handleZoomOut = () => {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.imagesElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT1_2;
             trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT1_2) + trns.translateX * Math.SQRT1_2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT1_2) + trns.translateY * Math.SQRT1_2;
+            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - Math.SQRT1_2) + trns.translateX * Math.SQRT1_2;
+            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - Math.SQRT1_2) + trns.translateY * Math.SQRT1_2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
@@ -164,7 +161,7 @@ export default class ImagesView extends React.Component<Props, State> {
 
         return (
             <div className="canvas-wrapper" id="images-view-wrapper" style={{width: width, height: height}}>
-                <canvas id="images-view" width={width} height={(height - 28)} onMouseDown={this.handleTranslatingStart}
+                <canvas id="images-view" width={width} height={(height - this.CONTROLS_PANEL_HEIGHT)} onMouseDown={this.handleTranslatingStart}
                     onMouseUp={this.handleTranslationEnd} onMouseLeave={this.handleTranslationEnd}
                     onTouchStart={(e) => {e.preventDefault();this.handleTranslatingStart(e.touches[0])}}>
                     Your browser does not support HTML5 Canvas. Please try different browser.

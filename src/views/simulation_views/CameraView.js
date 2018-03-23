@@ -160,8 +160,8 @@ export default class CameraView extends React.Component<Props, State> {
             // apply scaling
             trns.scaleX *= Math.SQRT2;
             trns.scaleY *= Math.SQRT2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT2) + trns.translateX * Math.SQRT2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT2) + trns.translateY * Math.SQRT2;
+            trns.translateX = trns.translateX * Math.SQRT2;
+            trns.translateY = trns.translateY * Math.SQRT2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
@@ -179,13 +179,11 @@ export default class CameraView extends React.Component<Props, State> {
     handleZoomOut = () => {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.cameraElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT1_2;
             trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = (rect.left / 2) * (1 - Math.SQRT1_2) + trns.translateX * Math.SQRT1_2;
-            trns.translateY = (rect.top / 2) * (1 - Math.SQRT1_2) + trns.translateY * Math.SQRT1_2;
+            trns.translateX = trns.translateX * Math.SQRT1_2;
+            trns.translateY = trns.translateY * Math.SQRT1_2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
