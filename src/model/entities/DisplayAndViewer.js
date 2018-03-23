@@ -233,7 +233,7 @@ export default class DisplayAndViewer extends Generic {
     setDisplayType(value: string) {
         this.displayType = value;
         if (this.displayType === displayTypes.stereoscopic) {
-            this.displayPPL = value;
+            this.displayPPL = this.displayStereoPPL;
         } else if (this.displayType === displayTypes.lenticular) {
             this.displayPPL = this.displayWidth / 0.0254 * this.displayDPI;
         }

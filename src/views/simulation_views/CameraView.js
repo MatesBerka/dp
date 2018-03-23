@@ -203,9 +203,8 @@ export default class CameraView extends React.Component<Props, State> {
         let object = visualizationBuilder.getFocusedObject();
         let trns = visualizationBuilder.getCameraTrns();
 
-        objCtrlWidth = object.getDepth() * trns.scaleX + this.OBJ_CTRL_PADDING;
-        objCtrlHeight = ((this.state.cameraSideView) ? (object.getWidth() * object.getAspect() * trns.scaleY  + this.OBJ_CTRL_PADDING) : (object.getWidth() * trns.scaleY
-            + this.OBJ_CTRL_PADDING));
+        objCtrlWidth = object.getDepth() * trns.scaleX;
+        objCtrlHeight = ((this.state.cameraSideView) ? (object.getWidth() * object.getAspect() * trns.scaleY) : (object.getWidth() * trns.scaleY));
 
         objCtrlWidth = ((objCtrlWidth < this.OBJ_CTRL_MIN_WIDTH) ? this.OBJ_CTRL_MIN_WIDTH : objCtrlWidth);
         objCtrlHeight = ((objCtrlHeight < this.OBJ_CTRL_MMN_HEIGHT) ? this.OBJ_CTRL_MMN_HEIGHT : objCtrlHeight);
@@ -316,6 +315,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.objectControlElm.addEventListener('touchmove', this._activeTouchMoveFunction, window.passiveEventListener);
         // $FlowFixMe Flow can not resolve function from string
         this.body.addEventListener('mouseup', this[endFunction], window.passiveEventListener);
+        // $FlowFixMe Flow can not resolve function from string
         this.body.addEventListener('touchend', this[endFunction], window.passiveEventListener);
     };
     /**
@@ -332,6 +332,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.objectControlElm.removeEventListener('touchmove', this._activeTouchMoveFunction, window.passiveEventListener);
         // $FlowFixMe Flow can not resolve function from string
         this.body.removeEventListener('mouseup', this[endFunction], window.passiveEventListener);
+        // $FlowFixMe Flow can not resolve function from string
         this.body.removeEventListener('touchend', this[endFunction], window.passiveEventListener);
     };
     /**
@@ -429,8 +430,8 @@ export default class CameraView extends React.Component<Props, State> {
         }
 
         this.focusedObj.setDepth(newDepth);
-        let objHeight = newHeight * trns.scaleY + this.OBJ_CTRL_PADDING;
-        let objWidth = newDepth * trns.scaleX + this.OBJ_CTRL_PADDING;
+        let objHeight = newHeight * trns.scaleY;
+        let objWidth = newDepth * trns.scaleX;
         let objY = this.state.objCtrlPosY + (this.state.objCtrlHeight - objHeight) / 2;
         let objX = this.state.objCtrlPosX + (this.state.objCtrlWidth - objWidth) / 2;
         if (objWidth < this.OBJ_CTRL_MIN_WIDTH) {
