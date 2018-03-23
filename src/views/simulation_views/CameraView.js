@@ -98,6 +98,8 @@ export default class CameraView extends React.Component<Props, State> {
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width,this.props.height);
         }.bind(this);
         this.pasteListener = function(payload) {
+            // close object focus frame
+            this.setState({ objCtrlShow: 'none' });
             visualizationBuilder.updateActiveModel();
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width,this.props.height);
         }.bind(this);
@@ -155,8 +157,6 @@ export default class CameraView extends React.Component<Props, State> {
     handleZoomIn = () => {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.cameraElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT2;
             trns.scaleY *= Math.SQRT2;

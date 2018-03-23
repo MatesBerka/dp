@@ -143,8 +143,6 @@ export default class ViewerView extends React.Component<Props, State> {
     handleZoomOut = () => {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
-            // get event coordinates relative to the canvas
-            let rect = this.viewerElm.getBoundingClientRect();
             // apply scaling
             trns.scaleX *= Math.SQRT1_2;
             trns.scaleY *= Math.SQRT1_2;
