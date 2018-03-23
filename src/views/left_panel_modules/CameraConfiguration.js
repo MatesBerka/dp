@@ -9,7 +9,7 @@ import cameraDAO from "../../model/CameraDAO";
 import Camera from '../../model/entities/Camera.js';
 import cameraTypes from "../../model/data_collections/CameraTypes"
 import cameraSensors from "../../model/data_collections/CameraSensors"
-import { unitDefinitionMenu } from "../../model/data_collections/UnitsDefinition"
+import { unitDefinition, unitDefinitionMenu } from "../../model/data_collections/UnitsDefinition"
 import { ctlSetLoc, inputTypesName } from "../../model/data_collections/ControlsTypes";
 import { default as utl } from "../../services/ControlsUtils";
 import dispatcher from "../../services/Dispatcher";
@@ -84,11 +84,11 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         this.distributeUpdate();
     };
     handleCameraSensorWidthChange = (e: Object) => {
-        this.state.cm.setValueForControl('sensorWidth', parseFloat(e.target.value));
+        this.state.cm.setSensorWidth(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorWidthUnit()].value);
         this.distributeUpdate();
     };
     handleCameraSensorHeightChange = (e: Object) => {
-        this.state.cm.setValueForControl('sensorHeight', parseFloat(e.target.value));
+        this.state.cm.setSensorHeight(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorHeightUnit()].value);
         this.distributeUpdate();
     };
     handleCameraHeightChange = (value: number) => {
@@ -151,7 +151,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                 </Accordion.Title>
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
                     <Popup trigger={<div className="option-group-line"><h5>Camera sensor:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Pick one of the predefined sensors or enter your own size.' inverted />
                     <div className="option-group-line">
                         <Input labelPosition='right' size='mini'>
                             <Label>W x H:</Label>
@@ -163,18 +163,11 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 className="short-input" step={CM.getSensorHeightControl(ctlSetLoc.step)}/>
                             <Label>mm</Label>
                             <Select compact onChange={this.handleCameraSensorTypeChange} options={cameraSensors}
-                                defaultValue={cm.getSensorSizeIdx()} />
+                                value={cm.getSensorSizeIdx()} />
                         </Input>
                     </div>
-
-                    <Popup trigger={<div className="option-group-line"><h5>Focal Length:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Focal Length:</h5></div>
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLog(CM.getFocalLengthControl(ctlSetLoc.min), CM.getFocalLengthControl(ctlSetLoc.max), cm.getValueForControl('focalLength'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleFocalLengthChange(utl.updateNumLog(CM.getFocalLengthControl(ctlSetLoc.min),
-                                CM.getFocalLengthControl(ctlSetLoc.max), CM.getFocalLengthControl(ctlSetLoc.precision), val))} />
                         <Input size='mini'>
                             <input
                                 type={inputTypesName[CM.getFocalLengthControl(ctlSetLoc.inputTypes)]}
@@ -185,8 +178,14 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 onChange={(e) => this.handleFocalLengthChange(e.target.value)}
                                 className="short-input" style={{borderRight: 0}} />
                             <Select compact onChange={this.handleFocalLengthUnitChange} options={unitDefinitionMenu}
-                                defaultValue={cm.getFocalLengthUnit()} />
+                                    defaultValue={cm.getFocalLengthUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                            value={utl.updateRangeLog(CM.getFocalLengthControl(ctlSetLoc.min), CM.getFocalLengthControl(ctlSetLoc.max), cm.getValueForControl('focalLength'))}
+                            format={utl.formatSliderValue}
+                            onChange={(val, e) => {e.preventDefault();
+                                this.handleFocalLengthChange(utl.updateNumLog(CM.getFocalLengthControl(ctlSetLoc.min),
+                                CM.getFocalLengthControl(ctlSetLoc.max), CM.getFocalLengthControl(ctlSetLoc.precision), val))}} />
                     </div>
 
                     <div className="option-group-line">
@@ -194,13 +193,8 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                     </div>
 
                     <Popup trigger={<div className="option-group-line"><h5>Camera Distance:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Distance from the scene.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLog(CM.getCameraDistanceControl(ctlSetLoc.min), CM.getCameraDistanceControl(ctlSetLoc.max), cm.getValueForControl('cameraDistance'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleCameraDistanceChange(utl.updateNumLog(CM.getCameraDistanceControl(ctlSetLoc.min),
-                                CM.getCameraDistanceControl(ctlSetLoc.max), CM.getCameraDistanceControl(ctlSetLoc.precision), val))} />
                         <Input size='mini'>
                             <input
                                 onChange={(e) => this.handleCameraDistanceChange(e.target.value)}
@@ -212,16 +206,17 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact onChange={this.handleCameraDistanceUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraDistanceUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLog(CM.getCameraDistanceControl(ctlSetLoc.min), CM.getCameraDistanceControl(ctlSetLoc.max), cm.getValueForControl('cameraDistance'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleCameraDistanceChange(utl.updateNumLog(CM.getCameraDistanceControl(ctlSetLoc.min),
+                                        CM.getCameraDistanceControl(ctlSetLoc.max), CM.getCameraDistanceControl(ctlSetLoc.precision), val))}} />
                     </div>
 
                     <Popup trigger={<div className="option-group-line"><h5>Camera Separation:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Distance between cameras.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLog(CM.getCameraSeparationControl(ctlSetLoc.min), CM.getCameraSeparationControl(ctlSetLoc.max), cm.getValueForControl('cameraSeparation'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleCameraSeparationChange(utl.updateNumLog(CM.getCameraSeparationControl(ctlSetLoc.min),
-                                CM.getCameraSeparationControl(ctlSetLoc.max), CM.getCameraSeparationControl(ctlSetLoc.precision), val))} />
                         <Input type='number' size='mini'>
                             <input onChange={(e) => this.handleCameraSeparationChange(e.target.value)}
                                 min={CM.getCameraSeparationControl(ctlSetLoc.min)}
@@ -232,16 +227,15 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact onChange={this.handleCameraSeparationUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraSeparationUnit()} />
                         </Input>
-                    </div>
-
-                    <Popup trigger={<div className="option-group-line"><h5>Camera Crossing:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
-                    <div className="option-group-line">
                         <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(CM.getCameraCrossingControl(ctlSetLoc.min), CM.getCameraCrossingControl(ctlSetLoc.max), cm.getValueForControl('cameraCrossing'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleCameraCrossingChange(utl.updateNumLin(CM.getCameraCrossingControl(ctlSetLoc.min),
-                                CM.getCameraCrossingControl(ctlSetLoc.max), CM.getCameraCrossingControl(ctlSetLoc.precision), val))} />
+                                value={utl.updateRangeLog(CM.getCameraSeparationControl(ctlSetLoc.min), CM.getCameraSeparationControl(ctlSetLoc.max), cm.getValueForControl('cameraSeparation'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleCameraSeparationChange(utl.updateNumLog(CM.getCameraSeparationControl(ctlSetLoc.min),
+                                        CM.getCameraSeparationControl(ctlSetLoc.max), CM.getCameraSeparationControl(ctlSetLoc.precision), val))}} />
+                    </div>
+                    <div className="option-group-line"><h5>Camera Crossing:</h5></div>
+                    <div className="option-group-line">
                         <Input size='mini'>
                             <input onChange={(e) => this.handleCameraCrossingChange(e.target.value)}
                                 type={inputTypesName[CM.getCameraCrossingControl(ctlSetLoc.inputTypes)]}
@@ -252,16 +246,17 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact  onChange={this.handleCameraCrossingUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraCrossingUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(CM.getCameraCrossingControl(ctlSetLoc.min), CM.getCameraCrossingControl(ctlSetLoc.max), cm.getValueForControl('cameraCrossing'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleCameraCrossingChange(utl.updateNumLin(CM.getCameraCrossingControl(ctlSetLoc.min),
+                                        CM.getCameraCrossingControl(ctlSetLoc.max), CM.getCameraCrossingControl(ctlSetLoc.precision), val))}} />
                     </div>
 
                     <Popup trigger={<div className="option-group-line"><h5>Camera Height:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Use cameras view side view to see the effect.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(CM.getCameraHeightControl(ctlSetLoc.min), CM.getCameraHeightControl(ctlSetLoc.max), cm.getValueForControl('cameraHeight'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleCameraHeightChange(utl.updateNumLin(CM.getCameraHeightControl(ctlSetLoc.min),
-                                CM.getCameraHeightControl(ctlSetLoc.max), CM.getCameraHeightControl(ctlSetLoc.precision), val))} />
                         <Input size='mini'>
                             <input onChange={(e) => this.handleCameraHeightChange(e.target.value)}
                                 min={CM.getCameraHeightControl(ctlSetLoc.min)}
@@ -272,23 +267,31 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact  onChange={this.handleCameraHeightUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraHeightUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(CM.getCameraHeightControl(ctlSetLoc.min), CM.getCameraHeightControl(ctlSetLoc.max), cm.getValueForControl('cameraHeight'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleCameraHeightChange(utl.updateNumLin(CM.getCameraHeightControl(ctlSetLoc.min),
+                                        CM.getCameraHeightControl(ctlSetLoc.max), CM.getCameraHeightControl(ctlSetLoc.precision), val))}} />
                     </div>
 
                     <div className="option-group-line">
                         <div className="ui mini labeled input">
                             <Popup trigger={<label className="ui label label">Cameras Count:</label>}
-                                   content='Hello. This is an inverted popup' inverted />
-                            <input value={cm.getCamerasCount()}
+                                   content='Determines number of images used for final composition. Also can influence diagnostics (global setting).' inverted />
+                            <input onChange={(e) => this.handleCamerasCountChange(e.target.value)} className="short-input"
+                                min={CM.getCamerasCountControl(ctlSetLoc.min)}
+                                max={CM.getCamerasCountControl(ctlSetLoc.max)}
+                                value={cm.getCamerasCount()}
                                 type={inputTypesName[CM.getCamerasCountControl(ctlSetLoc.inputTypes)]}
-                                step={CM.getCamerasCountControl(ctlSetLoc.step)}
-                                onChange={(e) => this.handleCamerasCountChange(e.target.value)} className="short-input"/>
+                                step={CM.getCamerasCountControl(ctlSetLoc.step)}/>
                         </div>
                     </div>
 
                     <div className="option-group-line">
                         <div className="ui mini labeled input">
                             <Popup trigger={<label className="ui label label">Camera Type:</label>}
-                                   content='Hello. This is an inverted popup' inverted />
+                                   content='Determines camera sensor orientation.' inverted />
                             <Select compact onChange={(e, data) => this.handleCameraTypeChange(data.value)}
                                 options={cameraTypes} defaultValue={cm.getCameraType()} />
                         </div>
@@ -296,7 +299,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
 
                     <div className="option-group-line">
                         <Popup trigger={<Checkbox label='Focal length correction' onChange={this.handleFocalLengthCorrectionToggle}
-                            checked={cm.getFocalLengthCorrection()}/>} content='Hello. This is an inverted popup' inverted />
+                            checked={cm.getFocalLengthCorrection()}/>} content='Set true for autocorrection.' inverted />
                     </div>
                 </Accordion.Content>
             </div>

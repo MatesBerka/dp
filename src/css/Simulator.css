@@ -299,7 +299,7 @@ canvas {
 }
 
 .ui.selection.dropdown .menu {
-    width: calc(100% + 21px);
+    width: calc(100% + 2px);
 }
 
 /*#stereoscopy-simulator > section,*/
@@ -465,7 +465,7 @@ canvas {
 }
 
 .ui.selection.dropdown {
-    max-width: 90px;
+    width: 80px !important;
     white-space: nowrap;
     /*overflow: hidden;*/
 }
@@ -496,7 +496,11 @@ h3, h4 {
 
 .rangeslider {
     width: 130px;
-    margin: 10px 10px 10px 0;
+    margin: 10px 0 10px 10px;
+}
+
+#display-type-select {
+    width: 120px !important;
 }
 
 #scene-object-control {

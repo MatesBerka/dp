@@ -186,6 +186,7 @@ export default class Camera  extends Generic {
             case 'APS-CCanon':  w = 22.3e-3; h = 14.9e-3; break;
             case '4/3':         w = 17.3e-3; h = 13.0e-3; break;
             case '1/3':         w =  4.8e-3; h =  3.6e-3; break;
+            case '--':          w = this.sensorWidth; h = this.sensorHeight; break; // keep old values
             default: console.error('Unknown sensor');
         }
         this.sensorHeight = h;

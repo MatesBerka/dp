@@ -223,12 +223,10 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                     </Button>
                 </Accordion.Title>
                 <Accordion.Content active={openObjectSettings.has(modelID)}>
-                    <Popup trigger={<div className="option-group-line"><h5>Object size:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Object size:</h5></div>
                     <div className="option-group-line">
                         <div className="ui mini labeled input">
-                            <Popup trigger={<label className="ui label label">Object Type:</label>}
-                                   content='Hello. This is an inverted popup' inverted />
+                            <label className="ui label label">Object Type:</label>
                             <Select compact onChange={(e, data) => this.handleObjectTypeChange(data.value, modelID)}
                                 options={objTypeIdxMenu} defaultValue={objModel.getObjectType()} style={{minWidth: '120px'}} />
                         </div>
@@ -253,15 +251,15 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 defaultValue={objModel.getDepthUnit()} />
                         </Input><br/>
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
-                            <Label>Aspect:</Label>
+                            <Popup trigger={<Label>Aspect:</Label>}
+                                   content='This value is used to determine object height.' inverted />
                             <input onChange={(e) => this.handleObjectAspectChange(e.target.value, modelID)}
                                 step={SO.getAspectControl(ctlSetLoc.step)}
                                 type={inputTypesName[SO.getAspectControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getAspect()} className="short-input right-border"/>
                         </Input>
                     </div>
-                    <Popup trigger={<div className="option-group-line"><h5>Object position:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Object position:</h5></div>
                     <div className="option-group-line">
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
                             <Label>X:</Label>
@@ -291,8 +289,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 defaultValue={objModel.getCenterZUnit()} />
                         </Input>
                     </div>
-                    <Popup trigger={<div className="option-group-line"><h5>Object rotation:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Object rotation:</h5></div>
                     <div className="option-group-line">
                         <Input labelPosition='right' size='mini'>
                             <Label>X x Y x Z:</Label>
@@ -324,7 +321,8 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                     </Button>
                 </Accordion.Title>
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
-                    <Button positive content='Add object' icon='add' labelPosition='right' onClick={this.handleAddNewObject} size='mini'/>
+                    <Popup trigger={<Button positive content='Add object' icon='add' labelPosition='right' onClick={this.handleAddNewObject} size='mini'/>}
+                           content='Added objects can be also selected and transformed in cameras view.' inverted />
                     <Accordion fluid id="simulation-objects-list">{ modelObjects.map(objectView) }</Accordion>
                 </Accordion.Content>
             </div>

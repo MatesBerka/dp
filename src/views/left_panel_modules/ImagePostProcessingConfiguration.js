@@ -117,14 +117,8 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                 </Accordion.Title>
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
                     <Popup trigger={<div className="option-group-line"><h5>Image Keystone:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Use to repair possible keystone effect.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
-                                IPR.getImagesKeystoneControl(ctlSetLoc.max), imgPro.getValueForControl('imagesKeystone'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleImagesKeystoneChange(utl.updateNumLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
-                                IPR.getImagesKeystoneControl(ctlSetLoc.max), IPR.getImagesKeystoneControl(ctlSetLoc.precision), val))}/>
                         <Input size='mini'>
                             <input value={imgPro.getValueForControl('imagesKeystone')}
                                 min={IPR.getImagesKeystoneControl(ctlSetLoc.min)}
@@ -136,17 +130,18 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesKeystoneUnitChange}
                                 defaultValue={imgPro.getImagesKeystoneUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
+                                    IPR.getImagesKeystoneControl(ctlSetLoc.max), imgPro.getValueForControl('imagesKeystone'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleImagesKeystoneChange(utl.updateNumLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
+                                        IPR.getImagesKeystoneControl(ctlSetLoc.max), IPR.getImagesKeystoneControl(ctlSetLoc.precision), val))}}/>
                     </div>
 
                     <Popup trigger={<div className="option-group-line"><h5>Images Stretch:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Use to repair possible deformations.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(IPR.getImagesStretchControl(ctlSetLoc.min),
-                                IPR.getImagesStretchControl(ctlSetLoc.max), imgPro.getValueForControl('imagesStretch'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleImagesStretchChange(utl.updateNumLin(IPR.getImagesStretchControl(ctlSetLoc.min),
-                                IPR.getImagesStretchControl(ctlSetLoc.max), IPR.getImagesStretchControl(ctlSetLoc.precision), val))}/>
                         <Input size='mini'>
                             <input value={imgPro.getValueForControl('imagesStretch')}
                                 min={IPR.getImagesStretchControl(ctlSetLoc.min)}
@@ -158,17 +153,18 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesStretchUnitChange}
                                 defaultValue={imgPro.getImagesStretchUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(IPR.getImagesStretchControl(ctlSetLoc.min),
+                                    IPR.getImagesStretchControl(ctlSetLoc.max), imgPro.getValueForControl('imagesStretch'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleImagesStretchChange(utl.updateNumLin(IPR.getImagesStretchControl(ctlSetLoc.min),
+                                        IPR.getImagesStretchControl(ctlSetLoc.max), IPR.getImagesStretchControl(ctlSetLoc.precision), val))}}/>
                     </div>
 
                     <Popup trigger={<div className="option-group-line"><h5>Images Shift:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                           content='Use to influence final scene depth.' inverted />
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(IPR.getImagesShiftControl(ctlSetLoc.min),
-                                IPR.getImagesShiftControl(ctlSetLoc.max), imgPro.getValueForControl('imagesShift'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleImagesShiftChange(utl.updateNumLin(IPR.getImagesShiftControl(ctlSetLoc.min),
-                                IPR.getImagesShiftControl(ctlSetLoc.max), IPR.getImagesShiftControl(ctlSetLoc.precision), val))}/>
                         <Input size='mini'>
                             <input value={imgPro.getValueForControl('imagesShift')}
                                    min={IPR.getImagesShiftControl(ctlSetLoc.min)}
@@ -180,17 +176,17 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesShiftUnitChange}
                                 defaultValue={imgPro.getImagesShiftUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(IPR.getImagesShiftControl(ctlSetLoc.min),
+                                    IPR.getImagesShiftControl(ctlSetLoc.max), imgPro.getValueForControl('imagesShift'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleImagesShiftChange(utl.updateNumLin(IPR.getImagesShiftControl(ctlSetLoc.min),
+                                        IPR.getImagesShiftControl(ctlSetLoc.max), IPR.getImagesShiftControl(ctlSetLoc.precision), val))}}/>
                     </div>
 
-                    <Popup trigger={<div className="option-group-line"><h5>Images Zoom:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Images Zoom:</h5></div>
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(IPR.getImagesZoomControl(ctlSetLoc.min),
-                                IPR.getImagesZoomControl(ctlSetLoc.max), imgPro.getValueForControl('imagesZoom'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleImagesZoomChange(utl.updateNumLin(IPR.getImagesZoomControl(ctlSetLoc.min),
-                                IPR.getImagesZoomControl(ctlSetLoc.max), IPR.getImagesZoomControl(ctlSetLoc.precision), val))}/>
                         <Input size='mini'>
                             <input className="short-input" value={imgPro.getValueForControl('imagesZoom')}
                                    min={IPR.getImagesZoomControl(ctlSetLoc.min)}
@@ -201,6 +197,13 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesZoomUnitChange}
                                 defaultValue={imgPro.getImagesZoomUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(IPR.getImagesZoomControl(ctlSetLoc.min),
+                                    IPR.getImagesZoomControl(ctlSetLoc.max), imgPro.getValueForControl('imagesZoom'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleImagesZoomChange(utl.updateNumLin(IPR.getImagesZoomControl(ctlSetLoc.min),
+                                        IPR.getImagesZoomControl(ctlSetLoc.max), IPR.getImagesZoomControl(ctlSetLoc.precision), val))}}/>
                     </div>
                 </Accordion.Content>
             </div>

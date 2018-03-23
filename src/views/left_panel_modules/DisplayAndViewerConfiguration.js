@@ -138,8 +138,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleHeadOptimalDistanceChange = (value: number) => {
         if (value) {
-            let newVal = value * this.state.DAWi.getHeadOptimalDistanceUnit();
-            this.state.DAWi.setHeadOptimalDistance(newVal);
+            this.state.DAWi.setValueForControl('headOptimalDistance', parseInt(value, 10));
             this.distributeUpdate();
         }
     };
@@ -175,7 +174,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleHeadOptimalDistanceUnitChange = (e: Object, data: Object) => {
         if (data.value) {
-            this.state.DAWi.set(parseInt(data.value, 10));
+            this.state.DAWi.setHeadOptimalDistanceUnit(parseInt(data.value, 10));
             this.distributeUpdate();
         }
     };
@@ -217,18 +216,24 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
                     <Input size='mini' className="option-group-line">
                         <Select onChange={this.handleDisplayTypeChange} options={displayTypesMenu} compact
-                            defaultValue={DAWi.getDisplayType()} size='mini'/>
+                            defaultValue={DAWi.getDisplayType()} size='mini' id="display-type-select"/>
                     </Input>
                     <div id="stereoscopic-display-settings" style={{display: ((DAWi.getDisplayType() === displayTypes.stereoscopic) ? 'block': 'none')}}>
                         <div className="option-group-line">
                             <Input labelPosition='right' size='mini'>
-                                <Label>Pixels per line:</Label>
+                                <Popup trigger={<Label>Pixels per line:</Label>}
+                                       content='Display resolution.' inverted />
                                 <input onChange={(e) => this.handleDisplayStereoPPLChange(e.target.value)}
+                                    min={DAW.getDisplayStereoPPLControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayStereoPPLControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayStereoPPLControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayStereoPPLControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayStereoPPL()} className="short-input"/>
-                                <Label>Image L:</Label>
+                                <Popup trigger={<Label>Left image:</Label>}
+                                       content='Select image for left eye. First camera has index 1.' inverted />
                                 <input onChange={(e) => this.handleDisplayCameraLeftChange(e.target.value)}
+                                    min={DAW.getDisplayCameraLeftControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayCameraLeftControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayCameraLeftControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayCameraLeftControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayCameraLeft()} className="mini-input right-border"/>
@@ -236,8 +241,11 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                         </div>
                         <div className="option-group-line">
                             <Input labelPosition='right' size='mini'>
-                                <Label>Offset:</Label>
+                                <Popup trigger={<Label>Right image offset:</Label>}
+                                       content='Select image for right eye (= left image index + offset).' inverted />
                                 <input onChange={(e) => this.handleDisplayCameraOffsetChange(e.target.value)}
+                                    min={DAW.getDisplayCameraOffsetControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayCameraOffsetControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayCameraOffsetControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayCameraOffsetControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayCameraOffset()} className="mini-input right-border"/>
@@ -249,29 +257,37 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                             <Input labelPosition='right' size='mini' >
                                 <Label>Display LPI:</Label>
                                 <input onChange={(e) => this.handleDisplayLPIChange(e.target.value)}
+                                    min={DAW.getDisplayLPIControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayLPIControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayLPIControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayLPIControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayLPI()} className="short-input"/>
                                 <Label>Display DPI:</Label>
                                 <input onChange={(e) => this.handleDisplayDPIChange(e.target.value)}
+                                    min={DAW.getDisplayDPIControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayDPIControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayDPIControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayDPIControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayDPI()} className="short-input right-border"/>
                             </Input>
                         </div>
                         <div className="option-group-line">
-                            <Input labelPosition='right' size='mini' >
-                                <Label style={{borderRight: 0}}>View. angle:</Label>
+                            <Input labelPosition='right' size='mini'>
+                                <Label>View. angle:</Label>
                                 <input onChange={(e) => this.handleDisplayViewAngleChange(e.target.value)}
+                                    min={DAW.getDisplayViewAngleControl(ctlSetLoc.min)}
+                                    max={DAW.getDisplayViewAngleControl(ctlSetLoc.max)}
                                     step={DAW.getDisplayViewAngleControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getDisplayViewAngleControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getDisplayViewAngle()} className="short-input right-border"/>
                             </Input>
                         </div>
                         <div className="option-group-line">
-                            <Input labelPosition='right' size='mini' >
+                            <Input labelPosition='right' size='mini'>
                                 <Label>Preferred head distance:</Label>
                                 <input onChange={(e) => this.handleHeadOptimalDistanceChange(e.target.value)}
+                                    min={DAW.getHeadOptimalDistanceControl(ctlSetLoc.min)}
+                                    max={DAW.getHeadOptimalDistanceControl(ctlSetLoc.max)}
                                     step={DAW.getHeadOptimalDistanceControl(ctlSetLoc.step)}
                                     type={inputTypesName[DAW.getHeadOptimalDistanceControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getValueForControl('headOptimalDistance')} className="short-input"/>
@@ -284,6 +300,8 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                         <Input labelPosition='right' size='mini' >
                             <Label>Display width:</Label>
                             <input onChange={(e) => this.handleDisplayWidthChange(e.target.value)}
+                                min={DAW.getDisplayWidthControl(ctlSetLoc.min)}
+                                max={DAW.getDisplayWidthControl(ctlSetLoc.max)}
                                 step={DAW.getDisplayWidthControl(ctlSetLoc.step)}
                                 type={inputTypesName[DAW.getDisplayWidthControl(ctlSetLoc.inputTypes)]}
                                 value={DAWi.getValueForControl('displayWidth')} className="short-input"/>
@@ -293,8 +311,11 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                     </div>
                     <div className="option-group-line">
                         <Input labelPosition='right' size='mini' >
-                            <Label>Display W/H:</Label>
+                            <Popup trigger={<Label>Display W/H:</Label>}
+                                   content='This value is used to determine display height.' inverted />
                             <input onChange={(e) => this.handleDisplayAspectChange(e.target.value)}
+                                min={DAW.getDisplayAspectControl(ctlSetLoc.min)}
+                                max={DAW.getDisplayAspectControl(ctlSetLoc.max)}
                                 step={DAW.getDisplayAspectControl(ctlSetLoc.step)}
                                 type={inputTypesName[DAW.getDisplayAspectControl(ctlSetLoc.inputTypes)]}
                                 value={DAWi.getDisplayAspect()} className="short-input right-border"/>
@@ -302,23 +323,18 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                     </div>
                     <div className="option-group-line">
                         <Input labelPosition='right' size='mini'>
-                            <Label>Viewing Comfort:</Label>
+                            <Popup trigger={<Label>Viewing Comfort:</Label>}
+                                   content='10 for the best and 0 for the worst.' inverted />
                             <input onChange={(e) => this.handleViewingComfortChange(e.target.value)}
+                                   min={DAW.getViewingComfortControl(ctlSetLoc.min)}
+                                   max={DAW.getViewingComfortControl(ctlSetLoc.max)}
                                    step={DAW.getViewingComfortControl(ctlSetLoc.step)}
                                    type={inputTypesName[DAW.getViewingComfortControl(ctlSetLoc.inputTypes)]}
                                    value={DAWi.getViewingComfort()} className="short-input right-border"/>
                         </Input>
                     </div>
-
-                    <Popup trigger={<div className="option-group-line"><h5>Head Distance:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Head Distance:</h5></div>
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
-                                DAW.getHeadDistanceControl(ctlSetLoc.max), DAWi.getValueForControl('headDistance'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleHeadDistanceChange(utl.updateNumLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
-                                DAW.getHeadDistanceControl(ctlSetLoc.max), DAW.getHeadDistanceControl(ctlSetLoc.precision), val))}/>
                         <Input type='text' size='mini'>
                             <input onChange={(e) => this.handleHeadDistanceChange(e.target.value)}
                                 type={inputTypesName[DAW.getHeadDistanceControl(ctlSetLoc.inputTypes)]}
@@ -329,6 +345,13 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadDistanceUnitChange}
                                 defaultValue={DAWi.getHeadDistanceUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
+                                    DAW.getHeadDistanceControl(ctlSetLoc.max), DAWi.getValueForControl('headDistance'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleHeadDistanceChange(utl.updateNumLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
+                                        DAW.getHeadDistanceControl(ctlSetLoc.max), DAW.getHeadDistanceControl(ctlSetLoc.precision), val))}}/>
                     </div>
                     <div className="option-group-line" id="daw-calculation">
                         <span>({this._convert(DAWi.getDisplayPPI())} ppi</span>
@@ -336,15 +359,8 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                         <span> angle {this._convert(DAWi.getViewerAngle())}°,</span>
                         <span> ideal dist. {DAWi.getIdealDisplayDistance()} m)</span>
                     </div>
-                    <Popup trigger={<div className="option-group-line"><h5>Head Position:</h5></div>}
-                           content='Hello. This is an inverted popup' inverted />
+                    <div className="option-group-line"><h5>Head Position:</h5></div>
                     <div className="option-group-line">
-                        <Slider min={0} max={100} step={1}
-                            value={utl.updateRangeLin(DAW.getHeadPositionControl(ctlSetLoc.min), DAW.getHeadPositionControl(ctlSetLoc.max),
-                                DAWi.getValueForControl('headPosition'))}
-                            format={utl.formatSliderValue}
-                            onChange={(val) => this.handleHeadPositionChange(utl.updateNumLin(DAW.getHeadPositionControl(ctlSetLoc.min),
-                                DAW.getHeadPositionControl(ctlSetLoc.max), DAW.getHeadPositionControl(ctlSetLoc.precision), val))}/>
                         <Input type='text' size='mini'>
                             <input onChange={(e) => this.handleHeadPositionChange(e.target.value)}
                                 type={inputTypesName[DAW.getHeadPositionControl(ctlSetLoc.inputTypes)]}
@@ -355,6 +371,13 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadPositionUnitChange}
                                 defaultValue={DAWi.getHeadPositionUnit()} />
                         </Input>
+                        <Slider min={0} max={100} step={1}
+                                value={utl.updateRangeLin(DAW.getHeadPositionControl(ctlSetLoc.min), DAW.getHeadPositionControl(ctlSetLoc.max),
+                                    DAWi.getValueForControl('headPosition'))}
+                                format={utl.formatSliderValue}
+                                onChange={(val, e) => {e.preventDefault();
+                                    this.handleHeadPositionChange(utl.updateNumLin(DAW.getHeadPositionControl(ctlSetLoc.min),
+                                        DAW.getHeadPositionControl(ctlSetLoc.max), DAW.getHeadPositionControl(ctlSetLoc.precision), val))}}/>
                     </div>
                 </Accordion.Content>
             </div>

@@ -25,7 +25,6 @@ export default class DisplayAndViewer extends Generic {
     static headPositionControl: [number, number, number, number, number, number] = [-100,100,sliderTypes.lin,0.1,10,inputTypes.number];
     // instance variables
     displayType: string = displayTypes.stereoscopic;
-    viewingComfort: number = 5;
     // stereoscopic display options
     displayStereoPPL: number = 1920; // pixels per line
     displayCameraLeft: number = 1; // camera (image) number for the left eye (numbered from 1)
@@ -37,8 +36,10 @@ export default class DisplayAndViewer extends Generic {
     displayViewAngleUnit: number = unitIdx.deg;
     headOptimalDistance: number = 0.4;
     headOptimalDistanceUnit: number = unitIdx.cm;
-    // general
+    // computed
     displayPPL: number = 1920;
+    // general
+    viewingComfort: number = 5;
     displayWidth: number = 0.30;
     displayWidthUnit: number = unitIdx.cm;
     displayAspect: number = 1.5;
@@ -46,6 +47,7 @@ export default class DisplayAndViewer extends Generic {
     headDistanceUnit: number = unitIdx.m;
     headPosition: number = 0;
     headPositionUnit: number = unitIdx.cm;
+    // these are currently unchangeable
     eyesSeparation: number = 0.063;
     eyesSeparationUnit: number = unitIdx.mm;
     mechanicalPitch: number = 0.0254 / this.displayLPI;
@@ -81,6 +83,7 @@ export default class DisplayAndViewer extends Generic {
         copy.headDistanceUnit = this.headDistanceUnit;
         copy.headPosition = this.headPosition;
         copy.headPositionUnit = this.headPositionUnit;
+        // these are currently unchangeable
         copy.eyesSeparation = this.eyesSeparation;
         copy.eyesSeparationUnit = this.eyesSeparationUnit;
         copy.mechanicalPitch = this.mechanicalPitch;
@@ -229,12 +232,19 @@ export default class DisplayAndViewer extends Generic {
     }
     setDisplayType(value: string) {
         this.displayType = value;
+        if (this.displayType === displayTypes.stereoscopic) {
+            this.displayPPL = value;
+        } else if (this.displayType === displayTypes.lenticular) {
+            this.displayPPL = this.displayWidth / 0.0254 * this.displayDPI;
+        }
     }
     setViewingComfort(value: number) {
         this.viewingComfort = value;
     }
     setDisplayStereoPPL(value: number) {
         this.displayStereoPPL = value;
+        if (this.displayType === displayTypes.stereoscopic)
+            this.displayPPL = value;
     }
 
     _setDisplayCameraLeftOffset(left: number, offset: number, cameras: number) {
@@ -278,6 +288,8 @@ export default class DisplayAndViewer extends Generic {
     }
     setDisplayDPI(value: number) {
         this.displayDPI = value;
+        if (this.displayType === displayTypes.lenticular)
+            this.displayPPL = this.displayWidth / 0.0254 * value;
     }
     setDisplayViewAngle(value: number) {
         this.displayViewAngle = value;
@@ -288,11 +300,10 @@ export default class DisplayAndViewer extends Generic {
         this.headOptimalDistance = value;
         this.visualPitch = this.mechanicalPitch * (1 + this.displayDepth / this.headOptimalDistance);
     }
-    setDisplayPPL(value: number) {
-        this.displayPPL = value;
-    }
     setDisplayWidth(value: number) {
         this.displayWidth = value;
+        if (this.displayType === displayTypes.lenticular)
+            this.displayPPL = value / 0.0254 * this.displayDPI;
     }
     setDisplayAspect(value: number) {
         this.displayAspect = value;

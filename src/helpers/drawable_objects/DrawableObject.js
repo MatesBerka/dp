@@ -9,8 +9,8 @@ import type {vec2, vec3, vertices} from "../../model/data_collections/flowTypes"
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 export default class DrawableObject {
-    vertices: vertices;
-    edges: Array<vec2>;
+    vertices: vertices = [];
+    edges: Array<vec2> = [];
     /**
      * Returns object vertices.
      * @return {vec3}

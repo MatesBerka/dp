@@ -24,7 +24,7 @@ type State = {
  */
 class Simulator extends React.Component<Props, State> {
     // component constant
-    SIDE_PANEL_WIDTH: number = 330;
+    SIDE_PANEL_WIDTH: number = 310;
     // component variables
     handleResizeAction: Function;
     firstVisible: boolean = true;

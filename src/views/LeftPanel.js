@@ -118,24 +118,27 @@ export default class LeftPanel extends React.Component<Props, State> {
      * Function splits available blocks between two left columns depending on available height.
      */
     checkPanelSize = () => {
-        this.panelFirstColumn = [];
-        this.panelSecondColumn = [];
-        // $FlowFixMe
-        let firstSize = 0, columnHeight = this.firstLeftColumnELM.clientHeight, i = 0;
-        for (; i < this.panelConfigurationItemsELMs.length; i++) {
-            firstSize += this.panelConfigurationItemsELMs[i].clientHeight;
-            this.panelFirstColumn.push(this.PANEL_COMPONENTS[i]);
-            if (firstSize >= columnHeight) {
-                i++;
-                break;
+        // use panel double size only for desktop devices
+        if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+            this.panelFirstColumn = [];
+            this.panelSecondColumn = [];
+            // $FlowFixMe
+            let firstSize = 0, columnHeight = this.firstLeftColumnELM.clientHeight, i = 0;
+            for (; i < this.panelConfigurationItemsELMs.length; i++) {
+                firstSize += this.panelConfigurationItemsELMs[i].clientHeight;
+                this.panelFirstColumn.push(this.PANEL_COMPONENTS[i]);
+                if (firstSize >= columnHeight) {
+                    i++;
+                    break;
+                }
             }
-        }
-        for (; i < this.panelConfigurationItemsELMs.length; i++)
-            this.panelSecondColumn.push(this.PANEL_COMPONENTS[i]);
-        if (this.panelSecondColumn.length > 0) {
-            this.props.updateCallback(true);
-        } else {
-            this.props.updateCallback(false);
+            for (; i < this.panelConfigurationItemsELMs.length; i++)
+                this.panelSecondColumn.push(this.PANEL_COMPONENTS[i]);
+            if (this.panelSecondColumn.length > 0) {
+                this.props.updateCallback(true);
+            } else {
+                this.props.updateCallback(false);
+            }
         }
     };
     /**

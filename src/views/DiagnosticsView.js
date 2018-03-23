@@ -127,7 +127,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                     </Accordion.Title>
                     <Accordion.Content active={toggleDiagnostics}  id="diagnostics-body">
                         <div className="diagnostics-line">
-                            <Popup trigger={<label><strong>Vergence Range:</strong></label>} content='Hello. This is an inverted popup' inverted />
+                            <label><strong>Vergence Range:</strong></label>
                         </div>
                         <div className="diagnostics-line">
                             <label><strong>Rel. to display: </strong></label><span>{this._convert(stats.getVergenceMinRel())}
@@ -139,7 +139,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                             cm to {this._convert(stats.getVergenceMaxAbs())} cm</span>
                         </div>
                         <div className="diagnostics-line">
-                            <Popup trigger={<label><strong>horizontal on-screen disparity </strong></label>} content='Hello. This is an inverted popup' inverted />
+                            <label><strong>horizontal on-screen disparity </strong></label>
                             <span>(negative: behind the screen; positive: in front)</span>:
                         </div>
                         <div className="diagnostics-line">
@@ -153,7 +153,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                             (parallax {this._convert(stats.getDisparityXMaxParallax())}°)</span>
                         </div>
                         <div className="diagnostics-line">
-                            <Popup trigger={<label><strong>vertical on-screen disparity:</strong></label>} content='jkl' inverted />
+                            <label><strong>vertical on-screen disparity:</strong></label>
                         </div>
                         <div className="diagnostics-line">
                             <span>max: {this._convert(stats.getDisparityYMaxMM())} mm ({this._convert(stats.getDisparityYMaxPct())} %,
