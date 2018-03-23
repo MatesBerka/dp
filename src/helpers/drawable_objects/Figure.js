@@ -10,19 +10,19 @@ import type {vertices} from "../../model/data_collections/flowTypes";
 export default class Figure extends DrawableObject {
     vertices: vertices = [
         // head
-        [0.1, 0.8, 0],
-        [-0.1, 0.8, 0],
-        [0, 0.65, 0],
+        [0.1, 0.4, 0],
+        [-0.1, 0.4, 0],
+        [0, 0.325, 0],
         // neck
-        [0, 0.45, 0],
+        [0, 0.225, 0],
         // body
-        [0, -0.1, 0],
+        [0, -0.05, 0],
         // arms
-        [0.2, 0.1, 0],
-        [-0.2, 0.1, 0],
+        [0.1, 0.05, 0],
+        [-0.1, 0.05, 0],
         // legs
-        [0.3, -0.6, 0],
-        [-0.3, -0.6, 0],
+        [0.15, -0.3, 0],
+        [-0.15, -0.3, 0],
     ];
     edges: Array<[number, number]> = [
         // head
