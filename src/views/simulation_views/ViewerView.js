@@ -98,7 +98,7 @@ export default class ViewerView extends React.Component<Props, State> {
      * Events handling functions for canvas controls.
      */
     handleGridToggle = (e: Object, data: Object) => {
-         this.setState({ drawViewerGrid: data.checked });
+        this.setState({ drawViewerGrid: data.checked });
         this.updateVisualization(data.checked, this.state.viewerSideView, this.state.drawReconstructionRays,
             this.state.viewerCanvasUnit, this.viewerCanvasCTX);
     };

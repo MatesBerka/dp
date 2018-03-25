@@ -5,7 +5,7 @@ Stereoscopy Simulator was created for students to help them better understand ho
 Temporarily hosted [here](http://dp.marpaweb.eu).
 ### Used packages
 
-Stereoscopy Simulator uses a some open source projects to work properly.
+Stereoscopy Simulator uses following packages.
 * [FileSaver.js] - FileSaver.js is the solution to saving files on the client-side.
 * [Flow] - A static type checker for JavaScript.
 * [React] - React is a JavaScript library for building user interfaces.
@@ -15,7 +15,7 @@ Stereoscopy Simulator uses a some open source projects to work properly.
 
 ### Installation
 
-Stereoscopy Simulator requires [Node.js](https://nodejs.org/) v5.6+ to run.
+Stereoscopy Simulator requires [Node.js](https://nodejs.org/) v5.6+ to run (for dev. environment).
 
 Install all the dependencies with following command.
 
