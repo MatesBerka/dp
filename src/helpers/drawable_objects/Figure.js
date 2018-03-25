@@ -18,11 +18,11 @@ export default class Figure extends DrawableObject {
         // body
         [0, -0.05, 0],
         // arms
-        [0.1, 0.05, 0],
-        [-0.1, 0.05, 0],
+        [0.4, 0.05, 0],
+        [-0.4, 0.05, 0],
         // legs
-        [0.15, -0.3, 0],
-        [-0.15, -0.3, 0],
+        [0.15, -0.45, 0],
+        [-0.15, -0.45, 0],
     ];
     edges: Array<[number, number]> = [
         // head
