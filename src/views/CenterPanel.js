@@ -8,12 +8,7 @@ import visualizationBuilder from "../services/VisualizationBuilder";
 import CameraView from "./simulation_views/CameraView";
 import ImagesView from "./simulation_views/ImagesView";
 import ViewerView from "./simulation_views/ViewerView";
-import cameraDAO from "../model/CameraDAO";
-import generalDAO from "../model/GeneralDAO";
-import sceneObjectDAO from "../model/SceneObjectDAO";
-import diagnosticsDAO from "../model/DiagnosticsDAO";
-import postProcessingDAO from "../model/PostProcessingDAO";
-import displayAndViewerDAO from "../model/DisplayAndViewerDAO";
+import registry from '../services/RegistryService'
 
 type Props = {
     centerPanelWidth: number,
@@ -187,12 +182,9 @@ export default class CenterPanel extends React.Component<Props, State> {
      * Switch to new active model a distribute the event.
      */
     static _setNewActiveModel(modelID: number) {
-        cameraDAO.setActiveRecord(modelID);
-        displayAndViewerDAO.setActiveRecord(modelID);
-        generalDAO.setActiveRecord(modelID);
-        postProcessingDAO.setActiveRecord(modelID);
-        sceneObjectDAO.setActiveRecord(modelID);
-        diagnosticsDAO.setActiveRecord(modelID);
+        registry.getAll().forEach(function(value) {
+            value.setActiveRecord(modelID);
+        });
     }
     /**
      * Opens warning window which ensures that you really want to delete selected model.
@@ -209,12 +201,9 @@ export default class CenterPanel extends React.Component<Props, State> {
      * Deletes selected model.
      */
     handleDeleteModel = () => {
-        cameraDAO.removeRecord(this.state.modelIDToRemove);
-        displayAndViewerDAO.removeRecord(this.state.modelIDToRemove);
-        generalDAO.removeRecord(this.state.modelIDToRemove);
-        postProcessingDAO.removeRecord(this.state.modelIDToRemove);
-        sceneObjectDAO.removeRecord(this.state.modelIDToRemove);
-        diagnosticsDAO.removeRecord(this.state.modelIDToRemove);
+        registry.getAll().forEach(function(value) {
+            value.removeRecord(this.state.modelIDToRemove);
+        }.bind(this));
 
         this.state.models.splice(this.state.modelIDToRemove, 1);
 
@@ -249,12 +238,9 @@ export default class CenterPanel extends React.Component<Props, State> {
         let newModelID = this.state.models.length;
         this.state.models.push({name: modelName});
 
-        cameraDAO.addNewRecord();
-        displayAndViewerDAO.addNewRecord();
-        generalDAO.addNewRecord();
-        postProcessingDAO.addNewRecord();
-        sceneObjectDAO.addNewRecord();
-        diagnosticsDAO.addNewRecord();
+        registry.getAll().forEach(function(value) {
+            value.addNewRecord();
+        }.bind(this));
 
         this.setState({ activeModelID: newModelID });
         CenterPanel._setNewActiveModel(newModelID);

@@ -1,6 +1,7 @@
 // @flow
 import SceneObject from './entities/SceneObject.js';
 import GenericDAO from "./GenericDAO.js";
+import registry from "../services/RegistryService";
 /**
  * @classdesc Class representing Data access object for SceneObject entity.
  * @extends GenericDAO
@@ -119,4 +120,7 @@ class SceneObjectDAO extends GenericDAO {
 }
 
 const sceneObjectDAO = new SceneObjectDAO();
+// register
+registry.register('sceneObjectDAO', sceneObjectDAO);
+
 export default sceneObjectDAO;

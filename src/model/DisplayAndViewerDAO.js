@@ -1,6 +1,7 @@
 // @flow
 import DisplayAndViewer from './entities/DisplayAndViewer.js';
 import GenericDAO from './GenericDAO.js';
+import registry from "../services/RegistryService";
 /**
  * @classdesc Class representing Data access object for DisplayAndViewer entity.
  * @extends GenericDAO
@@ -104,5 +105,7 @@ class DisplayAndViewerDAO extends GenericDAO {
 }
 
 const displayAndViewerDAO = new DisplayAndViewerDAO();
+// register
+registry.register('displayAndViewerDAO', displayAndViewerDAO);
 
 export default displayAndViewerDAO;

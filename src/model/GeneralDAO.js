@@ -1,6 +1,7 @@
 // @flow
 import General from './entities/General.js';
 import GenericDAO from "./GenericDAO";
+import registry from "../services/RegistryService";
 /**
  * @classdesc Class representing Data access object for General entity.
  * @extends GenericDAO
@@ -52,5 +53,7 @@ class GeneralDAO extends GenericDAO {
 }
 
 const generalDAO = new GeneralDAO();
+// register
+registry.register('generalDAO', generalDAO);
 
 export default generalDAO;

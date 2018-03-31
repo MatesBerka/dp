@@ -3,13 +3,8 @@ import * as React from 'react';
 import { Icon, Button, Modal, Header} from 'semantic-ui-react'
 import FileSaver from 'file-saver'
 
-import postProcessingDAO from "../model/PostProcessingDAO";
-import cameraDAO from "../model/CameraDAO";
-import displayAndViewerDAO from "../model/DisplayAndViewerDAO";
-import generalDAO from "../model/GeneralDAO";
-import sceneObjectDAO from "../model/SceneObjectDAO";
-import diagnosticsDAO from "../model/DiagnosticsDAO";
 import dispatcher from "../services/Dispatcher";
+import registry from "../services/RegistryService";
 
 type Props = {
     sidePanelWidth: number
@@ -40,18 +35,15 @@ export default class RightPanel extends React.Component<Props, State> {
      */
     handleSimulationExport = () => {
         let output = [], text;
-        output.push(postProcessingDAO.toJSON());
-        output.push(cameraDAO.toJSON());
-        output.push(displayAndViewerDAO.toJSON());
-        output.push(generalDAO.toJSON());
-        output.push(sceneObjectDAO.toJSON());
-        output.push(diagnosticsDAO.toJSON());
+        registry.getAll().forEach(function(dao) {
+            output.push(dao.toJSON());
+        });
         // ask components if the want to export something
         let extras = {};
         dispatcher.dispatch('exporting', extras);
         output.push(extras); // and store it
         // and store active model ID, NOTE all DAOs have the same active record ID
-        output.push(postProcessingDAO.getActiveRecordID());
+        output.push(registry.lookup('postProcessingDAO').getActiveRecordID());
         try {
             text = JSON.stringify(output);
         } catch(e) {
@@ -75,12 +67,12 @@ export default class RightPanel extends React.Component<Props, State> {
                     // NOTE index represents the order in which the entities where store. See handleSimulationExport.
                     // $FlowFixMe
                     let simulation = JSON.parse(reader.result);
-                    postProcessingDAO.fromJSON(simulation[0], simulation[7]);
-                    cameraDAO.fromJSON(simulation[1], simulation[7]);
-                    displayAndViewerDAO.fromJSON(simulation[2], simulation[7]);
-                    generalDAO.fromJSON(simulation[3], simulation[7]);
-                    sceneObjectDAO.fromJSON(simulation[4], simulation[7]);
-                    diagnosticsDAO.fromJSON(simulation[5], simulation[7]);
+                    let index = 0;
+                    registry.getAll().forEach(function(dao) {
+                        dao.fromJSON(simulation[index], simulation[7]);
+                        index++;
+                    });
+
                     // if components exported some settings then they can load them back
                     dispatcher.dispatch('importing', simulation[6]);
                     // now notify about model change

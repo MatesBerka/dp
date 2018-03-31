@@ -1,6 +1,7 @@
 // @flow
 import PostProcessing from './entities/PostProcessing.js';
 import GenericDAO from "./GenericDAO.js";
+import registry from "../services/RegistryService";
 /**
  * @classdesc Class representing Data access object for PostProcessing entity.
  * @extends GenericDAO
@@ -65,5 +66,7 @@ class PostProcessingDAO extends GenericDAO {
 }
 
 const postProcessingDAO = new PostProcessingDAO();
+// register
+registry.register('postProcessingDAO', postProcessingDAO);
 
 export default postProcessingDAO;

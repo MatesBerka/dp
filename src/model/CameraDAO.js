@@ -1,6 +1,7 @@
 // @flow
 import Camera from './entities/Camera.js';
 import GenericDAO from './GenericDAO.js';
+import registry from '../services/RegistryService'
 /**
  * @classdesc Class representing Data access object for Camera entity.
  * @extends GenericDAO
@@ -84,5 +85,7 @@ class CameraDAO extends GenericDAO {
 }
 
 const cameraDAO = new CameraDAO();
+// register
+registry.register('cameraDAO', cameraDAO);
 
 export default cameraDAO;

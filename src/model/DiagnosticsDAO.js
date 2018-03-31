@@ -1,6 +1,7 @@
 // @flow
 import Diagnostics from './entities/Diagnostics.js';
 import GenericDAO from './GenericDAO.js';
+import registry from "../services/RegistryService";
 /**
  * @classdesc Class representing Data access object for Diagnostics entity.
  * @extends GenericDAO
@@ -97,4 +98,7 @@ class DiagnosticsDAO extends GenericDAO {
 }
 
 const diagnosticsDAO = new DiagnosticsDAO();
+// register
+registry.register('diagnosticsDAO', diagnosticsDAO);
+
 export default diagnosticsDAO;
