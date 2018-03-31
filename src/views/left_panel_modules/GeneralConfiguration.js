@@ -5,7 +5,6 @@ import 'react-rangeslider/lib/index.css'
 
 import {colorSchemeMenu} from "../../model/data_collections/ColorSchemes";
 import generalDAO from "../../model/GeneralDAO";
-import cameraDAO from "../../model/CameraDAO";
 import dispatcher from "../../services/Dispatcher";
 import General from "../../model/entities/General";
 
@@ -81,7 +80,7 @@ export default class GeneralConfiguration extends React.Component<Props, State> 
             <div className="configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown'/><h4>General Configuration</h4>
-                    <Button positive animated compact onClick={(e) => copySettings(e, cameraDAO)} size='mini'>
+                    <Button positive animated compact onClick={(e) => copySettings(e, generalDAO)} size='mini'>
                         <Button.Content hidden>Copy</Button.Content>
                         <Button.Content visible><Icon name='copy' /></Button.Content>
                     </Button>

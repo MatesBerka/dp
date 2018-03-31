@@ -16,7 +16,7 @@
       "sizes": "152x152"
     }
   ],
-  "display": "browser",
+  "display": "standalone",
   "orientation": "landscape",
   "theme_color": "#000000",
   "background_color": "#ffffff"
