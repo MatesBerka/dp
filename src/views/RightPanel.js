@@ -125,7 +125,7 @@ export default class RightPanel extends React.Component<Props, State> {
                    <Modal.Header>Stereoscopy Simulator</Modal.Header>
                    <Modal.Content>
                        <Header>About program</Header>
-                       <p>Stereoscopy Simulator was created for students to help them better understand how stereoscopy works and for experienced photographers to help them with their experiments.</p>
+                       <p>Stereoscopy Simulator was created for students to help them better understand how stereoscopy works and for experienced photographers to help them with theirs experiments.</p>
                        <p>© <a href="http://www.kiv.zcu.cz/cz/katedra/osoby-seznam/osoba-detail.html?login=lobaz">Petr Lobaz</a>, University of West Bohemia</p>
                        <p style={{textAlign: 'right'}}>Program version: 1.0.3 (1.4.2018)</p>
                    </Modal.Content>
