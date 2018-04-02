@@ -240,7 +240,7 @@ export default class CenterPanel extends React.Component<Props, State> {
 
         registry.getAll().forEach(function(value) {
             value.addNewRecord();
-        }.bind(this));
+        });
 
         this.setState({ activeModelID: newModelID });
         CenterPanel._setNewActiveModel(newModelID);
@@ -374,7 +374,7 @@ export default class CenterPanel extends React.Component<Props, State> {
                         <Modal.Content>
                             <div className="ui labeled input">
                                 <Popup trigger={<label className="ui label label">Model name:</label>}
-                                       content='Hello. This is an inverted popup' inverted />
+                                       content='Choose a name that will help you distinguish your tabs and experiments.' inverted />
                                 <input placeholder='some name' id="new-model-name"/>
                             </div>
                         </Modal.Content>
