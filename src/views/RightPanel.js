@@ -43,6 +43,7 @@ export default class RightPanel extends React.Component<Props, State> {
         dispatcher.dispatch('exporting', extras);
         output.push(extras); // and store it
         // and store active model ID, NOTE all DAOs have the same active record ID
+        // $FlowFixMe
         output.push(registry.lookup('postProcessingDAO').getActiveRecordID());
         try {
             text = JSON.stringify(output);

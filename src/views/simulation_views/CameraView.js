@@ -382,7 +382,7 @@ export default class CameraView extends React.Component<Props, State> {
      * @param {Event} e
      */
     handleObjectStartScale = (e: Object) => {
-        if (e.constructor.name === 'SyntheticTouchEvent') {
+        if (e.type === 'touchstart') {
             this.trnsStartX = e.touches[0].clientX;
             this.trnsStartY = e.touches[0].clientY;
         } else {
@@ -472,7 +472,7 @@ export default class CameraView extends React.Component<Props, State> {
         // let rect = this.cameraElm.getBoundingClientRect();
         // this.objCtrlCenterX = rect.left + this.state.objCtrlPosX + this.state.objCtrlWidth / 2;
         // this.objCtrlCenterY = rect.top + this.state.objCtrlPosY + this.state.objCtrlHeight / 2;
-        // if (e.constructor.name === 'SyntheticTouchEvent') {
+        // if (e.type === 'touchstart) {
         //     x = e.touches[0].clientX - this.objCtrlCenterX;
         //     y = e.touches[1].clientY - this.objCtrlCenterY;
         // } else {
@@ -481,7 +481,7 @@ export default class CameraView extends React.Component<Props, State> {
         // }
         // let newCoords = vecOpr.reverse2Drotate(x, y, this.state.objCtrlRot);
         // this.actionStartDistance = -newCoords[0];
-        if (e.constructor.name === 'SyntheticTouchEvent') { this.trnsStartX = e.touches[0].clientX; } else { this.trnsStartX = e.clientX; }
+        if (e.type === 'touchstart') { this.trnsStartX = e.touches[0].clientX; } else { this.trnsStartX = e.clientX; }
         this._addControlListeners('handleObjectXResize', 'handleObjectEndXResize');
         e.stopPropagation();
         e.preventDefault();
@@ -529,7 +529,7 @@ export default class CameraView extends React.Component<Props, State> {
      * @param {Event} e
      */
     handleObjectStartYResize = (e: Object) => {
-        if (e.constructor.name === 'SyntheticTouchEvent') { this.trnsStartY = e.touches[0].clientY; } else { this.trnsStartY = e.clientY; }
+        if (e.type === 'touchstart') { this.trnsStartY = e.touches[0].clientY; } else { this.trnsStartY = e.clientY; }
         this._addControlListeners('handleObjectYResize', 'handleObjectEndYResize');
         e.stopPropagation();
         e.preventDefault();
@@ -580,7 +580,7 @@ export default class CameraView extends React.Component<Props, State> {
     handleObjectStartTranslate = (e: Object) => {
         e.stopPropagation();
         e.preventDefault();
-        if (e.constructor.name === 'SyntheticTouchEvent') {
+        if (e.type === 'touchstart') {
             this.trnsStartX = e.touches[0].clientX;
             this.trnsStartY = e.touches[0].clientY;
         } else {
