@@ -103,9 +103,10 @@ class VisualizationBuilder {
      */
     static _reverseTransformObject(vertices: vertices, model: SceneObject) {
         vecOpr.reverseObjectTranslate(vertices, [model.getCenterX(), model.getCenterY(), model.getCenterZ()]);
-        vecOpr.reverseObjectRotateY(vertices, model.getObjectRotY());
-        vecOpr.reverseObjectRotateX(vertices, model.getObjectRotX());
-        vecOpr.reverseObjectRotateZ(vertices, model.getObjectRotZ());
+        // prepared for future update
+        // vecOpr.reverseObjectRotateY(vertices, model.getObjectRotY());
+        // vecOpr.reverseObjectRotateX(vertices, model.getObjectRotX());
+        // vecOpr.reverseObjectRotateZ(vertices, model.getObjectRotZ());
     }
     /**
      * Returns currently selected object.
