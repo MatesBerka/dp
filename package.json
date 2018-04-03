@@ -12,10 +12,10 @@
     "semantic-ui-css": "2.2.14",
     "semantic-ui-react": "0.78.2"
   },
-  "homepage": "/stereoscopy-simulator/build",
   "scripts": {
     "flow": "flow",
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
   }
 }
