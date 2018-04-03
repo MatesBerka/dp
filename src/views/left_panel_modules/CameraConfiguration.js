@@ -144,7 +144,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
             <div className="configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown'/><h4>Camera Settings</h4>
-                    <Button positive animated compact onClick={(e) => copySettings(e, cameraDAO)} size='mini'>
+                    <Button positive animated compact onClick={(e) => copySettings(e, this.TAB_INDEX, cameraDAO)} size='mini'>
                         <Button.Content hidden>Copy</Button.Content>
                         <Button.Content visible><Icon name='copy' /></Button.Content>
                     </Button>

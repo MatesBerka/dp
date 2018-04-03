@@ -16,7 +16,7 @@ type Props = {
     updateCallback: Function
 };
 type State = {
-    clipboard: Map<string, [number, GenericDAO]>,
+    clipboard: Map<number, [number, GenericDAO]>,
     openSettings: Set<number>,
 };
 
@@ -144,8 +144,8 @@ export default class LeftPanel extends React.Component<Props, State> {
     /**
      * Stores selected settings block in clipboard.
      */
-    handleCopySettings = (e: SyntheticEvent<>, settingsDAO: GenericDAO) => {
-        this.state.clipboard.set(settingsDAO.constructor.name, [settingsDAO.getActiveRecordID(), settingsDAO]);
+    handleCopySettings = (e: SyntheticEvent<>, index: number, settingsDAO: GenericDAO) => {
+        this.state.clipboard.set(index, [settingsDAO.getActiveRecordID(), settingsDAO]);
         e.stopPropagation();
         this.forceUpdate();
     };

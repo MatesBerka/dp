@@ -315,7 +315,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
             <div className="configuration-item" id="scene-configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown' /><h4>Scene Configuration</h4>
-                    <Button positive animated compact onClick={(e) => copySettings(e, sceneObjectDAO)} size='mini'>
+                    <Button positive animated compact onClick={(e) => copySettings(e, this.TAB_INDEX, sceneObjectDAO)} size='mini'>
                         <Button.Content hidden>Copy</Button.Content>
                         <Button.Content visible><Icon name='copy' /></Button.Content>
                     </Button>
