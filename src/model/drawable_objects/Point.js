@@ -1,6 +1,6 @@
 // @flow
 import DrawableObject from './DrawableObject.js';
-import type {vertices} from "../../model/data_collections/flowTypes";
+import type {vertices} from "../data_collections/flowTypes";
 
 /**
  * @classdesc Class representing drawable object point.

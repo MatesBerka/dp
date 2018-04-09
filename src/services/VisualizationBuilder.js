@@ -17,7 +17,7 @@ import Diagnostics from "../model/entities/Diagnostics";
 import Camera from "../model/entities/Camera";
 import DisplayAndViewer from "../model/entities/DisplayAndViewer";
 import General from "../model/entities/General";
-import DrawableObject from "../helpers/drawable_objects/DrawableObject";
+import DrawableObject from "../model/drawable_objects/DrawableObject";
 
 /**
  * @classdesc Service class used to create simulation visualizations

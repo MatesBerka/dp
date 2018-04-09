@@ -3,20 +3,20 @@ import vecOpr from './VectorOperationsHelper.js'
 import { unitDefinition } from '../model/data_collections/UnitsDefinition.js';
 import sceneObjectDAO from '../model/SceneObjectDAO.js'
 
-import FineSquare from "./drawable_objects/FineSquare.js";
-import Point from "./drawable_objects/Point.js";
-import Square from "./drawable_objects/Square.js";
-import Cube from "./drawable_objects/Cube.js";
-import Octahedron from "./drawable_objects/Octahedron.js";
+import FineSquare from "../model/drawable_objects/FineSquare.js";
+import Point from "../model/drawable_objects/Point.js";
+import Square from "../model/drawable_objects/Square.js";
+import Cube from "../model/drawable_objects/Cube.js";
+import Octahedron from "../model/drawable_objects/Octahedron.js";
 
 import { objTypeIdx } from "../model/data_collections/ObjectTypes.js";
 import displayAndViewerDAO from "../model/DisplayAndViewerDAO.js";
-import Bust from "./drawable_objects/Bust";
-import Tree from "./drawable_objects/Tree";
-import House from "./drawable_objects/House";
-import Wall from "./drawable_objects/Wall";
-import Car from "./drawable_objects/Car";
-import Figure from "./drawable_objects/Figure";
+import Bust from "../model/drawable_objects/Bust";
+import Tree from "../model/drawable_objects/Tree";
+import House from "../model/drawable_objects/House";
+import Wall from "../model/drawable_objects/Wall";
+import Car from "../model/drawable_objects/Car";
+import Figure from "../model/drawable_objects/Figure";
 import Utils from "../services/ControlsUtils";
 import SceneObject from "../model/entities/SceneObject";
 import DisplayAndViewer from "../model/entities/DisplayAndViewer";
@@ -24,7 +24,7 @@ import type {
     camerasType, displayType, eyesType, imagesType, rulers, ruler, trnsType, vec2, vec3,
     vertices, reconstructionType
 } from "../model/data_collections/flowTypes";
-import DrawableObject from "./drawable_objects/DrawableObject";
+import DrawableObject from "../model/drawable_objects/DrawableObject";
 
 /**
  * @classdesc This class contains functions used for drawing primitive objects on canvas.

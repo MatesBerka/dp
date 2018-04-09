@@ -1,7 +1,7 @@
 // @flow
-import vecOpr from '../VectorOperationsHelper.js'
-import SceneObject from "../../model/entities/SceneObject";
-import type {vec2, vec3, vertices} from "../../model/data_collections/flowTypes";
+import vecOpr from '../../helpers/VectorOperationsHelper.js'
+import SceneObject from "../entities/SceneObject";
+import type {vec2, vec3, vertices} from "../data_collections/flowTypes";
 
 /**
  * @classdesc Abstract class representing generic drawable object.
