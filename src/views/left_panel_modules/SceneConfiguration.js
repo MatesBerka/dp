@@ -217,9 +217,8 @@ export default class SceneConfiguration extends React.Component<Props, State> {
             <div key={modelID} className="object-item">
                 <Accordion.Title active={openObjectSettings.has(modelID)} index={modelID} onClick={this.handleToggleObjectSettings}>
                     <Icon name='dropdown'/><h3>Object Configuration</h3>
-                    <Button negative animated compact onClick={this.removeObject} size='mini'>
-                        <Button.Content hidden>Delete</Button.Content>
-                        <Button.Content visible><Icon name='delete' /></Button.Content>
+                    <Button negative compact onClick={this.removeObject} size='mini'>
+                        Delete
                     </Button>
                 </Accordion.Title>
                 <Accordion.Content active={openObjectSettings.has(modelID)}>
@@ -315,9 +314,8 @@ export default class SceneConfiguration extends React.Component<Props, State> {
             <div className="configuration-item" id="scene-configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown' /><h4>Scene Configuration</h4>
-                    <Button positive animated compact onClick={(e) => copySettings(e, this.TAB_INDEX, sceneObjectDAO)} size='mini'>
-                        <Button.Content hidden>Copy</Button.Content>
-                        <Button.Content visible><Icon name='copy' /></Button.Content>
+                    <Button positive compact onClick={(e) => copySettings(e, this.TAB_INDEX, sceneObjectDAO)} size='mini'>
+                        Copy
                     </Button>
                 </Accordion.Title>
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
