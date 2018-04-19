@@ -18,9 +18,12 @@ type Props = {
 type State = {
     modalAddModelIsOpen: boolean,
     modalRemoveModelIsOpen: boolean,
+    modalRenameModelIsOpen: boolean,
     modelIDToRemove: number,
     models: Array<{name: string}>,
     activeModelID: number,
+    renameModelID: number,
+    renameModelName: string,
 
     simulationViewsHeight: number,
     centerPanelHeight: number,
@@ -55,6 +58,7 @@ export default class CenterPanel extends React.Component<Props, State> {
     imagesViewWidthRatio: number = 0.3;
     viewerViewHeightRatio: number = 0.4;
     orgViewerViewHeightRatio: number = 0.4;
+    renameTouchCounter: number = 0; // this is a helper value used to determine if double tab was triggered
     /**
      * Component constructor
      */
@@ -63,9 +67,12 @@ export default class CenterPanel extends React.Component<Props, State> {
         this.state = {
             modalAddModelIsOpen: false,
             modalRemoveModelIsOpen: false,
+            modalRenameModelIsOpen: false,
             modelIDToRemove: -1,
             models: [{name: 'default'}],
             activeModelID: 0,
+            renameModelID: 0,
+            renameModelName: '',
 
             simulationViewsHeight: 0,
             centerPanelHeight: 0,
@@ -257,6 +264,35 @@ export default class CenterPanel extends React.Component<Props, State> {
         visualizationBuilder.updateActiveModel();
         dispatcher.dispatch('modelSwitch', {modelID: modelID});
     };
+
+    handleTouchRenameModelOpen = (modelID: number) => {
+        this.renameTouchCounter++;
+        if (this.renameTouchCounter >= 2) { // only if it is double touch
+            this.handleRenameModelOpen(modelID);
+        }
+        setTimeout(function(){ this.renameTouchCounter--; }.bind(this), 500);
+    };
+
+    handleRenameModelOpen = (modelID: number) => {
+        this.setState((prev) => ({
+            renameModelID: modelID,
+            renameModelName: prev.models[modelID].name,
+            modalRenameModelIsOpen: true,
+        }));
+    };
+
+    handleRenameModel = () => {
+        // $FlowFixMe ignore null
+        let newName = document.getElementById('model-rename').value;
+        let models = this.state.models;
+        models[this.state.renameModelID].name = newName;
+        this.setState({ modalRenameModelIsOpen: false });
+    };
+
+    handleRenameModelClose = () => {
+        this.setState({ modalRenameModelIsOpen: false });
+    };
+
     /**
      * Registers event listeners for vertical bar movement and setups used variables.
      * @param {Event} e
@@ -342,15 +378,21 @@ export default class CenterPanel extends React.Component<Props, State> {
         const { models, activeModelID, imagesViewWidth, imagesViewHeight, cameraViewWidth, cameraViewHeight, viewerViewWidth, viewerViewHeight } = this.state;
 
         const modelTabs = (model, index) => (
-            <span onClick={(e) => this.handleOpenModel(e, index)} key={index} className={((activeModelID === index) ? 'view-model-item active' : 'view-model-item')}>
-                <h3>{model.name}</h3>
+            <span onClick={(e) => this.handleOpenModel(e, index)} key={index}
+                className={((activeModelID === index) ? 'view-model-item active' : 'view-model-item')}
+                onDoubleClick={() => this.handleRenameModelOpen(index)}
+                onTouchStart={() => this.handleTouchRenameModelOpen(index)}>
+                <h3 className="noselect">{model.name}</h3>
                 <Icon name='remove' onClick={(e) => this.handleOpenDeleteModel(e, index)}/>
             </span>
         );
 
         const modelSingleTab = (model, index) => (
-            <span onClick={(e) => this.handleOpenModel(e, index)} key={index} className={((activeModelID === index) ? 'view-model-item active' : 'view-model-item')}>
-                <h3>{model.name}</h3>
+            <span onClick={(e) => this.handleOpenModel(e, index)} key={index}
+                className={((activeModelID === index) ? 'view-model-item active' : 'view-model-item')}
+                onDoubleClick={() => this.handleRenameModelOpen(index)}
+                onTouchStart={() => this.handleTouchRenameModelOpen(index)}>
+                <h3 className="noselect">{model.name}</h3>
             </span>
         );
 
@@ -359,9 +401,9 @@ export default class CenterPanel extends React.Component<Props, State> {
                 <nav id="center-panel-navigation">
                     { ((models.length === 1) ? models.map(modelSingleTab) : models.map(modelTabs)) }
                     <Modal basic size='small' open={this.state.modalRemoveModelIsOpen}>
-                        <Header icon='warning sign' content='Deleting model' />
+                        <Header icon='warning sign' content='Deleting scene' />
                         <Modal.Content>
-                            <p>Are you sure you want to remove this model?</p>
+                            <p>Are you sure you want to remove this scene?</p>
                         </Modal.Content>
                         <Modal.Actions>
                             <Button color='green' inverted onClick={this.handleDeleteModel}><Icon name='checkmark'/>Yes</Button>
@@ -370,10 +412,10 @@ export default class CenterPanel extends React.Component<Props, State> {
                     </Modal>
                     <Modal trigger={<Button circular positive icon='add' onClick={this.handleAddModelOpen} size='mini'/>}
                         open={this.state.modalAddModelIsOpen} onClose={this.handleAddModelClose} size='small'>
-                        <Modal.Header>Add new model</Modal.Header>
+                        <Modal.Header>Add new scene</Modal.Header>
                         <Modal.Content>
                             <div className="ui labeled input">
-                                <Popup trigger={<label className="ui label label">Model name:</label>}
+                                <Popup trigger={<label className="ui label label">Scene name:</label>}
                                        content='Choose a name that will help you distinguish your tabs and experiments.' inverted />
                                 <input placeholder='some name' id="new-model-name"/>
                             </div>
@@ -381,6 +423,19 @@ export default class CenterPanel extends React.Component<Props, State> {
                         <Modal.Actions>
                             <Button color='red' onClick={this.handleAddModelClose}>Close</Button>
                             <Button color='green' onClick={this.handleAddNewModel}>Add</Button>
+                        </Modal.Actions>
+                    </Modal>
+                    <Modal open={this.state.modalRenameModelIsOpen} onClose={this.handleRenameModelClose} size='small'>
+                        <Modal.Header>Rename scene</Modal.Header>
+                        <Modal.Content>
+                            <div className="ui labeled input">
+                                <label className="ui label label">Scene name:</label>
+                                <input placeholder='some name' id="model-rename" defaultValue={this.state.renameModelName}/>
+                            </div>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Button color='red' onClick={this.handleRenameModelClose}>Close</Button>
+                            <Button color='green' onClick={this.handleRenameModel}>Rename</Button>
                         </Modal.Actions>
                     </Modal>
                 </nav>
