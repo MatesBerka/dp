@@ -4,6 +4,7 @@ import { Checkbox, Select, Button } from 'semantic-ui-react'
 import visualizationBuilder from '../../services/VisualizationBuilder.js'
 import { unitDefinitionMenu, unitIdx } from "../../model/data_collections/UnitsDefinition";
 import dispatcher from "../../services/Dispatcher";
+import {default as utl} from "../../services/ControlsUtils";
 
 type Props = {
     width: number,
@@ -125,14 +126,14 @@ export default class ViewerView extends React.Component<Props, State> {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT2;
-            trns.scaleY *= Math.SQRT2;
-            trns.translateX = trns.translateX * Math.SQRT2;
-            trns.translateY = trns.translateY * Math.SQRT2;
+            trns.scaleX *= utl.SQRT2;
+            trns.scaleY *= utl.SQRT2;
+            trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
+            trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
-                return {zoom: prevState.zoom * Math.SQRT2}
+                return {zoom: prevState.zoom * utl.SQRT2}
             });
         }
     };
@@ -144,14 +145,14 @@ export default class ViewerView extends React.Component<Props, State> {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT1_2;
-            trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = trns.translateX * Math.SQRT1_2;
-            trns.translateY = trns.translateY * Math.SQRT1_2;
+            trns.scaleX *= utl.SQRT1_2;
+            trns.scaleY *= utl.SQRT1_2;
+            trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
+            trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
-                return {zoom: prevState.zoom * Math.SQRT1_2}
+                return {zoom: prevState.zoom * utl.SQRT1_2}
             });
         }
     };
@@ -208,7 +209,7 @@ export default class ViewerView extends React.Component<Props, State> {
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="viewer-view-controls">
-                    <strong className="ui">Viewer view: </strong>
+                    <strong className="ui">Viewer view </strong>
                     <Checkbox label='Grid' onChange={this.handleGridToggle} checked={drawViewerGrid}/>
                     <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={viewerSideView}/>
                     <Checkbox label='Show rays' onChange={this.handleReconstructionRaysToggle} checked={drawReconstructionRays}/>

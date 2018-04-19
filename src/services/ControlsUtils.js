@@ -4,6 +4,8 @@
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 export default class Utils {
+    static SQRT2:number = Math.sqrt(Math.sqrt(2));
+    static SQRT1_2:number = Math.sqrt(Math.sqrt(1/2));
     /**
      * Converts an internal value of a logarithmic slider to a number
      * Notes:

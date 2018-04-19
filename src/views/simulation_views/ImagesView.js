@@ -4,6 +4,7 @@ import { Button } from 'semantic-ui-react'
 
 import visualizationBuilder from '../../services/VisualizationBuilder.js'
 import dispatcher from "../../services/Dispatcher";
+import {default as utl} from "../../services/ControlsUtils";
 
 type Props = {
     width: number,
@@ -84,14 +85,14 @@ export default class ImagesView extends React.Component<Props, State> {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT2;
-            trns.scaleY *= Math.SQRT2;
-            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - Math.SQRT2) + trns.translateX * Math.SQRT2;
-            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - Math.SQRT2) + trns.translateY * Math.SQRT2;
+            trns.scaleX *= utl.SQRT2;
+            trns.scaleY *= utl.SQRT2;
+            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
+            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
-                return {zoom: prevState.zoom * Math.SQRT2}
+                return {zoom: prevState.zoom * utl.SQRT2}
             });
         }
     };
@@ -103,14 +104,14 @@ export default class ImagesView extends React.Component<Props, State> {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT1_2;
-            trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - Math.SQRT1_2) + trns.translateX * Math.SQRT1_2;
-            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - Math.SQRT1_2) + trns.translateY * Math.SQRT1_2;
+            trns.scaleX *= utl.SQRT1_2;
+            trns.scaleY *= utl.SQRT1_2;
+            trns.translateX = (this.imagesElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
+            trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
-                return {zoom: prevState.zoom * Math.SQRT1_2}
+                return {zoom: prevState.zoom * utl.SQRT1_2}
             });
         }
     };
@@ -167,7 +168,7 @@ export default class ImagesView extends React.Component<Props, State> {
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="images-view-controls">
-                    <strong className="ui">Images composition view:</strong>
+                    <strong className="ui">Images composition view</strong>
                     Zoom: {Math.round(zoom)}%
                 </div>
                 <Button.Group basic size='mini' className="zoom-controls">>

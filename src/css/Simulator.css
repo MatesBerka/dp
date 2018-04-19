@@ -137,7 +137,7 @@ canvas {
 }
 
 .view-controls .ui {
-    margin-right: 9px;
+    margin-right: 15px;
 }
 
 .view-controls strong.ui {
@@ -495,7 +495,7 @@ h3, h4 {
 }
 
 .rangeslider {
-    width: 130px;
+    width: 120px;
     margin: 10px 0 10px 10px;
 }
 
@@ -552,5 +552,20 @@ h3, h4 {
 }
 
 #simulation-upload-input {
-    padding: 0px !important;
+    padding: 0 !important;
+}
+
+#images-view-wrapper .ui.basic.buttons {
+    border: 1px solid hsla(0, 0%, 100%, 0.72);
+}
+
+#images-view-wrapper  .ui.basic.buttons .button {
+    color: white !important;
+    border-left: 1px solid hsla(0, 0%, 100%, 0.72) !important
+}
+
+#images-view-wrapper  .ui.basic.buttons .button:active,
+#images-view-wrapper  .ui.basic.buttons .button:focus,
+#images-view-wrapper  .ui.basic.buttons .button:hover {
+    color: black !important;
 }

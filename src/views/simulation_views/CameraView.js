@@ -7,7 +7,7 @@ import { unitDefinitionMenu, unitIdx } from "../../model/data_collections/UnitsD
 import dispatcher from "../../services/Dispatcher";
 import type {vec2, vec3} from "../../model/data_collections/flowTypes";
 import SceneObject from "../../model/entities/SceneObject";
-// import vecOpr from "../../helpers/VectorOperationsHelper";
+import {default as utl} from "../../services/ControlsUtils";
 
 type Props = {
     width: number,
@@ -158,15 +158,15 @@ export default class CameraView extends React.Component<Props, State> {
         if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT2;
-            trns.scaleY *= Math.SQRT2;
-            trns.translateX = trns.translateX * Math.SQRT2;
-            trns.translateY = trns.translateY * Math.SQRT2;
+            trns.scaleX *= utl.SQRT2;
+            trns.scaleY *= utl.SQRT2;
+            trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
+            trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
                 return {
-                    zoom: prevState.zoom * Math.SQRT2,
+                    zoom: prevState.zoom * utl.SQRT2,
                     objCtrlShow: 'none'
                 }
             });
@@ -180,15 +180,15 @@ export default class CameraView extends React.Component<Props, State> {
         if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
             // apply scaling
-            trns.scaleX *= Math.SQRT1_2;
-            trns.scaleY *= Math.SQRT1_2;
-            trns.translateX = trns.translateX * Math.SQRT1_2;
-            trns.translateY = trns.translateY * Math.SQRT1_2;
+            trns.scaleX *= utl.SQRT1_2;
+            trns.scaleY *= utl.SQRT1_2;
+            trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
+            trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
             this.setState((prevState) => {
                 return {
-                    zoom: prevState.zoom * Math.SQRT1_2,
+                    zoom: prevState.zoom * utl.SQRT1_2,
                     objCtrlShow: 'none'
                 }
             });
@@ -651,7 +651,7 @@ export default class CameraView extends React.Component<Props, State> {
                     Your browser does not support HTML5 Canvas. Please try different browser.
                 </canvas>
                 <div className="view-controls" id="camera-view-controls">
-                    <strong className="ui">Cameras view: </strong>
+                    <strong className="ui">Cameras view </strong>
                     <Checkbox label='Grid' onChange={this.handleGridToggle} checked={drawCameraGrid}/>
                     <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={cameraSideView}/>
                     <Select compact options={unitDefinitionMenu} onChange={this.handleCanvasUnitChange} defaultValue={cameraCanvasUnit} />
