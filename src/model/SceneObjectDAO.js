@@ -8,6 +8,8 @@ import registry from "../services/RegistryService";
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 class SceneObjectDAO extends GenericDAO {
+    /** @override */
+    name: string = 'SceneObjectDAO';
     records: Array<Array<SceneObject>>;
     /**
      * @override
@@ -41,12 +43,12 @@ class SceneObjectDAO extends GenericDAO {
     /**
      * @override
      */
-    copyRecord(from: number) {
+    getCopy() {
         let copies = [];
+        for (let i = 0; i < this.records[this.activeRecordIndex].length; i++)
+            copies.push(this.records[this.activeRecordIndex][i].getCopy());
 
-        for (let i = 0; i < this.records[from].length; i++)
-            copies.push(this.records[from][i].getCopy());
-        this.records[this.activeRecordIndex] = copies;
+        return copies;
     }
     /**
      * @override

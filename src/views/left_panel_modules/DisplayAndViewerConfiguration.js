@@ -208,7 +208,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
             <div className="configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown' /><h4>Display & Viewer Configuration</h4>
-                    <Button positive compact onClick={(e) => copySettings(e, this.TAB_INDEX, displayAndViewerDAO)} size='mini'>
+                    <Button positive compact onClick={(e) => copySettings(e, displayAndViewerDAO)} size='mini'>
                         Copy
                     </Button>
                 </Accordion.Title>

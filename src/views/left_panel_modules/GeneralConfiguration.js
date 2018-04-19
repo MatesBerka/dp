@@ -80,7 +80,7 @@ export default class GeneralConfiguration extends React.Component<Props, State> 
             <div className="configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
                     <Icon name='dropdown'/><h4>General Configuration</h4>
-                    <Button positive compact onClick={(e) => copySettings(e, this.TAB_INDEX, generalDAO)} size='mini'>
+                    <Button positive compact onClick={(e) => copySettings(e, generalDAO)} size='mini'>
                         Copy
                     </Button>
                 </Accordion.Title>

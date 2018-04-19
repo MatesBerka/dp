@@ -8,6 +8,8 @@ import registry from "../services/RegistryService";
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 class DisplayAndViewerDAO extends GenericDAO {
+    /** @override */
+    name: string = 'DisplayAndViewerDAO';
     records: Array<DisplayAndViewer>;
     /**
      * @override

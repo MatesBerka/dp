@@ -9,6 +9,8 @@ import registry from "../services/RegistryService";
  */
 
 class DiagnosticsDAO extends GenericDAO {
+    /** @override */
+    name: string = 'DiagnosticsDAO';
     records: Array<Diagnostics>;
     /**
      * @override

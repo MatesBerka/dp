@@ -8,6 +8,8 @@ import registry from "../services/RegistryService";
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 class PostProcessingDAO extends GenericDAO {
+    /** @override */
+    name: string = 'PostProcessingDAO';
     records: Array<PostProcessing>;
     /**
      * @override

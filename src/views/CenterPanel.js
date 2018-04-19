@@ -264,7 +264,9 @@ export default class CenterPanel extends React.Component<Props, State> {
         visualizationBuilder.updateActiveModel();
         dispatcher.dispatch('modelSwitch', {modelID: modelID});
     };
-
+    /**
+     * Helper function used to create double tap on mobile devices.
+     */
     handleTouchRenameModelOpen = (modelID: number) => {
         this.renameTouchCounter++;
         if (this.renameTouchCounter >= 2) { // only if it is double touch
@@ -272,7 +274,9 @@ export default class CenterPanel extends React.Component<Props, State> {
         }
         setTimeout(function(){ this.renameTouchCounter--; }.bind(this), 500);
     };
-
+    /**
+     * Function opens Rename model modal.
+     */
     handleRenameModelOpen = (modelID: number) => {
         this.setState((prev) => ({
             renameModelID: modelID,
@@ -280,7 +284,9 @@ export default class CenterPanel extends React.Component<Props, State> {
             modalRenameModelIsOpen: true,
         }));
     };
-
+    /**
+     * Function updates scene name.
+     */
     handleRenameModel = () => {
         // $FlowFixMe ignore null
         let newName = document.getElementById('model-rename').value;
@@ -288,11 +294,12 @@ export default class CenterPanel extends React.Component<Props, State> {
         models[this.state.renameModelID].name = newName;
         this.setState({ modalRenameModelIsOpen: false });
     };
-
+    /**
+     * Function closes Rename scene modal.
+     */
     handleRenameModelClose = () => {
         this.setState({ modalRenameModelIsOpen: false });
     };
-
     /**
      * Registers event listeners for vertical bar movement and setups used variables.
      * @param {Event} e

@@ -9,6 +9,8 @@ import registry from '../services/RegistryService'
  */
 
 class CameraDAO extends GenericDAO {
+    /** @override */
+    name: string = 'CameraDAO';
     records: Array<Camera>;
     /**
      * @override

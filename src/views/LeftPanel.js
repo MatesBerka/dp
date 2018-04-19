@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Accordion, Button, Label } from 'semantic-ui-react'
+import { Accordion, Button } from 'semantic-ui-react'
 import 'react-rangeslider/lib/index.css'
 import CameraConfiguration from "./left_panel_modules/CameraConfiguration";
 import DisplayAndViewerConfiguration from "./left_panel_modules/DisplayAndViewerConfiguration";
@@ -9,6 +9,7 @@ import ImagePostProcessingConfiguration from "./left_panel_modules/ImagePostProc
 import SceneConfiguration from "./left_panel_modules/SceneConfiguration";
 import dispatcher from "../services/Dispatcher";
 import GenericDAO from "../model/GenericDAO";
+import registry from "../services/RegistryService";
 
 type Props = {
     sidePanelWidth: number,
@@ -44,6 +45,8 @@ export default class LeftPanel extends React.Component<Props, State> {
             <GeneralConfiguration key={index} openSettings={openSettings} toggleSettings={this.handleToggleSettings} copySettings={this.handleCopySettings}/>
         ),
     ];
+    // used to copy all settings
+    CONFIGURATION_COMPONENTS_NAMES: string = ['CameraDAO', 'DisplayAndViewerDAO', 'GeneralDAO', 'PostProcessingDAO', 'SceneObjectDAO'];
     // component variable
     panelConfigurationItemsELMs: HTMLCollection<HTMLElement>;
     firstLeftColumnELM: Element | null = null;
@@ -108,10 +111,28 @@ export default class LeftPanel extends React.Component<Props, State> {
      */
     handleConfigurationPaste = () => {
         this.state.clipboard.forEach(function(value, key, map) {
-            value[1].copyRecord(value[0]);
+            value[1].replaceRecord(value[0]);
         });
         this.state.clipboard.clear();
         dispatcher.dispatch('paste', {});
+        this.forceUpdate();
+    };
+    /**
+     * Function copies all available settings
+     */
+    handleConfigurationCopyAll = () => {
+        registry.getAll().forEach(function(dao) {
+            if (this.CONFIGURATION_COMPONENTS_NAMES.indexOf(dao.name) > -1) { // only simulation settings.
+                this.state.clipboard.set(dao.name, [dao.getCopy(), dao]);
+            }
+        }.bind(this));
+        this.forceUpdate();
+    };
+    /**
+     * Function clears clipboard
+     */
+    handleConfigurationClearAll = () => {
+        this.state.clipboard.clear();
         this.forceUpdate();
     };
     /**
@@ -144,8 +165,8 @@ export default class LeftPanel extends React.Component<Props, State> {
     /**
      * Stores selected settings block in clipboard.
      */
-    handleCopySettings = (e: SyntheticEvent<>, index: number, settingsDAO: GenericDAO) => {
-        this.state.clipboard.set(index, [settingsDAO.getActiveRecordID(), settingsDAO]);
+    handleCopySettings = (e: SyntheticEvent<>, settingsDAO: GenericDAO) => {
+        this.state.clipboard.set(settingsDAO.name, [settingsDAO.getCopy(), settingsDAO]);
         e.stopPropagation();
         this.forceUpdate();
     };
@@ -159,12 +180,15 @@ export default class LeftPanel extends React.Component<Props, State> {
 
         return (
             <div id="left-column" style={{width: leftPanelWidth}}>
-                <h2>Configuration
-                    <Button positive as='div' labelPosition='right' size='mini' onClick={this.handleConfigurationPaste}>
-                        <Button positive>Paste</Button>
-                        <Label as='a' basic color='green' pointing='left'>{clipboard.size}</Label>
-                    </Button>
-                </h2>
+                <h2>Configuration</h2>
+                <div id="clipboard-settings">
+                    Clipboard: {clipboard.size} setting(s)
+                    <Button.Group size='mini'>
+                        <Button size='mini' color='yellow' onClick={this.handleConfigurationPaste}>Paste</Button>
+                        <Button size='mini' color='red' onClick={this.handleConfigurationClearAll}>Clear all</Button>
+                        <Button size='mini' color='green' onClick={this.handleConfigurationCopyAll}>Copy all</Button>
+                    </Button.Group>
+                </div>
                 <div className="side-panel-column" id="first-left-column" style={{width: sidePanelWidth}}>
                     <Accordion fluid>
                         {this.panelFirstColumn.map((f, index) => f(openSettings, index))}

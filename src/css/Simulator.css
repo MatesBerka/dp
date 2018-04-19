@@ -579,3 +579,9 @@ h3, h4 {
 #images-view-wrapper  .ui.basic.buttons .button:hover {
     color: black !important;
 }
+
+#clipboard-settings {
+    padding: 10px;
+    background-color: #333333;
+    color: white;
+}
