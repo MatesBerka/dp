@@ -18,6 +18,7 @@ import Camera from "../model/entities/Camera";
 import DisplayAndViewer from "../model/entities/DisplayAndViewer";
 import General from "../model/entities/General";
 import DrawableObject from "../model/drawable_objects/DrawableObject";
+import dispatcher from "./Dispatcher";
 
 /**
  * @classdesc Service class used to create simulation visualizations
@@ -25,9 +26,13 @@ import DrawableObject from "../model/drawable_objects/DrawableObject";
  */
 class VisualizationBuilder {
     OBJ_MARGIN: number = 0.02;
-    cameraTrns: trnsType = {scaleX:100, translateX:300, scaleY:100, translateY:100};
-    viewerTrns: trnsType = {scaleX:100, translateX:300, scaleY:100, translateY:100};
-    imagesTrns: trnsType = {scaleX:100, translateX:250, scaleY:100, translateY:100};
+    activeModelID: number = 0;
+    activeCameraTrns: trnsType;
+    activeViewerTrns: trnsType;
+    activeImagesTrns: trnsType;
+    cameraTrns: Array<trnsType> = [{scaleX:100, translateX:300, scaleY:100, translateY:100}];
+    viewerTrns: Array<trnsType> = [{scaleX:100, translateX:300, scaleY:100, translateY:100}];
+    imagesTrns: Array<trnsType> = [{scaleX:100, translateX:250, scaleY:100, translateY:100}];
     images: imagesType;
     imagesVisible: imagesType;
     cameras: camerasType;
@@ -47,17 +52,35 @@ class VisualizationBuilder {
     gnrVals: General = generalDAO.getActiveRecord();
 
     scene: Array<DrawableObject>;
+    xGenerator: Function;
+    yGenerator: Function;
     /**
      * @constructs
      */
     constructor() {
-        this.updateActiveModel();
+        this.deleteListener = function(payload) {
+            this.cameraTrns.splice(payload.modelIDToRemove, 1);
+            this.viewerTrns.splice(payload.modelIDToRemove, 1);
+            this.imagesTrns.splice(payload.modelIDToRemove, 1);
+        }.bind(this);
+        dispatcher.register('modelDelete', this.deleteListener);
+
+        this.updateActiveModel(this.activeModelID);
     }
     /**
      * If there is a model switch, this function should be called to update active records used for visualization.
      * @public
      */
-    updateActiveModel() {
+    updateActiveModel(activeModelID: number) {
+        this.activeModelID = activeModelID;
+        if (activeModelID === this.cameraTrns.length) {
+            this.cameraTrns.push({scaleX:100, translateX:300, scaleY:100, translateY:100});
+            this.viewerTrns.push({scaleX:100, translateX:300, scaleY:100, translateY:100});
+            this.imagesTrns.push({scaleX:100, translateX: this.xGenerator(), scaleY:100, translateY: this.yGenerator()});
+        }
+        this.activeCameraTrns = this.cameraTrns[activeModelID];
+        this.activeViewerTrns = this.viewerTrns[activeModelID];
+        this.activeImagesTrns = this.imagesTrns[activeModelID];
         this.statVals = diagnosticsDAO.getActiveRecord();
         this.cmVals = cameraDAO.getActiveRecord();
         this.DAW = displayAndViewerDAO.getActiveRecord();
@@ -65,6 +88,10 @@ class VisualizationBuilder {
         drawingHelper.updateActiveModel();
         photoTransformationsHelper.updateActiveModel();
         this.scene = drawingHelper.createScene();
+    }
+    registerImageTranslationGenerators(xGenerator: Function, yGenerator: Function) {
+        this.yGenerator = yGenerator;
+        this.xGenerator = xGenerator;
     }
     /**
      * Function used to recreate views scene in case of some change.
@@ -78,22 +105,22 @@ class VisualizationBuilder {
      * @public
      */
     getCameraTrns(): trnsType {
-        return this.cameraTrns;
+        return this.cameraTrns[this.activeModelID];
     }
     getViewerTrns(): trnsType {
-        return this.viewerTrns;
+        return this.viewerTrns[this.activeModelID];
     }
     getImagesTrns(): trnsType {
-        return this.imagesTrns;
+        return this.imagesTrns[this.activeModelID];
     }
     setCameraTrns(trns: trnsType) {
-        this.cameraTrns = trns;
+        this.cameraTrns[this.activeModelID] = trns;
     }
     setViewerTrns(trns: trnsType) {
-        this.viewerTrns = trns;
+        this.viewerTrns[this.activeModelID] = trns;
     }
     setImagesTrns(trns: trnsType) {
-        this.imagesTrns = trns;
+        this.imagesTrns[this.activeModelID] = trns;
     }
     /**
      * Helper function used to get mouse click to the object origin.
@@ -127,8 +154,8 @@ class VisualizationBuilder {
         // $FlowFixMe
         this.focusedObject = null;
         let vertices = [[x, y, 0]], point;
-        vecOpr.reverseObjectTranslate(vertices, [this.cameraTrns.translateX, this.cameraTrns.translateY, 0]);
-        vecOpr.reverseObjectScale(vertices, [this.cameraTrns.scaleX, this.cameraTrns.scaleY, 1]);
+        vecOpr.reverseObjectTranslate(vertices, [this.activeCameraTrns.translateX, this.activeCameraTrns.translateY, 0]);
+        vecOpr.reverseObjectScale(vertices, [this.activeCameraTrns.scaleX, this.activeCameraTrns.scaleY, 1]);
         let objects = sceneObjectDAO.getActiveRecord();
         if (this.cameraSideView) { // height and depth
             let vec = [0, -vertices[0][1], vertices[0][0]];
@@ -160,9 +187,9 @@ class VisualizationBuilder {
         if (this.focusedObject != null) {
             // scene translation
             // $FlowFixMe
-            vecOpr.objectScale(point, [this.cameraTrns.scaleX, this.cameraTrns.scaleY, 1]);
+            vecOpr.objectScale(point, [this.activeCameraTrns.scaleX, this.activeCameraTrns.scaleY, 1]);
             // $FlowFixMe
-            vecOpr.objectTranslate(point, [this.cameraTrns.translateX, this.cameraTrns.translateY, 0]);
+            vecOpr.objectTranslate(point, [this.activeCameraTrns.translateX, this.activeCameraTrns.translateY, 0]);
             // $FlowFixMe
             return point[0];
         } else {
@@ -472,30 +499,30 @@ class VisualizationBuilder {
             aspect: this.DAW.getDisplayAspect()
         };
         let eyes = this._getEyesDefinition();
-        let positions = vecOpr.getRulerPositions(ctx, this.viewerTrns);
+        let positions = vecOpr.getRulerPositions(ctx, this.activeViewerTrns);
         let viewerSideView;
         if (this.viewerSideView) { viewerSideView = 'yz'; } else { viewerSideView = 'xz'; }
-        if (this.drawViewerGrid) { DrawingHelper.drawGrid(ctx, this.viewerTrns, viewerSideView, positions); }
+        if (this.drawViewerGrid) { DrawingHelper.drawGrid(ctx, this.activeViewerTrns, viewerSideView, positions); }
         // reconstruct 3D vision
         let imagesVisible = this._calculateVisibleImages(eyes, display, this.images);
         let reconstruction = VisualizationBuilder._calculateReconstruction(eyes, display, imagesVisible);
-        drawingHelper.drawVisibilityZones(ctx, this.viewerTrns, viewerSideView, this.cameras);
-        DrawingHelper.drawEyes(ctx, this.viewerTrns, viewerSideView, eyes, false, true);
-        drawingHelper.drawDisplay(ctx, this.viewerTrns, viewerSideView, display);
+        drawingHelper.drawVisibilityZones(ctx, this.activeViewerTrns, viewerSideView, this.cameras);
+        DrawingHelper.drawEyes(ctx, this.activeViewerTrns, viewerSideView, eyes, false, true);
+        drawingHelper.drawDisplay(ctx, this.activeViewerTrns, viewerSideView, display);
         // draw fatigue-free zone
         if (this.statVals.getVergenceDistanceFar()[0] < 100 && this.statVals.getVergenceDistanceFar()[0] > 0)
-            DrawingHelper.drawZLine(ctx, this.viewerTrns, this.statVals.getVergenceDistanceFar()[0] - this.DAW.getHeadDistance(), "#ff8080", 'far', 15);
-        DrawingHelper.drawZLine(ctx, this.viewerTrns, this.statVals.getVergenceDistanceNear()[0] - this.DAW.getHeadDistance(), "#8080ff", 'near', 5);
+            DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceFar()[0] - this.DAW.getHeadDistance(), "#ff8080", 'far', 15);
+        DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceNear()[0] - this.DAW.getHeadDistance(), "#8080ff", 'near', 5);
         // draw reconstruction. this must be line this
         if (this.drawReconstructionRays) {
             if (this.DAW.getDisplayType() !== 'stereoscopic')
-                DrawingHelper.drawReconstruction(ctx, this.viewerTrns, viewerSideView, eyes, display, this.images, reconstruction);
-            DrawingHelper.drawReconstruction(ctx, this.viewerTrns, viewerSideView, eyes, display, imagesVisible, reconstruction);
+                DrawingHelper.drawReconstruction(ctx, this.activeViewerTrns, viewerSideView, eyes, display, this.images, reconstruction);
+            DrawingHelper.drawReconstruction(ctx, this.activeViewerTrns, viewerSideView, eyes, display, imagesVisible, reconstruction);
         }
         ctx.fillStyle = "#000000";
-        DrawingHelper.drawScene(ctx, this.viewerTrns, viewerSideView, VisualizationBuilder._reconstructScene(
+        DrawingHelper.drawScene(ctx, this.activeViewerTrns, viewerSideView, VisualizationBuilder._reconstructScene(
             drawingHelper.createScene(), reconstruction));
-        DrawingHelper.drawRulers(ctx, this.viewerTrns, viewerSideView, positions, this.viewerCanvasUnit);
+        DrawingHelper.drawRulers(ctx, this.activeViewerTrns, viewerSideView, positions, this.viewerCanvasUnit);
         this.imagesVisible = imagesVisible;
     }
     /**
@@ -508,16 +535,16 @@ class VisualizationBuilder {
     renderCameraVisualization(ctx: CanvasRenderingContext2D, width: number, height: number) {
         DrawingHelper.clearCanvas(ctx, width, height);
         let cameras = this._getCamerasDefinition();
-        let positions = vecOpr.getRulerPositions(ctx, this.cameraTrns);
+        let positions = vecOpr.getRulerPositions(ctx, this.activeCameraTrns);
         let cameraSideView;
         if (this.cameraSideView) { cameraSideView = 'yz'; } else { cameraSideView = 'xz'; }
-        if (this.drawCameraGrid) { DrawingHelper.drawGrid(ctx, this.cameraTrns, cameraSideView, positions); }
+        if (this.drawCameraGrid) { DrawingHelper.drawGrid(ctx, this.activeCameraTrns, cameraSideView, positions); }
 
-        DrawingHelper.drawCameras(ctx, this.cameraTrns, cameraSideView, cameras, true, true);
-        DrawingHelper.drawZLine(ctx, this.cameraTrns, this.cmVals.getCameraCrossing(), "#a0a0a0", 'crossing', 5);
-        DrawingHelper.drawZLine(ctx, this.cameraTrns, 0, "#40f040", 'focus', 15);
-        DrawingHelper.drawScene(ctx, this.cameraTrns, cameraSideView, this.scene);
-        DrawingHelper.drawRulers(ctx, this.cameraTrns, cameraSideView, positions, this.cameraCanvasUnit);
+        DrawingHelper.drawCameras(ctx, this.activeCameraTrns, cameraSideView, cameras, true, true);
+        DrawingHelper.drawZLine(ctx, this.activeCameraTrns, this.cmVals.getCameraCrossing(), "#a0a0a0", 'crossing', 5);
+        DrawingHelper.drawZLine(ctx, this.activeCameraTrns, 0, "#40f040", 'focus', 15);
+        DrawingHelper.drawScene(ctx, this.activeCameraTrns, cameraSideView, this.scene);
+        DrawingHelper.drawRulers(ctx, this.activeCameraTrns, cameraSideView, positions, this.cameraCanvasUnit);
         this.cameras = cameras;
         this.cmVals.setCameras(cameras);
     }
@@ -544,19 +571,19 @@ class VisualizationBuilder {
     renderImagesVisualization(ctx: CanvasRenderingContext2D, width: number, height: number) {
         DrawingHelper.clearCanvasWithCustomColor(ctx, width, height, "#808080");
         let corner1, corner2;
-        corner1 = vecOpr.transform2d([-1, -1 / this.DAW.getDisplayAspect()], this.imagesTrns, 'xz');
-        corner2 = vecOpr.transform2d([1, 1 / this.DAW.getDisplayAspect()], this.imagesTrns, 'xz');
+        corner1 = vecOpr.transform2d([-1, -1 / this.DAW.getDisplayAspect()], this.activeImagesTrns, 'xz');
+        corner2 = vecOpr.transform2d([1, 1 / this.DAW.getDisplayAspect()], this.activeImagesTrns, 'xz');
         ctx.fillRect(corner1[0], corner1[1], corner2[0] - corner1[0], corner2[1] - corner1[1]);
         // create and draw frames of the camera sensors
         // create rectangle definitions of sensor size that are going to be
         // drawn in the display preview
         let images = this._cameraBorderImages(this.cameras);
         photoTransformationsHelper.transformImages(images);
-        DrawingHelper.drawImages(ctx, this.imagesTrns, this.cameras, images, [DrawingHelper.createDrawableObject(objTypeIdx.square)], 0, 3);
+        DrawingHelper.drawImages(ctx, this.activeImagesTrns, this.cameras, images, [DrawingHelper.createDrawableObject(objTypeIdx.square)], 0, 3);
         // calculate and draw actual images
         images = VisualizationBuilder._calculateImages(this.cameras, this.scene);
         photoTransformationsHelper.transformImages(images);
-        DrawingHelper.drawImages(ctx, this.imagesTrns, this.cameras, images, this.scene, 3, 1);
+        DrawingHelper.drawImages(ctx, this.activeImagesTrns, this.cameras, images, this.scene, 3, 1);
         this.images = images;
     }
 }

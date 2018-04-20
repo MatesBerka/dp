@@ -23,6 +23,7 @@ type State = {
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 export default class DiagnosticsView extends React.Component<Props, State> {
+    SHOW_DIAGNOSTICS_DEFAULT: number = true;
     modelSwitchListener: Function;
     diagnosticsUpdate: Function;
     /**
@@ -30,13 +31,13 @@ export default class DiagnosticsView extends React.Component<Props, State> {
      */
     constructor(props: Props) {
         super(props);
-        let showDiagnostics = true;
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-            showDiagnostics = false;
+            this.SHOW_DIAGNOSTICS_DEFAULT = false;
         this.state = {
-            stats: diagnosticsService.getActiveRecord(),
+            activeModelID: 0,
+            models: [{toggleDiagnostics: this.SHOW_DIAGNOSTICS_DEFAULT}],
             toggleDiagnosticsOldVal: false,
-            toggleDiagnostics: showDiagnostics
+            stats: diagnosticsService.getActiveRecord(),
         };
     }
     /**
@@ -46,20 +47,50 @@ export default class DiagnosticsView extends React.Component<Props, State> {
         diagnosticsService.updateDiagnostics();
         // register event listeners
         this.modelSwitchListener = function(payload) {
+            if (payload.modelID === this.state.models.length) { // new model
+                this.state.models.push({
+                    toggleDiagnostics: this.SHOW_DIAGNOSTICS_DEFAULT
+                });
+            }
+
             diagnosticsService.switchModel();
-            this.setState({ stats: diagnosticsService.getActiveRecord() });
+            this.setState({ activeModelID: payload.modelID, stats: diagnosticsService.getActiveRecord() });
         }.bind(this);
-        dispatcher.register('modelSwitch', this.modelSwitchListener);
+
+        this.modelDeleteListener = function(payload) {
+            this.state.models.splice(payload.modelIDToRemove, 1);
+        }.bind(this);
+
         this.diagnosticsUpdate = function(payload) {
             diagnosticsService.updateDiagnostics();
             this.forceUpdate();
         }.bind(this);
+
+        this.exportListener = function(payload) {
+            payload['diagnosticsView'] = [this.state.models, this.state.activeModelID]
+        }.bind(this);
+
+        this.importListener = function(payload) {
+            this.setState({
+                models:  payload['diagnosticsView'][0],
+                activeModelID:  payload['diagnosticsView'][1]
+            });
+            this.forceUpdate();
+        }.bind(this);
+
+        dispatcher.register('exporting', this.exportListener);
+        dispatcher.register('importing', this.importListener);
+        dispatcher.register('modelDelete', this.modelDeleteListener);
+        dispatcher.register('modelSwitch', this.modelSwitchListener);
         dispatcher.register('configurationUpdate', this.diagnosticsUpdate);
     }
     /**
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('exporting', this.exportListener);
+        dispatcher.unregister('importing', this.importListener);
+        dispatcher.unregister('modelDelete', this.modelDeleteListener);
         dispatcher.unregister('modelSwitch', this.modelSwitchListener);
         dispatcher.unregister('configurationUpdate', this.diagnosticsUpdate);
     };
@@ -67,11 +98,11 @@ export default class DiagnosticsView extends React.Component<Props, State> {
      * Calls callback to update views size if diagnostics sections was closed/opened.
      */
     componentDidUpdate() {
-        if (this.state.toggleDiagnostics !== this.state.toggleDiagnosticsOldVal) {
+        if (this.state.models[this.state.activeModelID].toggleDiagnostics !== this.state.toggleDiagnosticsOldVal) {
             this.setState((prevState) => {
                 return {toggleDiagnosticsOldVal: !prevState.toggleDiagnosticsOldVal}
             });
-            this.props.updateViewsSize();
+            this.props.updateViewsSize(this.state.activeModelID);
         }
     };
     /**
@@ -87,9 +118,9 @@ export default class DiagnosticsView extends React.Component<Props, State> {
      * Function opens or closes diagnostics view.
      */
     handleToggleDiagnosticsView = () => {
-        this.setState((prevState) => {
-            return {toggleDiagnostics: !prevState.toggleDiagnostics}
-        });
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.toggleDiagnostics = !activeModel.toggleDiagnostics;
+        this.forceUpdate();
     };
     /**
      * Helper function used to convert diagnostics values to displayed output and alert in case of out of range values.
@@ -115,17 +146,18 @@ export default class DiagnosticsView extends React.Component<Props, State> {
      */
     render() {
         const { centerPanelWidth } = this.props;
-        const { stats, toggleDiagnostics } = this.state;
+        const { stats } = this.state;
+        const activeModel = this.state.models[this.state.activeModelID];
 
         return (
             <footer id="diagnostics" style={{width: centerPanelWidth}}>
                 <Accordion fluid>
-                    <Accordion.Title active={toggleDiagnostics} onClick={this.handleToggleDiagnosticsView} id="diagnostics-header">
+                    <Accordion.Title active={activeModel.toggleDiagnostics} onClick={this.handleToggleDiagnosticsView} id="diagnostics-header">
                         <Icon name='dropdown' /><h4>Diagnostics</h4>
                         <Popup trigger={<Checkbox label='Global' onChange={this.handleToggleGlobalStat} checked={stats.isGlobalActive()}
                             style={{float: 'right', padding: '5px'}} />} content='In case of multiple cameras diagnostic is computed from the first and last camera.' inverted />
                     </Accordion.Title>
-                    <Accordion.Content active={toggleDiagnostics}  id="diagnostics-body">
+                    <Accordion.Content active={activeModel.toggleDiagnostics}  id="diagnostics-body">
                         <div className="diagnostics-line">
                             <label><strong>Vergence Range:</strong></label>
                         </div>

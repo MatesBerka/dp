@@ -28,6 +28,12 @@ export default class ViewerView extends React.Component<Props, State> {
     // component constants
     ZOOM_LOWER_LIMIT: number = 20;
     ZOOM_UPPER_LIMIT: number = 550;
+
+    DRAW_VIEWER_GRID_DEFAULT: number = false;
+    VIEWER_SIDE_VIEW_DEFAULT: number = false;
+    DRAW_RECONSTRUCTION_RAYS_DEFAULT: number = false;
+    VIEWER_CANVAS_UNIT_DEFAULT: number = unitIdx.cm;
+    ZOOM_DEFAULT: number = 100;
     // component variables
     translating: boolean = false;
     trnsStartX: number = 0;
@@ -37,17 +43,16 @@ export default class ViewerView extends React.Component<Props, State> {
     viewerCanvasCTX: CanvasRenderingContext2D;
     viewUpdateListener: Function;
     pasteListener: Function;
+    modelSwitch: Function;
+    modelDelete: Function;
     /**
      * Component constructor
      */
     constructor(props: Props) {
         super(props);
         this.state = {
-            drawViewerGrid: false,
-            viewerSideView: false,
-            drawReconstructionRays: false,
-            viewerCanvasUnit: unitIdx.cm,
-            zoom: 100
+            activeModelID: 0,
+            models: [{drawViewerGrid: false, viewerSideView: false, drawReconstructionRays: false, viewerCanvasUnit: unitIdx.cm, zoom: 100}],
         };
     }
     /**
@@ -59,17 +64,55 @@ export default class ViewerView extends React.Component<Props, State> {
         // $FlowFixMe ignore null
         this.viewerCanvasCTX = this.viewerElm.getContext('2d');
 
-        this.updateVisualization(this.state.drawViewerGrid, this.state.viewerSideView, this.state.drawReconstructionRays,
-            this.state.viewerCanvasUnit, this.viewerCanvasCTX);
+        this.updateVisualization(this.state.activeModelID);
         // register event listeners
         this.viewUpdateListener = function(payload) {
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
         }.bind(this);
+
         this.pasteListener = function(payload) {
-            visualizationBuilder.updateActiveModel();
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
         }.bind(this);
-        dispatcher.register('modelSwitch', this.pasteListener);
+
+        this.switchListener = function(payload) {
+            if (payload.modelID === this.state.models.length) { // new model
+                this.state.models.push({
+                    drawViewerGrid: this.DRAW_VIEWER_GRID_DEFAULT,
+                    viewerSideView: this.VIEWER_SIDE_VIEW_DEFAULT,
+                    drawReconstructionRays: this.DRAW_RECONSTRUCTION_RAYS_DEFAULT,
+                    viewerCanvasUnit: this.VIEWER_CANVAS_UNIT_DEFAULT,
+                    zoom: this.ZOOM_DEFAULT
+                })
+            }
+
+            this.setState({ activeModelID: payload.modelID });
+            visualizationBuilder.updateActiveModel(payload.modelID);
+            this.updateVisualization(payload.modelID);
+        }.bind(this);
+
+        this.deleteListener = function(payload) {
+            this.state.models.splice(payload.modelIDToRemove, 1);
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
+            this.updateVisualization(this.state.activeModelID);
+        }.bind(this);
+
+        this.exportListener = function(payload) {
+            payload['viewerView'] = [this.state.models, this.state.activeModelID]
+        }.bind(this);
+
+        this.importListener = function(payload) {
+            this.setState({
+                models:  payload['viewerView'][0],
+                activeModelID:  payload['viewerView'][1]
+            });
+            this.forceUpdate();
+        }.bind(this);
+
+        dispatcher.register('exporting', this.exportListener);
+        dispatcher.register('importing', this.importListener);
+        dispatcher.register('modelDelete', this.deleteListener);
+        dispatcher.register('modelSwitch', this.switchListener);
         dispatcher.register('paste', this.pasteListener);
         dispatcher.register('configurationUpdate', this.viewUpdateListener);
     };
@@ -77,7 +120,10 @@ export default class ViewerView extends React.Component<Props, State> {
      * After the component is removed from the DOM un-register listeners
      */
     componentWillUnmount() {
-        dispatcher.unregister('modelSwitch', this.pasteListener);
+        dispatcher.unregister('exporting', this.exportListener);
+        dispatcher.unregister('importing', this.importListener);
+        dispatcher.unregister('modelDelete', this.deleteListener);
+        dispatcher.unregister('modelSwitch', this.switchListener);
         dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('configurationUpdate', this.viewUpdateListener);
     }
@@ -90,40 +136,46 @@ export default class ViewerView extends React.Component<Props, State> {
     /**
      * Function updates visualization state and re-renders the view.
      */
-    updateVisualization = (grid: boolean, sideView: boolean, reconstructionRays: boolean, unit: number,
-        ctx: CanvasRenderingContext2D) => {
-        visualizationBuilder.setViewerViewConfiguration(grid, sideView, reconstructionRays, unit);
-        visualizationBuilder.renderViewerVisualization(ctx, this.props.width, this.props.height);
+    updateVisualization = (activeModelID: number) => {
+        let activeModel = this.state.models[activeModelID];
+        visualizationBuilder.setViewerViewConfiguration(activeModel.drawViewerGrid, activeModel.viewerSideView,
+            activeModel.drawReconstructionRays, activeModel.viewerCanvasUnit);
+        visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
     };
     /**
      * Events handling functions for canvas controls.
      */
     handleGridToggle = (e: Object, data: Object) => {
-        this.setState({ drawViewerGrid: data.checked });
-        this.updateVisualization(data.checked, this.state.viewerSideView, this.state.drawReconstructionRays,
-            this.state.viewerCanvasUnit, this.viewerCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.drawViewerGrid = data.checked;
+        this.updateVisualization(this.state.activeModelID);
+        this.forceUpdate();
     };
     handleSideViewToggle = (e: Object, data: Object) => {
-        this.setState({ viewerSideView: data.checked });
-        this.updateVisualization(this.state.drawViewerGrid, data.checked, this.state.drawReconstructionRays,
-            this.state.viewerCanvasUnit, this.viewerCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.viewerSideView = data.checked;
+        this.updateVisualization(this.state.activeModelID);
+        this.forceUpdate();
     };
     handleReconstructionRaysToggle = (e: Object, data: Object) => {
-        this.setState({ drawReconstructionRays: data.checked });
-        this.updateVisualization(this.state.drawViewerGrid, this.state.viewerSideView, data.checked,
-            this.state.viewerCanvasUnit, this.viewerCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.drawReconstructionRays = data.checked;
+        this.updateVisualization(this.state.activeModelID);
+        this.forceUpdate();
     };
     handleCanvasUnitChange = (e: Object, data: Object) => {
-        this.setState({ viewerCanvasUnit: data.value });
-        this.updateVisualization(this.state.drawViewerGrid, this.state.viewerSideView, this.state.drawReconstructionRays,
-            data.value, this.viewerCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.viewerCanvasUnit = data.value;
+        this.updateVisualization(this.state.activeModelID);
+        this.forceUpdate();
     };
     /**
      * Zooms in canvas view.
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomIn = () => {
-        if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT2;
@@ -132,9 +184,8 @@ export default class ViewerView extends React.Component<Props, State> {
             trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {zoom: prevState.zoom * utl.SQRT2}
-            });
+            activeModel.zoom *= utl.SQRT2;
+            this.forceUpdate();
         }
     };
     /**
@@ -142,7 +193,8 @@ export default class ViewerView extends React.Component<Props, State> {
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomOut = () => {
-        if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getViewerTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT1_2;
@@ -151,9 +203,8 @@ export default class ViewerView extends React.Component<Props, State> {
             trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setViewerTrns(trns);
             visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {zoom: prevState.zoom * utl.SQRT1_2}
-            });
+            activeModel.zoom *= utl.SQRT1_2;
+            this.forceUpdate();
         }
     };
     /**
@@ -199,7 +250,7 @@ export default class ViewerView extends React.Component<Props, State> {
      */
     render() {
         const { width, height } = this.props;
-        const { drawViewerGrid, viewerSideView, viewerCanvasUnit, drawReconstructionRays, zoom } = this.state;
+        const activeModel = this.state.models[this.state.activeModelID];
 
         return (
             <div className="canvas-wrapper" id="viewer-view-wrapper" style={{width: width, height: height}}>
@@ -210,11 +261,11 @@ export default class ViewerView extends React.Component<Props, State> {
                 </canvas>
                 <div className="view-controls" id="viewer-view-controls">
                     <strong className="ui">Viewer view </strong>
-                    <Checkbox label='Grid' onChange={this.handleGridToggle} checked={drawViewerGrid}/>
-                    <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={viewerSideView}/>
-                    <Checkbox label='Show rays' onChange={this.handleReconstructionRaysToggle} checked={drawReconstructionRays}/>
-                    <Select compact options={unitDefinitionMenu} onChange={this.handleCanvasUnitChange} defaultValue={viewerCanvasUnit}/>
-                    Zoom: {Math.round(zoom)}%
+                    <Checkbox label='Grid' onChange={this.handleGridToggle} checked={activeModel.drawViewerGrid}/>
+                    <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={activeModel.viewerSideView}/>
+                    <Checkbox label='Show rays' onChange={this.handleReconstructionRaysToggle} checked={activeModel.drawReconstructionRays}/>
+                    <Select compact options={unitDefinitionMenu} onChange={this.handleCanvasUnitChange} value={activeModel.viewerCanvasUnit}/>
+                    Zoom: {Math.round(activeModel.zoom)}%
                 </div>
                 <Button.Group basic size='mini' className="zoom-controls">>
                     <Button icon='plus' onClick={this.handleZoomIn}/>

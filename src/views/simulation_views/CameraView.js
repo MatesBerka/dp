@@ -39,6 +39,11 @@ export default class CameraView extends React.Component<Props, State> {
     ZOOM_LOWER_LIMIT: number = 20;
     ZOOM_UPPER_LIMIT: number = 550;
     OBJ_MIN_DISTANCE: number = 0.1;
+
+    DRAW_CAMERA_GRID_DEFAULT: boolean = false;
+    CAMERA_SIDE_VIEW_DEFAULT: boolean = false;
+    CAMERA_CANVAS_UNIT_DEFAULT: number = unitIdx.cm;
+    ZOOM_DEFAULT: number = 100;
     // there is no reason to store these variables in Component state since they are used for decision making
     // or computation by internal code
     translating: boolean = false;
@@ -61,23 +66,23 @@ export default class CameraView extends React.Component<Props, State> {
     // Listeners
     viewUpdateListener: Function;
     pasteListener: Function;
+    modelSwitch: Function;
+    modelDelete: Function;
     /**
      * Component constructor
      */
     constructor(props: Props) {
         super(props);
         this.state = {
-            drawCameraGrid: false,
-            cameraSideView: false,
+            activeModelID: 0,
+            models: [{drawCameraGrid: false, cameraSideView: false, cameraCanvasUnit: unitIdx.cm, zoom: 100}],
             objCtrlShow: 'none',
-            cameraCanvasUnit: unitIdx.cm,
             objCtrlPosX: 100,
             objCtrlPosY: 100,
             objCtrlWidth: 100,
             objCtrlHeight: 100,
             // this variable was prepared for object rotations
             // objCtrlRot: 0,
-            zoom: 100
         };
     }
     /**
@@ -92,18 +97,54 @@ export default class CameraView extends React.Component<Props, State> {
         this.objectControlElm = document.getElementById('scene-object-control');
         this.cameraCanvasCTX = this.cameraElm.getContext('2d');
 
-        this.updateVisualization(this.state.drawCameraGrid, this.state.cameraSideView, this.state.cameraCanvasUnit, this.cameraCanvasCTX);
+        this.updateVisualization(this.state.activeModelID);
         // register event listeners
         this.viewUpdateListener = function(payload) {
-            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width,this.props.height);
+            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
         }.bind(this);
+
         this.pasteListener = function(payload) {
             // close object focus frame
             this.setState({ objCtrlShow: 'none' });
-            visualizationBuilder.updateActiveModel();
-            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width,this.props.height);
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
+            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
         }.bind(this);
-        dispatcher.register('modelSwitch', this.pasteListener);
+
+        this.modelSwitch = function(payload) {
+            if (payload.modelID === this.state.models.length) { // new model
+                this.state.models.push({
+                    drawCameraGrid: this.DRAW_CAMERA_GRID_DEFAULT,
+                    cameraSideView: this.CAMERA_SIDE_VIEW_DEFAULT,
+                    cameraCanvasUnit: this.CAMERA_CANVAS_UNIT_DEFAULT,
+                    zoom: this.ZOOM_DEFAULT
+                })
+            }
+            this.setState({ objCtrlShow: 'none', activeModelID: payload.modelID });
+            visualizationBuilder.updateActiveModel(payload.modelID);
+            this.updateVisualization(payload.modelID);
+        }.bind(this);
+        this.modelDelete = function(payload) {
+            this.state.models.splice(payload.modelIDToRemove, 1);
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
+            this.updateVisualization(this.state.activeModelID);
+        }.bind(this);
+
+        this.exportListener = function(payload) {
+            payload['cameraView'] = [this.state.models, this.state.activeModelID]
+        }.bind(this);
+
+        this.importListener = function(payload) {
+            this.setState({
+                models:  payload['cameraView'][0],
+                activeModelID:  payload['cameraView'][1]
+            });
+            this.forceUpdate();
+        }.bind(this);
+
+        dispatcher.register('exporting', this.exportListener);
+        dispatcher.register('importing', this.importListener);
+        dispatcher.register('modelSwitch', this.modelSwitch);
+        dispatcher.register('modelDelete', this.modelDelete);
         dispatcher.register('paste', this.pasteListener);
         dispatcher.register('configurationUpdate', this.viewUpdateListener);
     };
@@ -111,7 +152,10 @@ export default class CameraView extends React.Component<Props, State> {
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
-        dispatcher.unregister('modelSwitch', this.pasteListener);
+        dispatcher.unregister('exporting', this.exportListener);
+        dispatcher.unregister('importing', this.importListener);
+        dispatcher.unregister('modelSwitch', this.modelSwitch);
+        dispatcher.unregister('modelDelete', this.modelDelete);
         dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('configurationUpdate', this.viewUpdateListener);
     }
@@ -123,39 +167,41 @@ export default class CameraView extends React.Component<Props, State> {
     };
     /**
      * Function updates visualization state and re-renders the view.
-     * @param {boolean} grid informs if grid view is active
-     * @param {boolean} sideView informs if side view is active
-     * @param {number} unit informs which unit is used in the view
-     * @param {CanvasRenderingContext2D} ctx
      */
-    updateVisualization = (grid: boolean, sideView: boolean, unit: number, ctx: CanvasRenderingContext2D) => {
-        visualizationBuilder.setCameraViewConfiguration(grid, sideView, unit);
-        visualizationBuilder.renderCameraVisualization(ctx, this.props.width, this.props.height);
+    updateVisualization = (activeModelID: number) => {
+        let activeModel = this.state.models[activeModelID];
+        visualizationBuilder.setCameraViewConfiguration(activeModel.drawCameraGrid,activeModel.cameraSideView,
+            activeModel.cameraCanvasUnit);
+        visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
     };
     /**
      * Events handling functions for canvas controls.
      */
     handleGridToggle = (e: SyntheticMouseEvent<>, data: Object) => {
-        this.setState({drawCameraGrid: data.checked, objCtrlShow: 'none'});
-        this.updateVisualization(data.checked, this.state.cameraSideView,
-            this.state.cameraCanvasUnit, this.cameraCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.drawCameraGrid = data.checked;
+        this.setState({objCtrlShow: 'none'});
+        this.updateVisualization(this.state.activeModelID);
     };
     handleSideViewToggle = (e: SyntheticMouseEvent<>, data: Object) => {
-        this.setState({cameraSideView: data.checked, objCtrlShow: 'none'});
-        this.updateVisualization(this.state.drawCameraGrid, data.checked,
-            this.state.cameraCanvasUnit, this.cameraCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.cameraSideView = data.checked;
+        this.setState({objCtrlShow: 'none'});
+        this.updateVisualization(this.state.activeModelID);
     };
     handleCanvasUnitChange = (e: SyntheticMouseEvent<>, data: Object) => {
-        this.setState({cameraCanvasUnit: data.value, objCtrlShow: 'none'});
-        this.updateVisualization(this.state.drawCameraGrid, this.state.cameraSideView,
-            data.value, this.cameraCanvasCTX);
+        let activeModel = this.state.models[this.state.activeModelID];
+        activeModel.cameraCanvasUnit = data.value;
+        this.setState({objCtrlShow: 'none'});
+        this.updateVisualization(this.state.activeModelID);
     };
     /**
      * Zooms in canvas view.
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomIn = () => {
-        if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT2;
@@ -164,12 +210,8 @@ export default class CameraView extends React.Component<Props, State> {
             trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {
-                    zoom: prevState.zoom * utl.SQRT2,
-                    objCtrlShow: 'none'
-                }
-            });
+            activeModel.zoom *= utl.SQRT2;
+            this.setState({objCtrlShow: 'none'});
         }
     };
     /**
@@ -177,7 +219,8 @@ export default class CameraView extends React.Component<Props, State> {
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomOut = () => {
-        if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getCameraTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT1_2;
@@ -186,12 +229,8 @@ export default class CameraView extends React.Component<Props, State> {
             trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setCameraTrns(trns);
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {
-                    zoom: prevState.zoom * utl.SQRT1_2,
-                    objCtrlShow: 'none'
-                }
-            });
+            activeModel.zoom *= utl.SQRT1_2;
+            this.setState({objCtrlShow: 'none'});
         }
     };
     /**
@@ -632,7 +671,8 @@ export default class CameraView extends React.Component<Props, State> {
      */
     render() {
         const { width, height } = this.props;
-        const { drawCameraGrid, cameraSideView, cameraCanvasUnit, zoom, objCtrlHeight, objCtrlWidth, objCtrlPosX, objCtrlPosY, objCtrlShow } = this.state;
+        const { objCtrlHeight, objCtrlWidth, objCtrlPosX, objCtrlPosY, objCtrlShow } = this.state;
+        const activeModel = this.state.models[this.state.activeModelID];
         return (
             <div className="canvas-wrapper" style={{width: width, height: (height)}}>
                 <div id="scene-object-control" onMouseDown={this.handleObjectStartTranslate} onTouchStart={this.handleObjectStartTranslate}
@@ -652,10 +692,10 @@ export default class CameraView extends React.Component<Props, State> {
                 </canvas>
                 <div className="view-controls" id="camera-view-controls">
                     <strong className="ui">Cameras view </strong>
-                    <Checkbox label='Grid' onChange={this.handleGridToggle} checked={drawCameraGrid}/>
-                    <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={cameraSideView}/>
-                    <Select compact options={unitDefinitionMenu} onChange={this.handleCanvasUnitChange} defaultValue={cameraCanvasUnit} />
-                    Zoom: {Math.round(zoom)}%
+                    <Checkbox label='Grid' onChange={this.handleGridToggle} checked={activeModel.drawCameraGrid}/>
+                    <Checkbox label='Side view' onChange={this.handleSideViewToggle} checked={activeModel.cameraSideView}/>
+                    <Select compact options={unitDefinitionMenu} onChange={this.handleCanvasUnitChange} value={activeModel.cameraCanvasUnit} />
+                    Zoom: {Math.round(activeModel.zoom)}%
                 </div>
                 <Button.Group basic size='mini' className="zoom-controls">>
                     <Button icon='plus' onClick={this.handleZoomIn}/>

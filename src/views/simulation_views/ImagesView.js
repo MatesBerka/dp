@@ -25,6 +25,8 @@ export default class ImagesView extends React.Component<Props, State> {
     ZOOM_LOWER_LIMIT: number = 20;
     ZOOM_UPPER_LIMIT: number = 550;
     CONTROLS_PANEL_HEIGHT: number = 28;
+
+    ZOOM_DEFAULT: number = 100;
     // component variables
     translating: boolean = false;
     trnsStartX: number = 0;
@@ -33,13 +35,16 @@ export default class ImagesView extends React.Component<Props, State> {
     imagesCanvasCTX: CanvasRenderingContext2D;
     viewUpdateListener: Function;
     pasteListener: Function;
+    modelSwitch: Function;
+    modelDelete: Function;
     /**
      * Component constructor
      */
     constructor(props: Props) {
         super(props);
         this.state = {
-            zoom: 100,
+            activeModelID: 0,
+            models: [{zoom: 100}],
         };
     }
     /**
@@ -55,11 +60,45 @@ export default class ImagesView extends React.Component<Props, State> {
         this.viewUpdateListener = function(payload) {
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);
         }.bind(this);
+
         this.pasteListener = function(payload) {
-            visualizationBuilder.updateActiveModel();
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);
         }.bind(this);
-        dispatcher.register('modelSwitch', this.pasteListener);
+
+        this.switchListener = function(payload) {
+            if (payload.modelID === this.state.models.length) { // new model
+                this.state.models.push({
+                    zoom: this.ZOOM_DEFAULT
+                })
+            }
+            this.setState({ activeModelID: payload.modelID });
+            visualizationBuilder.updateActiveModel(payload.modelID);
+            visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);
+        }.bind(this);
+
+        this.deleteListener = function(payload) {
+            this.state.models.splice(payload.modelIDToRemove, 1);
+            visualizationBuilder.updateActiveModel(this.state.activeModelID);
+            visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);
+        }.bind(this);
+
+        this.exportListener = function(payload) {
+            payload['imagesView'] = [this.state.models, this.state.activeModelID]
+        }.bind(this);
+
+        this.importListener = function(payload) {
+            this.setState({
+                models:  payload['imagesView'][0],
+                activeModelID:  payload['imagesView'][1]
+            });
+            this.forceUpdate();
+        }.bind(this);
+
+        dispatcher.register('exporting', this.exportListener);
+        dispatcher.register('importing', this.importListener);
+        dispatcher.register('modelDelete', this.deleteListener);
+        dispatcher.register('modelSwitch', this.switchListener);
         dispatcher.register('paste', this.pasteListener);
         dispatcher.register('configurationUpdate', this.viewUpdateListener);
     };
@@ -67,7 +106,10 @@ export default class ImagesView extends React.Component<Props, State> {
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
-        dispatcher.unregister('modelSwitch', this.pasteListener);
+        dispatcher.unregister('exporting', this.exportListener);
+        dispatcher.unregister('importing', this.importListener);
+        dispatcher.unregister('modelDelete', this.deleteListener);
+        dispatcher.unregister('modelSwitch', this.switchListener);
         dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('configurationUpdate', this.viewUpdateListener);
     }
@@ -82,7 +124,8 @@ export default class ImagesView extends React.Component<Props, State> {
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomIn = () => {
-        if (this.state.zoom < this.ZOOM_UPPER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom < this.ZOOM_UPPER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT2;
@@ -91,9 +134,8 @@ export default class ImagesView extends React.Component<Props, State> {
             trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {zoom: prevState.zoom * utl.SQRT2}
-            });
+            activeModel.zoom *= utl.SQRT2;
+            this.forceUpdate();
         }
     };
     /**
@@ -101,7 +143,8 @@ export default class ImagesView extends React.Component<Props, State> {
      * NOTE: These function is duplicated in every view so it cloud be customized for each specific view.
      */
     handleZoomOut = () => {
-        if (this.state.zoom > this.ZOOM_LOWER_LIMIT) {
+        let activeModel = this.state.models[this.state.activeModelID];
+        if (activeModel.zoom > this.ZOOM_LOWER_LIMIT) {
             let trns = visualizationBuilder.getImagesTrns();
             // apply scaling
             trns.scaleX *= utl.SQRT1_2;
@@ -110,9 +153,8 @@ export default class ImagesView extends React.Component<Props, State> {
             trns.translateY = (this.imagesElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
             visualizationBuilder.setImagesTrns(trns);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width, this.props.height);
-            this.setState((prevState) => {
-                return {zoom: prevState.zoom * utl.SQRT1_2}
-            });
+            activeModel.zoom *= utl.SQRT1_2;
+            this.forceUpdate();
         }
     };
     /**
@@ -158,7 +200,7 @@ export default class ImagesView extends React.Component<Props, State> {
      */
     render() {
         const { width, height } = this.props;
-        const { zoom } = this.state;
+        const activeModel = this.state.models[this.state.activeModelID];
 
         return (
             <div className="canvas-wrapper" id="images-view-wrapper" style={{width: width, height: height}}>
@@ -169,7 +211,7 @@ export default class ImagesView extends React.Component<Props, State> {
                 </canvas>
                 <div className="view-controls" id="images-view-controls">
                     <strong className="ui">Images composition view</strong>
-                    Zoom: {Math.round(zoom)}%
+                    Zoom: {Math.round(activeModel.zoom)}%
                 </div>
                 <Button.Group basic size='mini' className="zoom-controls">>
                     <Button icon='plus' onClick={this.handleZoomIn}/>
