@@ -28,5 +28,5 @@ export const objTypeIdxMenu = [
     {key: 7, value: 7, text: 'Tree'},
     {key: 8, value: 8, text: 'House'},
     {key: 9, value: 9, text: 'Wall'},
-    {key: 10, value: 10, text: 'Figure'},
+    {key: 10, value: 10, text: 'Human'},
 ];
