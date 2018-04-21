@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Accordion, Button } from 'semantic-ui-react'
+import { Accordion, Button, Icon, Popup, Checkbox } from 'semantic-ui-react'
 import 'react-rangeslider/lib/index.css'
 import CameraConfiguration from "./left_panel_modules/CameraConfiguration";
 import DisplayAndViewerConfiguration from "./left_panel_modules/DisplayAndViewerConfiguration";
@@ -63,6 +63,8 @@ export default class LeftPanel extends React.Component<Props, State> {
         this.state = {
             clipboard: new Map(),
             openSettings: new Set([0]), // we want tab with index 0 to be open by default
+            isPanelSettingsOpen: false,
+            useDoubleColumn: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
         };
     }
     /**
@@ -152,7 +154,7 @@ export default class LeftPanel extends React.Component<Props, State> {
      */
     checkPanelSize = () => {
         // use panel double size only for desktop devices
-        if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+        if(this.state.useDoubleColumn) {
             this.panelFirstColumn = [];
             this.panelSecondColumn = [];
             // $FlowFixMe
@@ -182,32 +184,57 @@ export default class LeftPanel extends React.Component<Props, State> {
         e.stopPropagation();
         this.forceUpdate();
     };
+
+    handleTogglePanelSettings = () => {
+        this.setState((prev) => {
+            return {isPanelSettingsOpen: !prev.isPanelSettingsOpen}
+        }, this.checkPanelSize);
+    };
+
+    handleToggleDoubleColumn = () => {
+        this.setState((prev) => {
+            return {useDoubleColumn: !prev.useDoubleColumn}
+        });
+    };
+
     /**
      * Component HTML representation
      * @return {HTMLElement} rendered component
      */
     render() {
-        const { openSettings, clipboard } = this.state;
+        const { isPanelSettingsOpen, useDoubleColumn, openSettings, clipboard } = this.state;
         const { sidePanelWidth, leftPanelWidth } = this.props;
 
         return (
             <div id="left-column" style={{width: leftPanelWidth}}>
-                <h2>Configuration</h2>
-                <div id="clipboard-settings">
-                    Clipboard: {clipboard.size} setting(s)
-                    <Button.Group size='mini'>
+                <h2>
+                    <Button active={isPanelSettingsOpen} onClick={this.handleTogglePanelSettings} icon><Icon name='settings'/></Button>
+                    Configuration
+                </h2>
+                <div id="clipboard-settings" style={{display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
+                    <div className="option-group-line">
+                        Clipboard: {clipboard.size} setting(s)
+                    </div>
+                    <Button.Group size='mini' style={{float: ((this.panelSecondColumn.length > 0) ? 'right' : 'none')}}>
                         <Button size='mini' color='yellow' onClick={this.handleConfigurationPaste}>Paste</Button>
                         <Button size='mini' color='red' onClick={this.handleConfigurationClearAll}>Clear all</Button>
-                        <Button size='mini' color='green' onClick={this.handleConfigurationCopyAll}>Copy all</Button>
+                        <Button size='mini' color='olive' onClick={this.handleConfigurationCopyAll}>Copy all</Button>
                         <Button size='mini' color='green' onClick={this.handleCenterPanelCopy}>Copy views</Button>
                     </Button.Group>
                 </div>
                 <div className="side-panel-column" id="first-left-column" style={{width: sidePanelWidth}}>
-                    <Accordion fluid>
+                    <div id="panel-settings" style={{display: ((isPanelSettingsOpen) ? 'block' : 'none')}}>
+                        <h3>Panel Settings</h3>
+                        <div className="option-group-line">
+                            <Popup trigger={<Checkbox label='Use double column' onChange={this.handleToggleDoubleColumn}
+                                checked={useDoubleColumn}/>} content="Panel will use two columns if open settings can't fit into one." inverted />
+                        </div>
+                    </div>
+                    <Accordion fluid style={{display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
                         {this.panelFirstColumn.map((f, index) => f(openSettings, index))}
                     </Accordion>
                 </div>
-                <div className="side-panel-column" style={{width: sidePanelWidth}}>
+                <div className="side-panel-column" style={{width: sidePanelWidth, display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
                     <Accordion fluid>
                         {this.panelSecondColumn.map((f, index) => f(openSettings, index))}
                     </Accordion>

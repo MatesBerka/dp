@@ -14,6 +14,10 @@
                                   supported by Chrome and Opera */
 }
 
+.ui.button {
+    background: #d8d8d8 none;
+}
+
 .ui.input input.short-input {
     width: 60px;
     padding: .67857143em 0.5em
@@ -250,10 +254,6 @@ canvas {
     padding: 10px;
 }
 
-#stereoscopy-simulator > section .ui.accordion > div.object-item > .title {
-
-}
-
 #stereoscopy-simulator > section .ui.accordion > .content.active,
 #stereoscopy-simulator > section .ui.accordion > div.object-item > .content.active,
 #stereoscopy-simulator > section .ui.accordion > div.configuration-item > .content.active,
@@ -264,6 +264,7 @@ canvas {
     border-bottom: 1px solid rgba(34,36,38,.15);
 }
 
+#panel-settings,
 #stereoscopy-simulator > section .ui.accordion > .content,
 #stereoscopy-simulator > section .ui.accordion > div.object-item > .content,
 #stereoscopy-simulator > section .ui.accordion > div.configuration-item > .content {
@@ -301,7 +302,7 @@ canvas {
 #stereoscopy-simulator > section.side-panel h2 > .ui.button {
     position: absolute;
     top: 6px;
-    right: 7px;
+    left: 7px;
 }
 
 .ui.dropdown .menu>.item {
@@ -581,7 +582,23 @@ h3, h4 {
 }
 
 #clipboard-settings {
-    padding: 10px;
+    padding: 10px 10px 3px 10px;
     background-color: #333333;
     color: white;
+    overflow: hidden;
+}
+
+#clipboard-settings div.option-group-line,
+#clipboard-settings div.buttons {
+    padding: 0 0 7px 0;
+    margin: 0;
+}
+
+#clipboard-settings div.option-group-line {
+    padding-right: 7px;
+    float: left;
+}
+
+#stereoscopy-simulator #clipboard-settings .ui.button {
+    padding: .48571429em
 }
