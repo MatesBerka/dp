@@ -48,17 +48,28 @@ export default class SceneConfiguration extends React.Component<Props, State> {
         this.modelSwitchListener = function(payload) {
             this.setState({ modelObjects: sceneObjectDAO.getActiveRecord() });
         }.bind(this);
-        dispatcher.register('modelSwitch', this.modelSwitchListener);
-        dispatcher.register('paste', this.modelSwitchListener);
+
         this.sceneConfigurationUpdate = function(payload) {
             this.forceUpdate();
         }.bind(this);
+
+        this.selectedObjListener = function(payload) {
+            let { openObjectSettings } = this.state;
+            openObjectSettings.clear();
+            openObjectSettings.add(payload.selectObjID);
+            this.setState({ openObjectSettings: openObjectSettings });
+        }.bind(this);
+
+        dispatcher.register('objectSelected', this.selectedObjListener);
+        dispatcher.register('modelSwitch', this.modelSwitchListener);
+        dispatcher.register('paste', this.modelSwitchListener);
         dispatcher.register('sceneConfigurationUpdate', this.sceneConfigurationUpdate);
     }
     /**
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('objectSelected', this.selectedObjListener);
         dispatcher.unregister('modelSwitch', this.modelSwitchListener);
         dispatcher.register('paste', this.modelSwitchListener);
         dispatcher.unregister('sceneConfigurationUpdate', this.sceneConfigurationUpdate);

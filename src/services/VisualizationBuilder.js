@@ -171,7 +171,8 @@ class VisualizationBuilder {
      * @param {number} y coordinates
      * @return {null | vec3} selected object center coordinates or null
      */
-    getSelectedObject(x: number, y: number): null | vec3 {
+    getSelectedObject(x: number, y: number): null | [vec3, number] {
+        let oi = 0;
         // $FlowFixMe
         this.focusedObject = null;
         let vertices = [[x, y, 0]], point;
@@ -180,7 +181,7 @@ class VisualizationBuilder {
         let objects = sceneObjectDAO.getActiveRecord();
         if (this.cameraSideView) { // height and depth
             let vec = [0, -vertices[0][1], vertices[0][0]];
-            for (let oi = 0; oi < objects.length; oi++) {
+            for (oi = 0; oi < objects.length; oi++) {
                 let verCopy = [vec.slice()];
                 // $FlowFixMe
                 VisualizationBuilder._reverseTransformObject(verCopy, objects[oi]);
@@ -193,7 +194,7 @@ class VisualizationBuilder {
             }
         } else { // width and depth
             let vec = [vertices[0][1], 0, vertices[0][0]];
-            for (let oi = 0; oi < objects.length; oi++) {
+            for (oi = 0; oi < objects.length; oi++) {
                 let verCopy = [vec.slice()];
                 // $FlowFixMe
                 VisualizationBuilder._reverseTransformObject(verCopy, objects[oi]);
@@ -212,7 +213,7 @@ class VisualizationBuilder {
             // $FlowFixMe
             vecOpr.objectTranslate(point, [this.activeCameraTrns.translateX, this.activeCameraTrns.translateY, 0]);
             // $FlowFixMe
-            return point[0];
+            return [point[0], oi];
         } else {
             return null;
         }

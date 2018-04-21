@@ -327,9 +327,11 @@ export default class CameraView extends React.Component<Props, State> {
         if (!this.translating) {
             let ex = e.clientX - rect.left;
             let ey = e.clientY - rect.top;
-            let objCenter = visualizationBuilder.getSelectedObject(ex, ey);
-            if (objCenter != null)
-                this.showObjectControl(objCenter);
+            let obj = visualizationBuilder.getSelectedObject(ex, ey);
+            if (obj != null) {
+                this.showObjectControl(obj[0]);
+                dispatcher.dispatch('objectSelected', {selectObjID: obj[1]})
+            }
         }
     };
     /**
