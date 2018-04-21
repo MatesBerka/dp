@@ -47,14 +47,10 @@ export default class CenterPanel extends React.Component<Props, State> {
     CAN_MIN_EDGE_SIZE: number = 70;
     SIM_VIEWS_MIN_HEIGHT: number = 40;
 
-    SIMULATION_VIEWS_HEIGHT: number = 0;
-    CENTER_PANEL_HEIGHT: number = 0;
-    CENTER_PANEL_WIDTH: number = 0;
-    IMAGES_VIEW_WIDTH: number = 100;
-
     // component variables
     exportListener: Function;
     importListener: Function;
+    getCenterPanelSettingsListener: Function;
     body: HTMLElement;
     diagnosticsElm: HTMLElement;
     simulationsViewElm: HTMLElement;
@@ -138,6 +134,20 @@ export default class CenterPanel extends React.Component<Props, State> {
             this.forceUpdate();
         }.bind(this);
 
+        this.getCenterPanelSettingsListener = function(payload) {
+            payload['centerPanelC'] = Object.assign({}, this.state.models[this.state.activeModelID]);
+        }.bind(this);
+
+        this.pasteListener = function(payload) {
+            let models = this.state.models;
+            if (payload.hasOwnProperty('centerPanelC')) {
+                models[this.state.activeModelID] = payload['centerPanelC'];
+                this.updateViewsSize(this.state.activeModelID);
+            }
+        }.bind(this);
+
+        dispatcher.register('getCenterPanelSettings', this.getCenterPanelSettingsListener);
+        dispatcher.register('paste', this.pasteListener);
         dispatcher.register('exporting', this.exportListener);
         dispatcher.register('importing', this.importListener);
     };
@@ -145,6 +155,8 @@ export default class CenterPanel extends React.Component<Props, State> {
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('getCenterPanelSettings', this.getCenterPanelSettingsListener);
+        dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('exporting', this.exportListener);
         dispatcher.unregister('importing', this.importListener);
     };

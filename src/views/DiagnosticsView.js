@@ -25,7 +25,8 @@ type State = {
 export default class DiagnosticsView extends React.Component<Props, State> {
     SHOW_DIAGNOSTICS_DEFAULT: number = true;
     modelSwitchListener: Function;
-    diagnosticsUpdate: Function;
+    diagnosticsUpdateListener: Function;
+    getCenterPanelSettingsListener: Function;
     /**
      * Component constructor
      */
@@ -61,7 +62,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
             this.state.models.splice(payload.modelIDToRemove, 1);
         }.bind(this);
 
-        this.diagnosticsUpdate = function(payload) {
+        this.diagnosticsUpdateListener = function(payload) {
             diagnosticsService.updateDiagnostics();
             this.forceUpdate();
         }.bind(this);
@@ -78,21 +79,37 @@ export default class DiagnosticsView extends React.Component<Props, State> {
             this.forceUpdate();
         }.bind(this);
 
+        this.getCenterPanelSettingsListener = function(payload) {
+            payload['diagnosticsViewC'] = Object.assign({}, this.state.models[this.state.activeModelID]);
+        }.bind(this);
+
+        this.pasteListener = function(payload) {
+            let models = this.state.models;
+            if (payload.hasOwnProperty('diagnosticsViewC')) {
+                models[this.state.activeModelID] = payload['diagnosticsViewC'];
+            }
+            this.forceUpdate();
+        }.bind(this);
+
+        dispatcher.register('getCenterPanelSettings', this.getCenterPanelSettingsListener);
+        dispatcher.register('paste', this.pasteListener);
         dispatcher.register('exporting', this.exportListener);
         dispatcher.register('importing', this.importListener);
         dispatcher.register('modelDelete', this.modelDeleteListener);
         dispatcher.register('modelSwitch', this.modelSwitchListener);
-        dispatcher.register('configurationUpdate', this.diagnosticsUpdate);
+        dispatcher.register('configurationUpdate', this.diagnosticsUpdateListener);
     }
     /**
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('getCenterPanelSettings', this.getCenterPanelSettingsListener);
+        dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('exporting', this.exportListener);
         dispatcher.unregister('importing', this.importListener);
         dispatcher.unregister('modelDelete', this.modelDeleteListener);
         dispatcher.unregister('modelSwitch', this.modelSwitchListener);
-        dispatcher.unregister('configurationUpdate', this.diagnosticsUpdate);
+        dispatcher.unregister('configurationUpdate', this.diagnosticsUpdateListener);
     };
     /**
      * Calls callback to update views size if diagnostics sections was closed/opened.

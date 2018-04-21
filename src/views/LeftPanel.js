@@ -17,7 +17,7 @@ type Props = {
     updateCallback: Function
 };
 type State = {
-    clipboard: Map<number, [number, GenericDAO]>,
+    clipboard: Map<number, Array<Object>>,
     openSettings: Set<number>,
 };
 
@@ -110,11 +110,16 @@ export default class LeftPanel extends React.Component<Props, State> {
      * Function takes stored entities in clipboard and stores them in active model
      */
     handleConfigurationPaste = () => {
+        let pasteObj = {};
         this.state.clipboard.forEach(function(value, key, map) {
-            value[1].replaceRecord(value[0]);
+            if (key === 'centerPanelSettings') {
+                pasteObj = value[0];
+            } else {
+                value[1].replaceRecord(value[0]);
+            }
         });
         this.state.clipboard.clear();
-        dispatcher.dispatch('paste', {});
+        dispatcher.dispatch('paste', pasteObj);
         this.forceUpdate();
     };
     /**
@@ -126,6 +131,13 @@ export default class LeftPanel extends React.Component<Props, State> {
                 this.state.clipboard.set(dao.name, [dao.getCopy(), dao]);
             }
         }.bind(this));
+        this.handleCenterPanelCopy();
+        this.forceUpdate();
+    };
+    handleCenterPanelCopy = () => {
+        let centerPanelSettings = {};
+        dispatcher.dispatch('getCenterPanelSettings', centerPanelSettings);
+        this.state.clipboard.set('centerPanelSettings', [centerPanelSettings]);
         this.forceUpdate();
     };
     /**
@@ -187,6 +199,7 @@ export default class LeftPanel extends React.Component<Props, State> {
                         <Button size='mini' color='yellow' onClick={this.handleConfigurationPaste}>Paste</Button>
                         <Button size='mini' color='red' onClick={this.handleConfigurationClearAll}>Clear all</Button>
                         <Button size='mini' color='green' onClick={this.handleConfigurationCopyAll}>Copy all</Button>
+                        <Button size='mini' color='green' onClick={this.handleCenterPanelCopy}>Copy views</Button>
                     </Button.Group>
                 </div>
                 <div className="side-panel-column" id="first-left-column" style={{width: sidePanelWidth}}>

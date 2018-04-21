@@ -45,6 +45,7 @@ export default class ViewerView extends React.Component<Props, State> {
     pasteListener: Function;
     modelSwitch: Function;
     modelDelete: Function;
+    getCenterPanelSettingsListener: Function;
     /**
      * Component constructor
      */
@@ -71,8 +72,13 @@ export default class ViewerView extends React.Component<Props, State> {
         }.bind(this);
 
         this.pasteListener = function(payload) {
+            let models = this.state.models;
+            if (payload.hasOwnProperty('viewerViewC')) {
+                models[this.state.activeModelID] = payload['viewerViewC'][0];
+                visualizationBuilder.setViewerTrns(payload['viewerViewC'][1]);
+            }
             visualizationBuilder.updateActiveModel(this.state.activeModelID);
-            visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
+            this.updateVisualization(this.state.activeModelID);
         }.bind(this);
 
         this.switchListener = function(payload) {
@@ -98,10 +104,11 @@ export default class ViewerView extends React.Component<Props, State> {
         }.bind(this);
 
         this.exportListener = function(payload) {
-            payload['viewerView'] = [this.state.models, this.state.activeModelID]
+            payload['viewerView'] = [this.state.models, this.state.activeModelID, visualizationBuilder.getAllViewerTrns()]
         }.bind(this);
 
         this.importListener = function(payload) {
+            visualizationBuilder.setAllViewerTrns(payload['cameraView'][2], payload['cameraView'][1]);
             this.setState({
                 models:  payload['viewerView'][0],
                 activeModelID:  payload['viewerView'][1]
@@ -109,6 +116,14 @@ export default class ViewerView extends React.Component<Props, State> {
             this.forceUpdate();
         }.bind(this);
 
+        this.getCenterPanelSettingsListener = function(payload) {
+            payload['viewerViewC'] = [
+                Object.assign({}, this.state.models[this.state.activeModelID]),
+                Object.assign({}, visualizationBuilder.getViewerTrns())
+            ];
+        }.bind(this);
+
+        dispatcher.register('getCenterPanelSettings', this.getCenterPanelSettingsListener);
         dispatcher.register('exporting', this.exportListener);
         dispatcher.register('importing', this.importListener);
         dispatcher.register('modelDelete', this.deleteListener);
@@ -120,6 +135,7 @@ export default class ViewerView extends React.Component<Props, State> {
      * After the component is removed from the DOM un-register listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('getCenterPanelSettings', this.getCenterPanelSettingsListener);
         dispatcher.unregister('exporting', this.exportListener);
         dispatcher.unregister('importing', this.importListener);
         dispatcher.unregister('modelDelete', this.deleteListener);

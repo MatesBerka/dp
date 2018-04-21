@@ -68,6 +68,7 @@ export default class CameraView extends React.Component<Props, State> {
     pasteListener: Function;
     modelSwitch: Function;
     modelDelete: Function;
+    getCenterPanelSettingsListener: Function;
     /**
      * Component constructor
      */
@@ -104,10 +105,15 @@ export default class CameraView extends React.Component<Props, State> {
         }.bind(this);
 
         this.pasteListener = function(payload) {
+            let models = this.state.models;
+            if (payload.hasOwnProperty('cameraViewC')) {
+                models[this.state.activeModelID] = payload['cameraViewC'][0];
+                visualizationBuilder.setCameraTrns(payload['cameraViewC'][1]);
+            }
             // close object focus frame
-            this.setState({ objCtrlShow: 'none' });
+            this.setState({objCtrlShow: 'none'});
             visualizationBuilder.updateActiveModel(this.state.activeModelID);
-            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
+            this.updateVisualization(this.state.activeModelID);
         }.bind(this);
 
         this.modelSwitch = function(payload) {
@@ -130,10 +136,11 @@ export default class CameraView extends React.Component<Props, State> {
         }.bind(this);
 
         this.exportListener = function(payload) {
-            payload['cameraView'] = [this.state.models, this.state.activeModelID]
+            payload['cameraView'] = [this.state.models, this.state.activeModelID, visualizationBuilder.getAllCameraTrns()]
         }.bind(this);
 
         this.importListener = function(payload) {
+            visualizationBuilder.setAllCameraTrns(payload['cameraView'][2], payload['cameraView'][1]);
             this.setState({
                 models:  payload['cameraView'][0],
                 activeModelID:  payload['cameraView'][1]
@@ -141,6 +148,14 @@ export default class CameraView extends React.Component<Props, State> {
             this.forceUpdate();
         }.bind(this);
 
+        this.getCenterPanelSettingsListener = function(payload) {
+            payload['cameraViewC'] = [
+                Object.assign({}, this.state.models[this.state.activeModelID]),
+                Object.assign({}, visualizationBuilder.getCameraTrns())
+            ];
+        }.bind(this);
+
+        dispatcher.register('getCenterPanelSettings', this.getCenterPanelSettingsListener);
         dispatcher.register('exporting', this.exportListener);
         dispatcher.register('importing', this.importListener);
         dispatcher.register('modelSwitch', this.modelSwitch);
@@ -152,6 +167,7 @@ export default class CameraView extends React.Component<Props, State> {
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
+        dispatcher.unregister('getCenterPanelSettings', this.getCenterPanelSettingsListener);
         dispatcher.unregister('exporting', this.exportListener);
         dispatcher.unregister('importing', this.importListener);
         dispatcher.unregister('modelSwitch', this.modelSwitch);

@@ -122,6 +122,27 @@ class VisualizationBuilder {
     setImagesTrns(trns: trnsType) {
         this.imagesTrns[this.activeModelID] = trns;
     }
+    getAllCameraTrns(): trnsType {
+        return this.cameraTrns;
+    }
+    getAllViewerTrns(): trnsType {
+        return this.viewerTrns;
+    }
+    getAllImagesTrns(): trnsType {
+        return this.imagesTrns;
+    }
+    setAllCameraTrns(trns: trnsType, activeModelID: number) {
+        this.cameraTrns = trns;
+        this.activeModelID = activeModelID;
+    }
+    setAllViewerTrns(trns: trnsType, activeModelID: number) {
+        this.viewerTrns = trns;
+        this.activeModelID = activeModelID;
+    }
+    setAllImagesTrns(trns: trnsType, activeModelID: number) {
+        this.imagesTrns = trns;
+        this.activeModelID = activeModelID;
+    }
     /**
      * Helper function used to get mouse click to the object origin.
      * @private
