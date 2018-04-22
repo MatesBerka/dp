@@ -128,10 +128,9 @@ export default class CenterPanel extends React.Component<Props, State> {
 
         this.importListener = function(payload) {
             this.setState({
+                activeModelID:  payload['centerPanel'][1],
                 models:  payload['centerPanel'][0],
-                activeModelID:  payload['centerPanel'][1]
             });
-            this.forceUpdate();
         }.bind(this);
 
         this.getCenterPanelSettingsListener = function(payload) {
@@ -344,6 +343,7 @@ export default class CenterPanel extends React.Component<Props, State> {
     handleVerticalBarMoveStart = (e: MouseEvent | Touch) => {
         // NOTE: here we use state directly because we not there will be no update in the DOM
         this.verticalBarStartX = e.clientX;
+        this.orgImagesViewWidthRatio = this.state.models[this.state.activeModelID].imagesViewWidthRatio;
         this.body.addEventListener('mousemove', this.handleVerticalBarMove, window.passiveEventListener);
         this.body.addEventListener('touchmove', this.handleVerticalBarTouchMove, window.passiveEventListener);
         this.body.addEventListener('mouseup', this.handleVerticalBarMoveEnd);
@@ -383,6 +383,7 @@ export default class CenterPanel extends React.Component<Props, State> {
      */
     handleHorizontalBarMoveStart = (e: MouseEvent | Touch) => {
         this.horizontalBarStartY = e.clientY;
+        this.orgViewerViewHeightRatio = this.state.models[this.state.activeModelID].viewerViewHeightRatio;
         this.body.addEventListener('mousemove', this.handleHorizontalBarMove, window.passiveEventListener);
         this.body.addEventListener('touchmove', this.handleHorizontalBarTouchMove, window.passiveEventListener);
         this.body.addEventListener('mouseup', this.handleHorizontalBarMoveEnd, window.passiveEventListener);

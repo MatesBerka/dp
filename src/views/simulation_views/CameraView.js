@@ -142,10 +142,9 @@ export default class CameraView extends React.Component<Props, State> {
         this.importListener = function(payload) {
             visualizationBuilder.setAllCameraTrns(payload['cameraView'][2], payload['cameraView'][1]);
             this.setState({
+                activeModelID:  payload['cameraView'][1],
                 models:  payload['cameraView'][0],
-                activeModelID:  payload['cameraView'][1]
             });
-            this.forceUpdate();
         }.bind(this);
 
         this.getCenterPanelSettingsListener = function(payload) {

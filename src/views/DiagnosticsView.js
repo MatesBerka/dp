@@ -73,10 +73,9 @@ export default class DiagnosticsView extends React.Component<Props, State> {
 
         this.importListener = function(payload) {
             this.setState({
+                activeModelID:  payload['diagnosticsView'][1],
                 models:  payload['diagnosticsView'][0],
-                activeModelID:  payload['diagnosticsView'][1]
             });
-            this.forceUpdate();
         }.bind(this);
 
         this.getCenterPanelSettingsListener = function(payload) {

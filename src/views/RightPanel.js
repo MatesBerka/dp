@@ -77,7 +77,7 @@ export default class RightPanel extends React.Component<Props, State> {
                     // if components exported some settings then they can load them back
                     dispatcher.dispatch('importing', simulation[6]);
                     // now notify about model change
-                    dispatcher.dispatch('modelSwitch', {});
+                    dispatcher.dispatch('modelSwitch', {modelID: simulation[7]});
                 } catch(e) {
                     console.error(e);
                     alert(e);
