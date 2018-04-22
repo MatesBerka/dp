@@ -49,6 +49,10 @@ class CameraDAO extends GenericDAO {
                 camerasCount: instance.camerasCount,
                 cameraType: instance.cameraType,
                 focalLengthCorrection: instance.focalLengthCorrection,
+                keepCamerasAngle: instance.keepCamerasAngle,
+                keepCamerasAngleRatio: instance.keepCamerasAngleRatio,
+                keepObjectSize: instance.keepObjectSize,
+                keepObjectSizeRatio: instance.keepObjectSizeRatio
             });
         }
         return entities;
@@ -80,6 +84,10 @@ class CameraDAO extends GenericDAO {
             instance.camerasCount = entity.camerasCount;
             instance.cameraType = entity.cameraType;
             instance.focalLengthCorrection = entity.focalLengthCorrection;
+            instance.keepCamerasAngle = entity.keepCamerasAngle;
+            instance.keepCamerasAngleRatio = entity.keepCamerasAngleRatio;
+            instance.keepObjectSize = entity.keepObjectSize;
+            instance.keepObjectSizeRatio = entity.keepObjectSizeRatio;
 
             this.records.push(instance);
         }

@@ -23,6 +23,10 @@ export default class Camera  extends Generic {
     cameraDistance: number = 1;
     cameraDistanceUnit: number = unitIdx.m;
     cameraSeparation: number = 0.063;
+    keepCamerasAngle: boolean = false;
+    keepCamerasAngleRatio: number = 0;
+    keepObjectSize: boolean = false;
+    keepObjectSizeRatio: number = 0;
     cameraSeparationUnit: number = unitIdx.mm;
     cameraCrossing: number = 0;
     cameraCrossingUnit: number = unitIdx.mm;
@@ -68,6 +72,10 @@ export default class Camera  extends Generic {
         copy.cameraType = this.cameraType;
         copy.focalLengthCorrection = this.focalLengthCorrection;
         copy.cameras = this.cameras;
+        copy.keepCamerasAngle = this.keepCamerasAngle;
+        copy.keepCamerasAngleRatio = this.keepCamerasAngleRatio;
+        copy.keepObjectSize = this.keepObjectSize;
+        copy.keepObjectSizeRatio = this.keepObjectSizeRatio;
 
         return copy;
     }
@@ -195,6 +203,8 @@ export default class Camera  extends Generic {
     }
     setFocalLength(value: number) {
         this.focalLength = value;
+        if (this.keepObjectSize)
+            this.cameraDistance = this.focalLength / this.keepObjectSizeRatio;
     }
     setFocalLengthUnit(value: number) {
         this.focalLengthUnit = value;
@@ -212,12 +222,34 @@ export default class Camera  extends Generic {
     }
     setCameraDistance(value: number) {
         this.cameraDistance = value;
+        if (this.keepCamerasAngle)
+            this.cameraSeparation = this.cameraDistance * this.keepCamerasAngleRatio;
+        if (this.keepObjectSize)
+            this.focalLength = this.keepObjectSizeRatio * this.cameraDistance;
+    }
+    setKeepCamerasAngle(value: boolean) {
+        this.keepCamerasAngle = value;
+        if (this.keepCamerasAngle)
+            this.keepCamerasAngleRatio = this.cameraSeparation / this.cameraDistance;
+    }
+    setKeepObjectSize(value: boolean) {
+        this.keepObjectSize = value;
+        if (this.keepObjectSize)
+            this.keepObjectSizeRatio = this.focalLength / this.cameraDistance;
+    }
+    getKeepCamerasAngle(): boolean {
+        return this.keepCamerasAngle;
+    }
+    getKeepObjectSize(): boolean {
+        return this.keepObjectSize;
     }
     setCameraDistanceUnit(value: number) {
         this.cameraDistanceUnit = value;
     }
     setCameraSeparation(value: number) {
         this.cameraSeparation = value;
+        if (this.keepCamerasAngle)
+            this.cameraDistance = this.cameraSeparation / this.keepCamerasAngleRatio;
     }
     setCameraSeparationUnit(value: number) {
         this.cameraSeparationUnit = value;

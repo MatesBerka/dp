@@ -68,15 +68,15 @@ export default class CameraConfiguration extends React.Component<Props, State> {
      * Events handling functions for component controls.
      */
     handleFocalLengthChange = (value: number) => {
-        this.state.cm.setValueForControl('focalLength', parseFloat(value));
+        this.state.cm.setFocalLength(parseFloat(value) * unitDefinition[this.state.cm.getFocalLengthUnit()].value);
         this.distributeUpdate();
     };
     handleCameraDistanceChange = (value: number) => {
-        this.state.cm.setValueForControl('cameraDistance', parseFloat(value));
+        this.state.cm.setCameraDistance(parseFloat(value) * unitDefinition[this.state.cm.getCameraDistanceUnit()].value);
         this.distributeUpdate();
     };
     handleCameraSeparationChange = (value: number) => {
-        this.state.cm.setValueForControl('cameraSeparation', parseFloat(value));
+        this.state.cm.setCameraSeparation(parseFloat(value) * unitDefinition[this.state.cm.getCameraSeparationUnit()].value);
         this.distributeUpdate();
     };
     handleCameraCrossingChange = (value: number) => {
@@ -132,6 +132,15 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         this.state.cm.setFocalLengthCorrection(data.checked);
         this.distributeUpdate();
     };
+    handleKeepCamerasAngleToggle = (e: Object, data: Object) => {
+        this.state.cm.setKeepCamerasAngle(data.checked);
+        this.distributeUpdate();
+    };
+    handleKeepObjectSizeToggle = (e: Object, data: Object) => {
+        this.state.cm.setKeepObjectSize(data.checked);
+        this.distributeUpdate();
+    };
+
     /**
      * Component HTML representation
      * @return {HTMLElement} rendered component
@@ -299,6 +308,14 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                     <div className="option-group-line">
                         <Popup trigger={<Checkbox label='Focal length correction' onChange={this.handleFocalLengthCorrectionToggle}
                             checked={cm.getFocalLengthCorrection()}/>} content='Set true for autocorrection.' inverted />
+                    </div>
+                    <div className="option-group-line">
+                        <Checkbox label='Keep cameras angle' onChange={this.handleKeepCamerasAngleToggle}
+                            checked={cm.getKeepCamerasAngle()}/>
+                    </div>
+                    <div className="option-group-line">
+                        <Checkbox label='Keep object size' onChange={this.handleKeepObjectSizeToggle}
+                            checked={cm.getKeepObjectSize()}/>
                     </div>
                 </Accordion.Content>
             </div>
