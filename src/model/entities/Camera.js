@@ -35,6 +35,8 @@ export default class Camera  extends Generic {
     camerasCount: number = 2;
     cameraType: string = 'toe-in';
     focalLengthCorrection: boolean = false;
+    acuityAngle: number = (2 / 60) * Math.PI / 180; // static value for this version
+    sensorPixelWidth: number = 5e-6; // static value for this version
     // this value is computed in VisualizationBuilder
     cameras: Array<cameraType> | null = null;
     // static variables
@@ -181,6 +183,12 @@ export default class Camera  extends Generic {
         } else { // value will be computed
             return '';
         }
+    }
+    getAcuityAngle(): number {
+        return this.acuityAngle;
+    }
+    getSensorPixelWidth(): number {
+        return this.sensorPixelWidth;
     }
     setCameras(cameras: Array<cameraType>) {
         this.cameras = cameras;

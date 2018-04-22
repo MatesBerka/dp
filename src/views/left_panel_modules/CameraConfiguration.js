@@ -124,6 +124,10 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         dispatcher.dispatch('camerasCountChange', {});
         this.distributeUpdate();
     };
+    handleFNumberChange = (value: number) => {
+        this.state.cm.setFNumber(parseFloat(value));
+        this.distributeUpdate();
+    };
     handleCameraTypeChange = (value: string) => {
         this.state.cm.setCameraType(value);
         this.distributeUpdate();
@@ -293,6 +297,19 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 value={cm.getCamerasCount()}
                                 type={inputTypesName[CM.getCamerasCountControl(ctlSetLoc.inputTypes)]}
                                 step={CM.getCamerasCountControl(ctlSetLoc.step)}/>
+                        </div>
+                    </div>
+
+                    <div className="option-group-line">
+                        <div className="ui mini labeled input">
+                            <Popup trigger={<label className="ui label label">F-number:</label>}
+                                   content="Ratio of the cameras's focal length to the diameter of the entrance pupil." inverted />
+                            <input onChange={(e) => this.handleFNumberChange(e.target.value)} className="short-input"
+                                   min={CM.getFNumberControl(ctlSetLoc.min)}
+                                   max={CM.getFNumberControl(ctlSetLoc.max)}
+                                   value={cm.getFNumber()}
+                                   type={inputTypesName[CM.getFNumberControl(ctlSetLoc.inputTypes)]}
+                                   step={CM.getFNumberControl(ctlSetLoc.step)}/>
                         </div>
                     </div>
 

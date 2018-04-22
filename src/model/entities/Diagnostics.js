@@ -33,6 +33,8 @@ export default class Diagnostics  extends Generic {
     vergenceMaxRel: vec4 | string = [0,1,0,0];
     vergenceDistanceNear: vec4 = [0,1,0,0];
     vergenceDistanceFar: vec4 = [0,1,0,0];
+    camerasZNear: number = 0;
+    camerasZFar: number = 0;
     /**
      * @description Getters and Setters for entity values.
      */
@@ -111,6 +113,12 @@ export default class Diagnostics  extends Generic {
     getVergenceDistanceFar(): vec4 {
         return this.vergenceDistanceFar;
     }
+    getCamerasZNear(): number {
+        return this.camerasZNear;
+    }
+    getCamerasZFar(): number {
+        return this.camerasZFar;
+    }
     setVergenceDistanceNear(val: vec4) {
         this.vergenceDistanceNear = val;
     }
@@ -176,5 +184,11 @@ export default class Diagnostics  extends Generic {
     }
     setVergenceMaxRel(val: vec4 | string) {
         this.vergenceMaxRel = val;
+    }
+    setCamerasZNear(near: number) {
+        this.camerasZNear = near;
+    }
+    setCamerasZFar(far: number) {
+        this.camerasZFar = far;
     }
 }

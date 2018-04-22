@@ -19,6 +19,8 @@ import DisplayAndViewer from "../model/entities/DisplayAndViewer";
 import General from "../model/entities/General";
 import DrawableObject from "../model/drawable_objects/DrawableObject";
 import dispatcher from "./Dispatcher";
+import PostProcessing from "../model/entities/PostProcessing";
+import postProcessingDAO from "../model/PostProcessingDAO";
 
 /**
  * @classdesc Service class used to create simulation visualizations
@@ -49,6 +51,7 @@ class VisualizationBuilder {
     statVals: Diagnostics = diagnosticsDAO.getActiveRecord();
     cmVals: Camera = cameraDAO.getActiveRecord();
     DAW: DisplayAndViewer = displayAndViewerDAO.getActiveRecord();
+    postPr: PostProcessing = postProcessingDAO.getActiveRecord();
     gnrVals: General = generalDAO.getActiveRecord();
 
     scene: Array<DrawableObject>;
@@ -85,6 +88,7 @@ class VisualizationBuilder {
         this.cmVals = cameraDAO.getActiveRecord();
         this.DAW = displayAndViewerDAO.getActiveRecord();
         this.gnrVals = generalDAO.getActiveRecord();
+        this.postPr = postProcessingDAO.getActiveRecord();
         drawingHelper.updateActiveModel();
         photoTransformationsHelper.updateActiveModel();
         this.scene = drawingHelper.createScene();
@@ -547,6 +551,57 @@ class VisualizationBuilder {
         DrawingHelper.drawRulers(ctx, this.activeViewerTrns, viewerSideView, positions, this.viewerCanvasUnit);
         this.imagesVisible = imagesVisible;
     }
+     /**
+     * Function used to compute and draw depth of field and.
+     * https://en.wikipedia.org/wiki/Depth_of_field
+     * @public
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    _createDepthOfField(ctx: CanvasRenderingContext2D) {
+        let zNear, tmp, zFar; // to be calculated
+        // DETAILS SEEN ON DISPLAY
+        let displayWidth = this.DAW.getDisplayWidth();
+        let displayPixelsHorizontal = this.DAW.getDisplayPPL();
+        let viewingDistance = this.DAW.getHeadDistance();
+        let acuityAngle = this.cmVals.getAcuityAngle();
+        let displayPixelWidth = displayWidth / displayPixelsHorizontal;
+        let acuityWidth = viewingDistance * Math.tan(acuityAngle);
+        // at least two pixels should be used for detail.
+        let acuityPixelWidth = acuityWidth / 2;
+        if (acuityPixelWidth < displayPixelWidth)
+            acuityPixelWidth = displayPixelWidth;
+        // NOW RECALCULATE DISPLAY -> SENSOR
+        let sensorWidth = this.cmVals.getSensorWidth();
+        let postprocessZoom = this.postPr.getImagesZoom();
+        // zoom factor sensor -> display
+        let sensorToDisplayZoom = postprocessZoom * displayWidth / sensorWidth;
+        // Size "circle of confusion"
+        let coc = acuityPixelWidth / sensorToDisplayZoom;
+        // coc smaller then 1 px of sensor are not considered (too small)
+        let sensorPixelWidth = this.cmVals.getSensorPixelWidth();
+        // Accurately it should be limitCoc = sensorWidth / sensorPixelsHoriznotal where sensorPixelsHorizontal is number
+        // of pixels in sensor (horizontal). But for most sensors it is roughly 0.005 mm.
+        if (coc < sensorPixelWidth)
+            coc = sensorPixelWidth;
+        // AND FINALLY DEPTH OF FIELD
+        // picture is sharp in range from zNear to zFar. (disparity circle has diameter smaller then c)
+        let f = this.cmVals.getFocalLength();
+        let s = this.cmVals.getCameraDistance();
+        // N: f-number
+        let N = this.cmVals.getFNumber();
+        // first NEAR
+        zNear = s*f*f/(f*f + N*coc*(s-f));
+        DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zNear - s, "#8080ff", 'near', 30);
+        // now FAR
+        tmp = f*f - N*coc*(s-f);
+        if (tmp > 0) { // else image is sharp to infinity
+            zFar = (s*f*f)/tmp;
+            DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zFar - s, "#ff8080", 'far', 40);
+        }
+
+        this.statVals.setCamerasZNear(zNear);
+        this.statVals.setCamerasZFar(zFar);
+    }
     /**
      * Function used to render Camera view visualization.
      * @public
@@ -565,6 +620,7 @@ class VisualizationBuilder {
         DrawingHelper.drawCameras(ctx, this.activeCameraTrns, cameraSideView, cameras, true, true);
         DrawingHelper.drawZLine(ctx, this.activeCameraTrns, this.cmVals.getCameraCrossing(), "#a0a0a0", 'crossing', 5);
         DrawingHelper.drawZLine(ctx, this.activeCameraTrns, 0, "#40f040", 'focus', 15);
+        this._createDepthOfField(ctx);
         DrawingHelper.drawScene(ctx, this.activeCameraTrns, cameraSideView, this.scene);
         DrawingHelper.drawRulers(ctx, this.activeCameraTrns, cameraSideView, positions, this.cameraCanvasUnit);
         this.cameras = cameras;
