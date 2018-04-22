@@ -171,42 +171,55 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                 <Accordion fluid>
                     <Accordion.Title active={activeModel.toggleDiagnostics} onClick={this.handleToggleDiagnosticsView} id="diagnostics-header">
                         <Icon name='dropdown' /><h4>Diagnostics</h4>
-                        <Popup trigger={<Checkbox label='Global' onChange={this.handleToggleGlobalStat} checked={stats.isGlobalActive()}
-                            style={{float: 'right', padding: '5px'}} />} content='In case of multiple cameras diagnostic is computed from the first and last camera.' inverted />
                     </Accordion.Title>
                     <Accordion.Content active={activeModel.toggleDiagnostics}  id="diagnostics-body">
-                        <div className="diagnostics-line">
-                            <label><strong>Vergence Range:</strong></label>
+                        <div className="diagnostics-block">
+                            <h3>Viewer view</h3><br/>
+                            <Popup trigger={<Checkbox label='Compute globally' onChange={this.handleToggleGlobalStat} checked={stats.isGlobalActive()}/>}
+                                content='In case of multiple cameras diagnostic is computed from the first and last camera.' inverted />
+                            {/*<div className="diagnostics-line">*/}
+                                {/*<label><strong>Vergence Range:</strong></label>*/}
+                            {/*</div>*/}
+                            <div className="diagnostics-line">
+                                <label><strong>Vergence rel. to display: </strong></label><span>{this._convert(stats.getVergenceMinRel())}
+                                cm to {this._convert(stats.getVergenceMaxRel())} cm ({this._convert(stats.getVergenceMinRelD())}
+                                to {this._convert(stats.getVergenceMaxRelD())} D)</span>
+                            </div>
+                            {/*<div className="diagnostics-line">*/}
+                                {/*<label><strong>Absolute: </strong></label><span>{this._convert(stats.getVergenceMinAbs())}*/}
+                                {/*cm to {this._convert(stats.getVergenceMaxAbs())} cm</span>*/}
+                            {/*</div>*/}
+                            <div className="diagnostics-line">
+                                <label><strong>horizontal on-screen disparity </strong></label>
+                                <span>(negative: behind the screen; positive: in front)</span>:
+                            </div>
+                            <div className="diagnostics-line">
+                                <span>min: {this._convert(stats.getDisparityXMinMM())} mm ({this._convert(stats.getDisparityXMinPct())} %,
+                                {this._convert(stats.getDisparityXMinPx())} px, )  ~  conv. {this._convert(stats.getDisparityXMinConv())}°
+                                (parallax {this._convert(stats.getDisparityXMinParallax())}°)</span>
+                            </div>
+                            <div className="diagnostics-line">
+                                <span>max: {this._convert(stats.getDisparityXMaxMM())} mm ({this._convert(stats.getDisparityXMaxPct())} %,
+                                {this._convert(stats.getDisparityXMaxPx())} px, )  ~  conv. {this._convert(stats.getDisparityXMaxConv())}°
+                                (parallax {this._convert(stats.getDisparityXMaxParallax())}°)</span>
+                            </div>
+                            <div className="diagnostics-line">
+                                <label><strong>vertical on-screen disparity:</strong></label>
+                            </div>
+                            <div className="diagnostics-line">
+                                <span>max: {this._convert(stats.getDisparityYMaxMM())} mm ({this._convert(stats.getDisparityYMaxPct())} %,
+                                {this._convert(stats.getDisparityYMaxPx())} px, )  ~  (parallax {this._convert(stats.getDisparityYMaxParallax())}')</span>
+                            </div>
                         </div>
-                        <div className="diagnostics-line">
-                            <label><strong>Rel. to display: </strong></label><span>{this._convert(stats.getVergenceMinRel())}
-                            cm to {this._convert(stats.getVergenceMaxRel())} cm ({this._convert(stats.getVergenceMinRelD())}
-                            to {this._convert(stats.getVergenceMaxRelD())} D)</span>
-                        </div>
-                        <div className="diagnostics-line">
-                            <label><strong>Absolute: </strong></label><span>{this._convert(stats.getVergenceMinAbs())}
-                            cm to {this._convert(stats.getVergenceMaxAbs())} cm</span>
-                        </div>
-                        <div className="diagnostics-line">
-                            <label><strong>horizontal on-screen disparity </strong></label>
-                            <span>(negative: behind the screen; positive: in front)</span>:
-                        </div>
-                        <div className="diagnostics-line">
-                            <span>min: {this._convert(stats.getDisparityXMinMM())} mm ({this._convert(stats.getDisparityXMinPct())} %,
-                            {this._convert(stats.getDisparityXMinPx())} px, )  ~  conv. {this._convert(stats.getDisparityXMinConv())}°
-                            (parallax {this._convert(stats.getDisparityXMinParallax())}°)</span>
-                        </div>
-                        <div className="diagnostics-line">
-                            <span>max: {this._convert(stats.getDisparityXMaxMM())} mm ({this._convert(stats.getDisparityXMaxPct())} %,
-                            {this._convert(stats.getDisparityXMaxPx())} px, )  ~  conv. {this._convert(stats.getDisparityXMaxConv())}°
-                            (parallax {this._convert(stats.getDisparityXMaxParallax())}°)</span>
-                        </div>
-                        <div className="diagnostics-line">
-                            <label><strong>vertical on-screen disparity:</strong></label>
-                        </div>
-                        <div className="diagnostics-line">
-                            <span>max: {this._convert(stats.getDisparityYMaxMM())} mm ({this._convert(stats.getDisparityYMaxPct())} %,
-                            {this._convert(stats.getDisparityYMaxPx())} px, )  ~  (parallax {this._convert(stats.getDisparityYMaxParallax())}')</span>
+                        <div className="diagnostics-block">
+                            <h3>Cameras view</h3>
+                            <div className="diagnostics-line">
+                                <Popup trigger={<label><strong>Depth of field: </strong></label>}
+                                    content='Values are measured from the cameras to the focus point.' inverted />
+                                <br/>
+                                <span>Near: {stats.getCamerasZNear().toPrecision(4)} m</span><br/>
+                                <span>Far: {stats.getCamerasZFar().toPrecision(4)} m</span>
+                            </div>
                         </div>
                     </Accordion.Content>
                 </Accordion>

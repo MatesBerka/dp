@@ -122,6 +122,7 @@ class DiagnosticsService {
         let vergenceDistanceFar = (1.129*(1-alpha)+alpha) / (1 / this.DAW.getHeadDistance() - 0.442*(1-alpha));
         this.statValues.setVergenceDistanceNear([vergenceDistanceNear, 2, 0, 0]);
         this.statValues.setVergenceDistanceFar([vergenceDistanceFar, 2, 0, 0]);
+
         this.statValues.setVergenceMinAbs([(100 * vergenceDistanceNear), 2, 0, 0]);
         this.statValues.setVergenceMinRel([(100 * (vergenceDistanceNear - this.DAW.getHeadDistance())), 2, 0, 0]);
         this.statValues.setVergenceMaxRelD([(1 / vergenceDistanceNear - 1 / this.DAW.getHeadDistance()), 2, -0.3, 0.3]);
