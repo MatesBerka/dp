@@ -10,6 +10,7 @@ import SceneConfiguration from "./left_panel_modules/SceneConfiguration";
 import dispatcher from "../services/Dispatcher";
 import GenericDAO from "../model/GenericDAO";
 import registry from "../services/RegistryService";
+import sceneObjectDAO from "../model/SceneObjectDAO";
 
 type Props = {
     sidePanelWidth: number,
@@ -119,10 +120,14 @@ export default class LeftPanel extends React.Component<Props, State> {
             if (key === 'centerPanelSettings') {
                 pasteObj = value[0];
             } else {
-                value[1].replaceRecord(value[0]);
+                if (key === 'SceneObjectDAO') {
+                    // $FlowFixMe
+                    value[1].replaceRecord(sceneObjectDAO.createCopy(value[0]));
+                } else {
+                    value[1].replaceRecord(value[0].getCopy());
+                }
             }
         });
-        this.state.clipboard.clear();
         dispatcher.dispatch('paste', pasteObj);
         this.forceUpdate();
     };

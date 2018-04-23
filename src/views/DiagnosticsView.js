@@ -73,10 +73,11 @@ export default class DiagnosticsView extends React.Component<Props, State> {
         }.bind(this);
 
         this.exportListener = function(payload) {
-            payload['diagnosticsView'] = [this.state.models, this.state.activeModelID]
+            payload['diagnosticsView'] = [this.state.models, this.state.activeModelID, this.state.stats.isGlobalActive()]
         }.bind(this);
 
         this.importListener = function(payload) {
+            this.state.stats.setIsGlobal(payload['diagnosticsView'][2]);
             this.setState({
                 activeModelID:  payload['diagnosticsView'][1],
                 models:  payload['diagnosticsView'][0],
@@ -84,13 +85,14 @@ export default class DiagnosticsView extends React.Component<Props, State> {
         }.bind(this);
 
         this.getCenterPanelSettingsListener = function(payload) {
-            payload['diagnosticsViewC'] = Object.assign({}, this.state.models[this.state.activeModelID]);
+            payload['diagnosticsViewC'] = [Object.assign({}, this.state.models[this.state.activeModelID]), this.state.stats.isGlobalActive()];
         }.bind(this);
 
         this.pasteListener = function(payload) {
             let models = this.state.models;
             if (payload.hasOwnProperty('diagnosticsViewC')) {
-                models[this.state.activeModelID] = payload['diagnosticsViewC'];
+                models[this.state.activeModelID] = Object.assign({}, payload['diagnosticsViewC'][0]);
+                this.state.stats.setIsGlobal(payload['diagnosticsViewC'][1]);
             }
             this.forceUpdate();
         }.bind(this);

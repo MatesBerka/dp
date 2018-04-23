@@ -68,8 +68,8 @@ export default class ImagesView extends React.Component<Props, State> {
         this.pasteListener = function(payload) {
             let models = this.state.models;
             if (payload.hasOwnProperty('imagesViewC')) {
-                models[this.state.activeModelID] = payload['imagesViewC'][0];
-                visualizationBuilder.setImagesTrns(payload['imagesViewC'][1]);
+                models[this.state.activeModelID] = Object.assign({}, payload['imagesViewC'][0]);
+                visualizationBuilder.setImagesTrns(Object.assign({}, payload['imagesViewC'][1]));
             }
             visualizationBuilder.updateActiveModel(this.state.activeModelID);
             visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);

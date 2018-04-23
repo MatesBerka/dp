@@ -73,8 +73,8 @@ export default class ViewerView extends React.Component<Props, State> {
         this.pasteListener = function(payload) {
             let models = this.state.models;
             if (payload.hasOwnProperty('viewerViewC')) {
-                models[this.state.activeModelID] = payload['viewerViewC'][0];
-                visualizationBuilder.setViewerTrns(payload['viewerViewC'][1]);
+                models[this.state.activeModelID] = Object.assign({}, payload['viewerViewC'][0]);
+                visualizationBuilder.setViewerTrns(Object.assign({}, payload['viewerViewC'][1]));
             }
             visualizationBuilder.updateActiveModel(this.state.activeModelID);
             this.updateVisualization(this.state.activeModelID);

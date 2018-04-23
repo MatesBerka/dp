@@ -43,10 +43,16 @@ class SceneObjectDAO extends GenericDAO {
     /**
      * @override
      */
-    getCopy() {
+    getCopy(): Array<SceneObject> {
+        return this.createCopy(this.records[this.activeRecordIndex]);
+    }
+    /**
+     * HelperFunction used to create records copy
+     */
+    createCopy(objects: Array<SceneObject>) {
         let copies = [];
-        for (let i = 0; i < this.records[this.activeRecordIndex].length; i++)
-            copies.push(this.records[this.activeRecordIndex][i].getCopy());
+        for (let i = 0; i < objects.length; i++)
+            copies.push(objects[i].getCopy());
 
         return copies;
     }

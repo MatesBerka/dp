@@ -107,8 +107,8 @@ export default class CameraView extends React.Component<Props, State> {
         this.pasteListener = function(payload) {
             let models = this.state.models;
             if (payload.hasOwnProperty('cameraViewC')) {
-                models[this.state.activeModelID] = payload['cameraViewC'][0];
-                visualizationBuilder.setCameraTrns(payload['cameraViewC'][1]);
+                models[this.state.activeModelID] = Object.assign({}, payload['cameraViewC'][0]);
+                visualizationBuilder.setCameraTrns(Object.assign({}, payload['cameraViewC'][1]));
             }
             // close object focus frame
             this.setState({objCtrlShow: 'none'});
@@ -129,6 +129,7 @@ export default class CameraView extends React.Component<Props, State> {
             visualizationBuilder.updateActiveModel(payload.modelID);
             this.updateVisualization(payload.modelID);
         }.bind(this);
+
         this.modelDelete = function(payload) {
             this.state.models.splice(payload.modelIDToRemove, 1);
             visualizationBuilder.updateActiveModel(this.state.activeModelID);
