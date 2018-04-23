@@ -202,9 +202,13 @@ canvas {
 
 #left-column > .side-panel-column {
     position: relative;
-    height: calc(100% - 48px);
+    height: calc(100% - 109px);
     float: left;
     overflow-x: auto;
+}
+
+#left-column > .side-panel-column.double-column {
+    height: calc(100% - 83px);
 }
 
 #left-column > .side-panel-column > .ui.accordion > .object-item,

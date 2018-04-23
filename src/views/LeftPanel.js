@@ -229,19 +229,19 @@ export default class LeftPanel extends React.Component<Props, State> {
                         <Button size='mini' color='green' onClick={this.handleCenterPanelCopy}>Copy views</Button>
                     </Button.Group>
                 </div>
-                <div className="side-panel-column" id="first-left-column" style={{width: sidePanelWidth}}>
+                <div className={((this.panelSecondColumn.length > 0) ? 'side-panel-column double-column' : 'side-panel-column')} id="first-left-column" style={{width: sidePanelWidth}}>
                     <div id="panel-settings" style={{display: ((isPanelSettingsOpen) ? 'block' : 'none')}}>
                         <h3>Panel Settings</h3>
                         <div className="option-group-line">
                             <Popup trigger={<Checkbox label='Use double column' onChange={this.handleToggleDoubleColumn}
-                                checked={useDoubleColumn}/>} content="Panel will use two columns if open settings can't fit into one." inverted />
+                                checked={useDoubleColumn}/>} content="If open settings can't fit into one." inverted />
                         </div>
                     </div>
                     <Accordion fluid style={{display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
                         {this.panelFirstColumn.map((f, index) => f(openSettings, index))}
                     </Accordion>
                 </div>
-                <div className="side-panel-column" style={{width: sidePanelWidth, display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
+                <div className={((this.panelSecondColumn.length > 0) ? 'side-panel-column double-column' : 'side-panel-column')} style={{width: sidePanelWidth, display: ((isPanelSettingsOpen) ? 'none' : 'block')}}>
                     <Accordion fluid>
                         {this.panelSecondColumn.map((f, index) => f(openSettings, index))}
                     </Accordion>
