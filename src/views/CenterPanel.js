@@ -242,30 +242,35 @@ export default class CenterPanel extends React.Component<Props, State> {
      * Deletes selected model.
      */
     handleDeleteModel = () => {
-        registry.getAll().forEach(function(value) {
-            value.removeRecord(this.state.modelIDToRemove);
-        }.bind(this));
-
-        this.state.models.splice(this.state.modelIDToRemove, 1);
-
-        if (this.state.activeModelID === this.state.modelIDToRemove) {
+        let newActiveModelID = this.state.activeModelID;
+        if (newActiveModelID === this.state.modelIDToRemove) {
             let defaultActiveModel = 0;
             CenterPanel._setNewActiveModel(defaultActiveModel);
             this.setState({ modalRemoveModelIsOpen: false, activeModelID: defaultActiveModel });
             this.updateViewsSize(defaultActiveModel);
+            // first switch to temporary model
             dispatcher.dispatch('modelSwitch', {modelID: defaultActiveModel});
         } else {
-            if (this.state.activeModelID > this.state.modelIDToRemove) {
-                CenterPanel._setNewActiveModel(this.state.activeModelID - 1);
-                this.setState((prev) => ({
+            if (newActiveModelID > this.state.modelIDToRemove) {
+                newActiveModelID--;
+                CenterPanel._setNewActiveModel(newActiveModelID);
+                this.setState({
                     modalRemoveModelIsOpen: false,
-                    activeModelID: (prev.activeModelID - 1)
-                }));
+                    activeModelID: newActiveModelID
+                });
+                // first switch to temporary model
+                dispatcher.dispatch('modelSwitch', {modelID: newActiveModelID});
             } else {
                 this.setState({ modalRemoveModelIsOpen: false });
             }
         }
+
+        registry.getAll().forEach(function(value) {
+            value.removeRecord(this.state.modelIDToRemove);
+        }.bind(this));
+        this.state.models.splice(this.state.modelIDToRemove, 1);
         dispatcher.dispatch('modelDelete', {modelIDToRemove: this.state.modelIDToRemove});
+        dispatcher.dispatch('modelSwitch', {modelID: newActiveModelID});
     };
     /* Open modal window for adding new model */
     handleAddModelOpen = () => this.setState({ modalAddModelIsOpen: true });

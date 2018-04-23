@@ -131,8 +131,8 @@ class DiagnosticsService {
             this.statValues.setVergenceMaxAbs([(100 * vergenceDistanceFar), 2, 0, 0]);
             this.statValues.setVergenceMaxRel([(100 * (vergenceDistanceFar - this.DAW.getHeadDistance())), 2, 0, 0]);
         } else {
-            this.statValues.setVergenceMaxAbs('INFINITY');
-            this.statValues.setVergenceMaxRel('INFINITY');
+            this.statValues.setVergenceMaxAbs('Infinity');
+            this.statValues.setVergenceMaxRel('Infinity');
         }
     }
 }

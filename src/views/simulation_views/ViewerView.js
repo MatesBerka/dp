@@ -98,8 +98,6 @@ export default class ViewerView extends React.Component<Props, State> {
 
         this.deleteListener = function(payload) {
             this.state.models.splice(payload.modelIDToRemove, 1);
-            visualizationBuilder.updateActiveModel(this.state.activeModelID);
-            this.updateVisualization(this.state.activeModelID);
         }.bind(this);
 
         this.exportListener = function(payload) {

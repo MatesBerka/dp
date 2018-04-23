@@ -88,8 +88,6 @@ export default class ImagesView extends React.Component<Props, State> {
 
         this.deleteListener = function(payload) {
             this.state.models.splice(payload.modelIDToRemove, 1);
-            visualizationBuilder.updateActiveModel(this.state.activeModelID);
-            visualizationBuilder.renderImagesVisualization(this.imagesCanvasCTX, this.props.width,this.props.height);
         }.bind(this);
 
         this.exportListener = function(payload) {
