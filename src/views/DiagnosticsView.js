@@ -13,8 +13,9 @@ type Props = {
 };
 type State = {
     stats: Diagnostics;
+    activeModelID: number;
+    models: Array<{toggleDiagnostics: boolean}>;
     toggleDiagnosticsOldVal: boolean;
-    toggleDiagnostics: boolean;
 };
 
 /**
@@ -23,10 +24,14 @@ type State = {
  * @author Matej Berka <matejb@students.zcu.cz>
  */
 export default class DiagnosticsView extends React.Component<Props, State> {
-    SHOW_DIAGNOSTICS_DEFAULT: number = true;
+    SHOW_DIAGNOSTICS_DEFAULT: boolean = true;
     modelSwitchListener: Function;
     diagnosticsUpdateListener: Function;
     getCenterPanelSettingsListener: Function;
+    modelDeleteListener: Function;
+    pasteListener: Function;
+    exportListener: Function;
+    importListener: Function;
     /**
      * Component constructor
      */

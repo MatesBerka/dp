@@ -17,8 +17,10 @@ type Props = {
     updateCallback: Function
 };
 type State = {
-    clipboard: Map<number, Array<Object>>,
+    clipboard: Map<string, Array<Object>>,
     openSettings: Set<number>,
+    useDoubleColumn: boolean,
+    isPanelSettingsOpen: boolean
 };
 
 /**
@@ -46,7 +48,7 @@ export default class LeftPanel extends React.Component<Props, State> {
         ),
     ];
     // used to copy all settings
-    CONFIGURATION_COMPONENTS_NAMES: string = ['CameraDAO', 'DisplayAndViewerDAO', 'GeneralDAO', 'PostProcessingDAO', 'SceneObjectDAO'];
+    CONFIGURATION_COMPONENTS_NAMES: Array<string> = ['CameraDAO', 'DisplayAndViewerDAO', 'GeneralDAO', 'PostProcessingDAO', 'SceneObjectDAO'];
     // component variable
     panelConfigurationItemsELMs: HTMLCollection<HTMLElement>;
     firstLeftColumnELM: Element | null = null;

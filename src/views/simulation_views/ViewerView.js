@@ -12,11 +12,8 @@ type Props = {
     activeModelID: number
 };
 type State = {
-    drawViewerGrid: boolean;
-    viewerSideView: boolean;
-    drawReconstructionRays: boolean;
-    viewerCanvasUnit: number;
-    zoom: number;
+    activeModelID: number;
+    models: Array<{drawViewerGrid: boolean, viewerSideView: boolean, drawReconstructionRays: boolean, viewerCanvasUnit: number, zoom: number}>;
 };
 
 /**
@@ -29,9 +26,9 @@ export default class ViewerView extends React.Component<Props, State> {
     ZOOM_LOWER_LIMIT: number = 20;
     ZOOM_UPPER_LIMIT: number = 550;
 
-    DRAW_VIEWER_GRID_DEFAULT: number = false;
-    VIEWER_SIDE_VIEW_DEFAULT: number = false;
-    DRAW_RECONSTRUCTION_RAYS_DEFAULT: number = false;
+    DRAW_VIEWER_GRID_DEFAULT: boolean = false;
+    VIEWER_SIDE_VIEW_DEFAULT: boolean = false;
+    DRAW_RECONSTRUCTION_RAYS_DEFAULT: boolean = false;
     VIEWER_CANVAS_UNIT_DEFAULT: number = unitIdx.cm;
     ZOOM_DEFAULT: number = 100;
     // component variables
@@ -43,8 +40,10 @@ export default class ViewerView extends React.Component<Props, State> {
     viewerCanvasCTX: CanvasRenderingContext2D;
     viewUpdateListener: Function;
     pasteListener: Function;
-    modelSwitch: Function;
-    modelDelete: Function;
+    switchListener: Function;
+    deleteListener: Function;
+    exportListener: Function;
+    importListener: Function;
     getCenterPanelSettingsListener: Function;
     /**
      * Component constructor

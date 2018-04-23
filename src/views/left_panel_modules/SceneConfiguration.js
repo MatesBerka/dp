@@ -31,6 +31,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
     checkColumnsSize: boolean = false;
     modelSwitchListener: Function;
     sceneConfigurationUpdate: Function;
+    selectedObjListener: Function;
     /**
      * Component constructor
      */

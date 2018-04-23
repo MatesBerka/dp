@@ -15,15 +15,13 @@ type Props = {
     activeModelID: number
 };
 type State = {
-    drawCameraGrid: boolean,
-    cameraSideView: boolean,
+    activeModelID: number;
+    models: Array<{drawCameraGrid: boolean, cameraSideView: boolean, cameraCanvasUnit: number, zoom: number}>;
     objCtrlShow: string,
-    cameraCanvasUnit: number,
     objCtrlPosX: number,
     objCtrlPosY: number,
     objCtrlWidth: number,
     objCtrlHeight: number,
-    zoom: number
 };
 
 /**
@@ -68,6 +66,8 @@ export default class CameraView extends React.Component<Props, State> {
     pasteListener: Function;
     modelSwitch: Function;
     modelDelete: Function;
+    exportListener: Function;
+    importListener: Function;
     getCenterPanelSettingsListener: Function;
     /**
      * Component constructor
@@ -258,7 +258,7 @@ export default class CameraView extends React.Component<Props, State> {
         let trns = visualizationBuilder.getCameraTrns();
 
         objCtrlWidth = object.getDepth() * trns.scaleX;
-        objCtrlHeight = ((this.state.cameraSideView) ? (object.getWidth() * object.getAspect() * trns.scaleY) : (object.getWidth() * trns.scaleY));
+        objCtrlHeight = ((this.state.models[this.state.activeModelID].cameraSideView) ? (object.getWidth() * object.getAspect() * trns.scaleY) : (object.getWidth() * trns.scaleY));
 
         objCtrlWidth = ((objCtrlWidth < this.OBJ_CTRL_MIN_WIDTH) ? this.OBJ_CTRL_MIN_WIDTH : objCtrlWidth);
         objCtrlHeight = ((objCtrlHeight < this.OBJ_CTRL_MMN_HEIGHT) ? this.OBJ_CTRL_MMN_HEIGHT : objCtrlHeight);
@@ -419,7 +419,7 @@ export default class CameraView extends React.Component<Props, State> {
         let deg = Math.acos(l) * (180 / Math.PI);
         deg = (x <= this.xyRotationRatio*y) ? deg : -deg;
 
-        if (this.state.cameraSideView) { this.focusedObj.setObjectRotX(deg); } else {  this.focusedObj.setObjectRotY(deg); }
+        if (this.state.models[this.state.activeModelID].cameraSideView) { this.focusedObj.setObjectRotX(deg); } else {  this.focusedObj.setObjectRotY(deg); }
         // this.setState({ objCtrlRot: deg });
         visualizationBuilder.updateScene();
         dispatcher.dispatch('sceneConfigurationUpdate', {});
@@ -470,7 +470,7 @@ export default class CameraView extends React.Component<Props, State> {
         if (newDepth < this.OBJ_MIN_DISTANCE)
             return true;
 
-        if (this.state.cameraSideView) {
+        if (this.state.models[this.state.activeModelID].cameraSideView) {
             let curHeight = this.focusedObj.getAspect() * this.focusedObj.getWidth();
             let newAspect = (curHeight + 2 * ratio * curHeight) / this.focusedObj.getWidth();
             newHeight = newAspect * this.focusedObj.getWidth();
@@ -599,7 +599,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.trnsStartY = e.clientY;
         let trns = visualizationBuilder.getCameraTrns();
 
-        if (this.state.cameraSideView) {
+        if (this.state.models[this.state.activeModelID].cameraSideView) {
             let newAspect = (this.focusedObj.getAspect() * this.focusedObj.getWidth() + (2 * (disChange / trns.scaleY))) / this.focusedObj.getWidth();
             if (newAspect * this.focusedObj.getWidth() <= this.OBJ_MIN_DISTANCE)
                 return true;
@@ -653,7 +653,7 @@ export default class CameraView extends React.Component<Props, State> {
         let x = e.clientX - this.trnsStartX;
         let y = e.clientY - this.trnsStartY;
         let trns = visualizationBuilder.getCameraTrns();
-        if (this.state.cameraSideView) {
+        if (this.state.models[this.state.activeModelID].cameraSideView) {
             this.focusedObj.setCenterY(this.focusedObj.getCenterY() - (y / trns.scaleY));
             this.focusedObj.setCenterZ(this.focusedObj.getCenterZ() + (x / trns.scaleX));
         } else {

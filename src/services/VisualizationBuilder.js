@@ -57,6 +57,7 @@ class VisualizationBuilder {
     scene: Array<DrawableObject>;
     xGenerator: Function;
     yGenerator: Function;
+    deleteListener: Function;
     /**
      * @constructs
      */
@@ -126,24 +127,24 @@ class VisualizationBuilder {
     setImagesTrns(trns: trnsType) {
         this.imagesTrns[this.activeModelID] = trns;
     }
-    getAllCameraTrns(): trnsType {
+    getAllCameraTrns(): Array<trnsType> {
         return this.cameraTrns;
     }
-    getAllViewerTrns(): trnsType {
+    getAllViewerTrns(): Array<trnsType> {
         return this.viewerTrns;
     }
-    getAllImagesTrns(): trnsType {
+    getAllImagesTrns(): Array<trnsType> {
         return this.imagesTrns;
     }
-    setAllCameraTrns(trns: trnsType, activeModelID: number) {
+    setAllCameraTrns(trns: Array<trnsType>, activeModelID: number) {
         this.cameraTrns = trns;
         this.activeModelID = activeModelID;
     }
-    setAllViewerTrns(trns: trnsType, activeModelID: number) {
+    setAllViewerTrns(trns: Array<trnsType>, activeModelID: number) {
         this.viewerTrns = trns;
         this.activeModelID = activeModelID;
     }
-    setAllImagesTrns(trns: trnsType, activeModelID: number) {
+    setAllImagesTrns(trns: Array<trnsType>, activeModelID: number) {
         this.imagesTrns = trns;
         this.activeModelID = activeModelID;
     }
@@ -558,7 +559,7 @@ class VisualizationBuilder {
      * @param {CanvasRenderingContext2D} ctx
      */
     _createDepthOfField(ctx: CanvasRenderingContext2D) {
-        let zNear, tmp, zFar; // to be calculated
+        let zNear, tmp, zFar = Number.POSITIVE_INFINITY; // to be calculated
         // DETAILS SEEN ON DISPLAY
         let displayWidth = this.DAW.getDisplayWidth();
         let displayPixelsHorizontal = this.DAW.getDisplayPPL();

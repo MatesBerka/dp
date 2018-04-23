@@ -20,7 +20,7 @@ type State = {
     modalRemoveModelIsOpen: boolean,
     modalRenameModelIsOpen: boolean,
     modelIDToRemove: number,
-    models: Array<{name: string}>,
+    models: Array<{name: string, imagesViewWidthRatio: number, viewerViewHeightRatio: number}>,
     activeModelID: number,
     renameModelID: number,
     renameModelName: string,
@@ -50,7 +50,10 @@ export default class CenterPanel extends React.Component<Props, State> {
     // component variables
     exportListener: Function;
     importListener: Function;
+    pasteListener: Function;
     getCenterPanelSettingsListener: Function;
+    getImageViewDefaultYCoord: Function;
+    getImageViewDefaultXCoord: Function;
     body: HTMLElement;
     diagnosticsElm: HTMLElement;
     simulationsViewElm: HTMLElement;

@@ -12,7 +12,8 @@ type Props = {
     activeModelID: number
 };
 type State = {
-    zoom: number
+    activeModelID: number;
+    models: Array<{zoom: number}>;
 };
 
 /**
@@ -35,8 +36,10 @@ export default class ImagesView extends React.Component<Props, State> {
     imagesCanvasCTX: CanvasRenderingContext2D;
     viewUpdateListener: Function;
     pasteListener: Function;
-    modelSwitch: Function;
-    modelDelete: Function;
+    switchListener: Function;
+    deleteListener: Function;
+    exportListener: Function;
+    importListener: Function;
     getCenterPanelSettingsListener: Function;
     /**
      * Component constructor
