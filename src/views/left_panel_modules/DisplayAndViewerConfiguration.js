@@ -7,7 +7,7 @@ import 'react-rangeslider/lib/index.css'
 import DAW from "../../model/entities/DisplayAndViewer";
 import displayAndViewerDAO from "../../model/DisplayAndViewerDAO";
 import {displayTypes, displayTypesMenu} from "../../model/data_collections/DisplayTypes";
-import {unitDefinitionMenu} from "../../model/data_collections/UnitsDefinition";
+import {unitDefinition, unitDefinitionMenu} from "../../model/data_collections/UnitsDefinition";
 import cameraDAO from "../../model/CameraDAO";
 import {ctlSetLoc, inputTypesName} from "../../model/data_collections/ControlsTypes";
 import dispatcher from "../../services/Dispatcher";
@@ -138,13 +138,13 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleHeadOptimalDistanceChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setValueForControl('headOptimalDistance', parseInt(value, 10));
+            this.state.DAWi.setHeadOptimalDistance(parseFloat(value) * unitDefinition[this.state.DAWi.getHeadOptimalDistanceUnit()].value);
             this.distributeUpdate();
         }
     };
     handleDisplayWidthChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setValueForControl('displayWidth', parseFloat(value));
+            this.state.DAWi.setDisplayWidth(parseFloat(value) * unitDefinition[this.state.DAWi.getDisplayWidthUnit()].value);
             this.distributeUpdate();
         }
     };

@@ -5,6 +5,7 @@ import visualizationBuilder from "./VisualizationBuilder";
 import Diagnostics from "../model/entities/Diagnostics";
 import DisplayAndViewer from "../model/entities/DisplayAndViewer";
 import type {imagesType, vec3} from "../model/data_collections/flowTypes";
+import dispatcher from "./Dispatcher";
 
 /**
  * @classdesc Service class used to handle diagnostics construction.
@@ -13,6 +14,16 @@ import type {imagesType, vec3} from "../model/data_collections/flowTypes";
 class DiagnosticsService {
     statValues: Diagnostics = diagnosticsDAO.getActiveRecord();
     DAW: DisplayAndViewer = displayAndViewerDAO.getActiveRecord();
+    diagnosticsUpdateListener: Function;
+    /**
+     * @constructs
+     */
+    constructor() {
+        this.diagnosticsUpdateListener = function(payload) {
+            this.updateDiagnostics();
+        }.bind(this);
+        dispatcher.register('configurationUpdate', this.diagnosticsUpdateListener);
+    }
     /**
      * Returns diagnostics active entity.
      * @public
