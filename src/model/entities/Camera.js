@@ -231,14 +231,14 @@ export default class Camera  extends Generic {
     setCameraDistance(value: number) {
         this.cameraDistance = value;
         if (this.keepCamerasAngle)
-            this.cameraSeparation = this.cameraDistance * this.keepCamerasAngleRatio;
+            this.cameraSeparation = (this.cameraDistance + this.cameraCrossing) * this.keepCamerasAngleRatio;
         if (this.keepObjectSize)
             this.focalLength = this.keepObjectSizeRatio * this.cameraDistance;
     }
     setKeepCamerasAngle(value: boolean) {
         this.keepCamerasAngle = value;
         if (this.keepCamerasAngle)
-            this.keepCamerasAngleRatio = this.cameraSeparation / this.cameraDistance;
+            this.keepCamerasAngleRatio = this.cameraSeparation / (this.cameraDistance + this.cameraCrossing);
     }
     setKeepObjectSize(value: boolean) {
         this.keepObjectSize = value;
@@ -264,6 +264,8 @@ export default class Camera  extends Generic {
     }
     setCameraCrossing(value: number) {
         this.cameraCrossing = value;
+        if (this.keepCamerasAngle)
+            this.cameraSeparation = (this.cameraDistance + this.cameraCrossing) * this.keepCamerasAngleRatio;
     }
     setCameraCrossingUnit(value: number) {
         this.cameraCrossingUnit = value;

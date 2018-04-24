@@ -168,11 +168,10 @@ export default class LeftPanel extends React.Component<Props, State> {
             let firstSize = 0, columnHeight = this.firstLeftColumnELM.clientHeight, i = 0;
             for (; i < this.panelConfigurationItemsELMs.length; i++) {
                 firstSize += this.panelConfigurationItemsELMs[i].clientHeight;
-                this.panelFirstColumn.push(this.PANEL_COMPONENTS[i]);
                 if (firstSize >= columnHeight) {
-                    i++;
                     break;
                 }
+                this.panelFirstColumn.push(this.PANEL_COMPONENTS[i]);
             }
             for (; i < this.panelConfigurationItemsELMs.length; i++)
                 this.panelSecondColumn.push(this.PANEL_COMPONENTS[i]);

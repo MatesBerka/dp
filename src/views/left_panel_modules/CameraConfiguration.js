@@ -80,7 +80,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         this.distributeUpdate();
     };
     handleCameraCrossingChange = (value: number) => {
-        this.state.cm.setValueForControl('cameraCrossing', parseFloat(value));
+        this.state.cm.setCameraCrossing(parseFloat(value) * unitDefinition[this.state.cm.getCameraCrossingUnit()].value);
         this.distributeUpdate();
     };
     handleCameraSensorWidthChange = (e: Object) => {
