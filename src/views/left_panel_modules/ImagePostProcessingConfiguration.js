@@ -67,36 +67,52 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
      * Events handling functions for component controls.
      */
     handleImagesKeystoneChange = (value: number) => {
-        this.state.imgPro.setValueForControl('imagesKeystone', parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.imgPro.setValueForControl('imagesKeystone', parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleImagesKeystoneUnitChange = (e: Object, data: Object) => {
-        this.state.imgPro.setImagesKeystoneUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.imgPro.setImagesKeystoneUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleImagesStretchChange = (value: number) => {
-        this.state.imgPro.setValueForControl('imagesStretch', parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.imgPro.setValueForControl('imagesStretch', parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleImagesStretchUnitChange = (e: Object, data: Object) => {
-        this.state.imgPro.setImagesStretchUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.imgPro.setImagesStretchUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleImagesShiftChange = (value: number) => {
-        this.state.imgPro.setValueForControl('imagesShift', parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.imgPro.setValueForControl('imagesShift', parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleImagesShiftUnitChange = (e: Object, data: Object) => {
-        this.state.imgPro.setImagesShiftUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.imgPro.setImagesShiftUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleImagesZoomChange = (value: number) => {
-        this.state.imgPro.setValueForControl('imagesZoom', parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.imgPro.setValueForControl('imagesZoom', parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleImagesZoomUnitChange = (e: Object, data: Object) => {
-        this.state.imgPro.setImagesZoomUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.imgPro.setImagesZoomUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     /**
      * Component HTML representation

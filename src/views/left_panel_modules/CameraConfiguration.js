@@ -68,81 +68,119 @@ export default class CameraConfiguration extends React.Component<Props, State> {
      * Events handling functions for component controls.
      */
     handleFocalLengthChange = (value: number) => {
-        this.state.cm.setFocalLength(parseFloat(value) * unitDefinition[this.state.cm.getFocalLengthUnit()].value);
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setFocalLength(parseFloat(value) * unitDefinition[this.state.cm.getFocalLengthUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraDistanceChange = (value: number) => {
-        this.state.cm.setCameraDistance(parseFloat(value) * unitDefinition[this.state.cm.getCameraDistanceUnit()].value);
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setCameraDistance(parseFloat(value) * unitDefinition[this.state.cm.getCameraDistanceUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraSeparationChange = (value: number) => {
-        this.state.cm.setCameraSeparation(parseFloat(value) * unitDefinition[this.state.cm.getCameraSeparationUnit()].value);
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setCameraSeparation(parseFloat(value) * unitDefinition[this.state.cm.getCameraSeparationUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraCrossingChange = (value: number) => {
-        this.state.cm.setCameraCrossing(parseFloat(value) * unitDefinition[this.state.cm.getCameraCrossingUnit()].value);
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setCameraCrossing(parseFloat(value) * unitDefinition[this.state.cm.getCameraCrossingUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraSensorWidthChange = (e: Object) => {
-        this.state.cm.setSensorWidth(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorWidthUnit()].value);
-        this.distributeUpdate();
+        if (e.target.value) {
+            this.state.cm.setSensorWidth(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorWidthUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraSensorHeightChange = (e: Object) => {
-        this.state.cm.setSensorHeight(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorHeightUnit()].value);
-        this.distributeUpdate();
+        if (e.target.value) {
+            this.state.cm.setSensorHeight(parseFloat(e.target.value) * unitDefinition[this.state.cm.getSensorHeightUnit()].value);
+            this.distributeUpdate();
+        }
     };
     handleCameraHeightChange = (value: number) => {
-        this.state.cm.setValueForControl('cameraHeight', parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setValueForControl('cameraHeight', parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleCameraSensorTypeChange = (e: Object, data: Object) => {
-        this.state.cm.setSensorSizeIdx(data.value);
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setSensorSizeIdx(data.value);
+            this.distributeUpdate();
+        }
     };
     handleFocalLengthUnitChange = (e: Object, data: Object) => {
-        this.state.cm.setFocalLengthUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setFocalLengthUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleCameraDistanceUnitChange = (e: Object, data: Object) => {
-        this.state.cm.setCameraDistanceUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setCameraDistanceUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleCameraSeparationUnitChange = (e: Object, data: Object) => {
-        this.state.cm.setCameraSeparationUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setCameraSeparationUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleCameraCrossingUnitChange = (e: Object, data: Object) => {
-        this.state.cm.setCameraCrossingUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setCameraCrossingUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleCameraHeightUnitChange = (e: Object, data: Object) => {
-        this.state.cm.setCameraHeightUnit(parseInt(data.value, 10));
-        this.distributeUpdate();
+        if (data.value) {
+            this.state.cm.setCameraHeightUnit(parseInt(data.value, 10));
+            this.distributeUpdate();
+        }
     };
     handleCamerasCountChange = (value: number) => {
-        this.state.cm.setCamerasCount(parseInt(value, 10));
-        dispatcher.dispatch('camerasCountChange', {});
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setCamerasCount(parseInt(value, 10));
+            dispatcher.dispatch('camerasCountChange', {});
+            this.distributeUpdate();
+        }
     };
     handleFNumberChange = (value: number) => {
-        this.state.cm.setFNumber(parseFloat(value));
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setFNumber(parseFloat(value));
+            this.distributeUpdate();
+        }
     };
     handleCameraTypeChange = (value: string) => {
-        this.state.cm.setCameraType(value);
-        this.distributeUpdate();
+        if (value) {
+            this.state.cm.setCameraType(value);
+            this.distributeUpdate();
+        }
     };
     handleFocalLengthCorrectionToggle = (e: Object, data: Object) => {
-        this.state.cm.setFocalLengthCorrection(data.checked);
-        this.distributeUpdate();
+        if (data.checked) {
+            this.state.cm.setFocalLengthCorrection(data.checked);
+            this.distributeUpdate();
+        }
     };
     handleKeepCamerasAngleToggle = (e: Object, data: Object) => {
-        this.state.cm.setKeepCamerasAngle(data.checked);
-        this.distributeUpdate();
+        if (data.checked) {
+            this.state.cm.setKeepCamerasAngle(data.checked);
+            this.distributeUpdate();
+        }
     };
     handleKeepObjectSizeToggle = (e: Object, data: Object) => {
-        this.state.cm.setKeepObjectSize(data.checked);
-        this.distributeUpdate();
+        if (data.checked) {
+            this.state.cm.setKeepObjectSize(data.checked);
+            this.distributeUpdate();
+        }
     };
 
     /**
