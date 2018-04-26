@@ -14,7 +14,6 @@ import displayAndViewerDAO from "../model/DisplayAndViewerDAO.js";
 import Bust from "../model/drawable_objects/Bust";
 import Tree from "../model/drawable_objects/Tree";
 import House from "../model/drawable_objects/House";
-import Wall from "../model/drawable_objects/Wall";
 import Car from "../model/drawable_objects/Car";
 import Figure from "../model/drawable_objects/Figure";
 import Utils from "../services/ControlsUtils";
@@ -762,8 +761,6 @@ export class DrawingHelper {
             return new Tree();
         else if (objectType === objTypeIdx.house)
             return new House();
-        else if (objectType === objTypeIdx.wall)
-            return new Wall();
         else if (objectType === objTypeIdx.car)
             return new Car();
         else if (objectType === objTypeIdx.figure)

@@ -13,13 +13,12 @@ export const objTypeIdx = {
     bust: 6,
     tree: 7,
     house: 8,
-    wall: 9,
-    figure: 10
+    figure: 9
 };
 
 export const objTypeIdxMenu = [
     {key: 0, value: 0, text: 'Point'},
-    {key: 1, value: 1, text: 'Square'},
+    {key: 1, value: 1, text: 'Square wall'},
     {key: 2, value: 2, text: 'FineSquare'},
     {key: 3, value: 3, text: 'Cube'},
     {key: 4, value: 4, text: 'Octahedron'},
@@ -27,6 +26,5 @@ export const objTypeIdxMenu = [
     {key: 6, value: 6, text: 'Bust'},
     {key: 7, value: 7, text: 'Tree'},
     {key: 8, value: 8, text: 'House'},
-    {key: 9, value: 9, text: 'Wall'},
-    {key: 10, value: 10, text: 'Human'},
+    {key: 9, value: 9, text: 'Human'},
 ];
