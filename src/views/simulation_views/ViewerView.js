@@ -102,7 +102,7 @@ export default class ViewerView extends React.Component<Props, State> {
         }.bind(this);
 
         this.importListener = function(payload) {
-            visualizationBuilder.setAllViewerTrns(payload['cameraView'][2], payload['cameraView'][1]);
+            visualizationBuilder.setAllViewerTrns(payload['viewerView'][2], payload['viewerView'][1]);
             this.setState({
                 activeModelID:  payload['viewerView'][1],
                 models:  payload['viewerView'][0],

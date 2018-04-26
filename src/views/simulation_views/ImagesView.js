@@ -93,7 +93,7 @@ export default class ImagesView extends React.Component<Props, State> {
         }.bind(this);
 
         this.importListener = function(payload) {
-            visualizationBuilder.setAllImagesTrns(payload['cameraView'][2], payload['cameraView'][1]);
+            visualizationBuilder.setAllImagesTrns(payload['imagesView'][2], payload['imagesView'][1]);
             this.setState({
                 activeModelID:  payload['imagesView'][1],
                 models:  payload['imagesView'][0],
