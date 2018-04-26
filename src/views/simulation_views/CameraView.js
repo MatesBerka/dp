@@ -34,8 +34,6 @@ export default class CameraView extends React.Component<Props, State> {
     OBJ_CTRL_PADDING: number = 10;
     OBJ_CTRL_MIN_WIDTH: number = 70;
     OBJ_CTRL_MMN_HEIGHT: number = 70;
-    ZOOM_LOWER_LIMIT: number = 20;
-    ZOOM_UPPER_LIMIT: number = 550;
     OBJ_MIN_DISTANCE: number = 0.1;
 
     DRAW_CAMERA_GRID_DEFAULT: boolean = false;
@@ -215,18 +213,16 @@ export default class CameraView extends React.Component<Props, State> {
      */
     handleZoomIn = () => {
         let activeModel = this.state.models[this.state.activeModelID];
-        if (activeModel.zoom < this.ZOOM_UPPER_LIMIT) {
-            let trns = visualizationBuilder.getCameraTrns();
-            // apply scaling
-            trns.scaleX *= utl.SQRT2;
-            trns.scaleY *= utl.SQRT2;
-            trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
-            trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
-            visualizationBuilder.setCameraTrns(trns);
-            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
-            activeModel.zoom *= utl.SQRT2;
-            this.setState({objCtrlShow: 'none'});
-        }
+        let trns = visualizationBuilder.getCameraTrns();
+        // apply scaling
+        trns.scaleX *= utl.SQRT2;
+        trns.scaleY *= utl.SQRT2;
+        trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
+        trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
+        visualizationBuilder.setCameraTrns(trns);
+        visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
+        activeModel.zoom *= utl.SQRT2;
+        this.setState({objCtrlShow: 'none'});
     };
     /**
      * Zooms out canvas view.
@@ -234,18 +230,16 @@ export default class CameraView extends React.Component<Props, State> {
      */
     handleZoomOut = () => {
         let activeModel = this.state.models[this.state.activeModelID];
-        if (activeModel.zoom > this.ZOOM_LOWER_LIMIT) {
-            let trns = visualizationBuilder.getCameraTrns();
-            // apply scaling
-            trns.scaleX *= utl.SQRT1_2;
-            trns.scaleY *= utl.SQRT1_2;
-            trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
-            trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
-            visualizationBuilder.setCameraTrns(trns);
-            visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
-            activeModel.zoom *= utl.SQRT1_2;
-            this.setState({objCtrlShow: 'none'});
-        }
+        let trns = visualizationBuilder.getCameraTrns();
+        // apply scaling
+        trns.scaleX *= utl.SQRT1_2;
+        trns.scaleY *= utl.SQRT1_2;
+        trns.translateX = (this.cameraElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
+        trns.translateY = (this.cameraElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
+        visualizationBuilder.setCameraTrns(trns);
+        visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
+        activeModel.zoom *= utl.SQRT1_2;
+        this.setState({objCtrlShow: 'none'});
     };
     /**
      * Open object control frame.

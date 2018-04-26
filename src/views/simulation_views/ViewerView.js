@@ -23,9 +23,6 @@ type State = {
  */
 export default class ViewerView extends React.Component<Props, State> {
     // component constants
-    ZOOM_LOWER_LIMIT: number = 20;
-    ZOOM_UPPER_LIMIT: number = 550;
-
     DRAW_VIEWER_GRID_DEFAULT: boolean = false;
     VIEWER_SIDE_VIEW_DEFAULT: boolean = false;
     DRAW_RECONSTRUCTION_RAYS_DEFAULT: boolean = false;
@@ -187,18 +184,16 @@ export default class ViewerView extends React.Component<Props, State> {
      */
     handleZoomIn = () => {
         let activeModel = this.state.models[this.state.activeModelID];
-        if (activeModel.zoom < this.ZOOM_UPPER_LIMIT) {
-            let trns = visualizationBuilder.getViewerTrns();
-            // apply scaling
-            trns.scaleX *= utl.SQRT2;
-            trns.scaleY *= utl.SQRT2;
-            trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
-            trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
-            visualizationBuilder.setViewerTrns(trns);
-            visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
-            activeModel.zoom *= utl.SQRT2;
-            this.forceUpdate();
-        }
+        let trns = visualizationBuilder.getViewerTrns();
+        // apply scaling
+        trns.scaleX *= utl.SQRT2;
+        trns.scaleY *= utl.SQRT2;
+        trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT2) + trns.translateX * utl.SQRT2;
+        trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT2) + trns.translateY * utl.SQRT2;
+        visualizationBuilder.setViewerTrns(trns);
+        visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
+        activeModel.zoom *= utl.SQRT2;
+        this.forceUpdate();
     };
     /**
      * Zooms out canvas view.
@@ -206,18 +201,16 @@ export default class ViewerView extends React.Component<Props, State> {
      */
     handleZoomOut = () => {
         let activeModel = this.state.models[this.state.activeModelID];
-        if (activeModel.zoom > this.ZOOM_LOWER_LIMIT) {
-            let trns = visualizationBuilder.getViewerTrns();
-            // apply scaling
-            trns.scaleX *= utl.SQRT1_2;
-            trns.scaleY *= utl.SQRT1_2;
-            trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
-            trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
-            visualizationBuilder.setViewerTrns(trns);
-            visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
-            activeModel.zoom *= utl.SQRT1_2;
-            this.forceUpdate();
-        }
+        let trns = visualizationBuilder.getViewerTrns();
+        // apply scaling
+        trns.scaleX *= utl.SQRT1_2;
+        trns.scaleY *= utl.SQRT1_2;
+        trns.translateX = (this.viewerElm.offsetWidth / 2) * (1 - utl.SQRT1_2) + trns.translateX * utl.SQRT1_2;
+        trns.translateY = (this.viewerElm.offsetHeight / 2) * (1 - utl.SQRT1_2) + trns.translateY * utl.SQRT1_2;
+        visualizationBuilder.setViewerTrns(trns);
+        visualizationBuilder.renderViewerVisualization(this.viewerCanvasCTX, this.props.width, this.props.height);
+        activeModel.zoom *= utl.SQRT1_2;
+        this.forceUpdate();
     };
     /**
      * Registers event listeners for canvas translation.
