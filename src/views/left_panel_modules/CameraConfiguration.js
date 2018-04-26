@@ -146,7 +146,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         }
     };
     handleCamerasCountChange = (value: number) => {
-        if (value) {
+        if (value && value > CM.getCamerasCountControl(ctlSetLoc.min) && value < CM.getCamerasCountControl(ctlSetLoc.max)) {
             this.state.cm.setCamerasCount(parseInt(value, 10));
             dispatcher.dispatch('camerasCountChange', {});
             this.distributeUpdate();
@@ -230,7 +230,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact onChange={this.handleFocalLengthUnitChange} options={unitDefinitionMenu}
                                     defaultValue={cm.getFocalLengthUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                             value={utl.updateRangeLog(CM.getFocalLengthControl(ctlSetLoc.min), CM.getFocalLengthControl(ctlSetLoc.max), cm.getValueForControl('focalLength'))}
                             format={utl.formatSliderValue}
                             onChange={(val, e) => {e.preventDefault();
@@ -256,7 +256,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact onChange={this.handleCameraDistanceUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraDistanceUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(CM.getCameraDistanceControl(ctlSetLoc.min), CM.getCameraDistanceControl(ctlSetLoc.max), cm.getValueForControl('cameraDistance'))}
                                 format={utl.formatSliderValue}
                                 onChange={(val, e) => {e.preventDefault();
@@ -277,7 +277,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact onChange={this.handleCameraSeparationUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraSeparationUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(CM.getCameraSeparationControl(ctlSetLoc.min), CM.getCameraSeparationControl(ctlSetLoc.max), cm.getValueForControl('cameraSeparation'))}
                                 format={utl.formatSliderValue}
                                 onChange={(val, e) => {e.preventDefault();
@@ -296,7 +296,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact  onChange={this.handleCameraCrossingUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraCrossingUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(CM.getCameraCrossingControl(ctlSetLoc.min), CM.getCameraCrossingControl(ctlSetLoc.max), cm.getValueForControl('cameraCrossing'))}
                                 format={utl.formatSliderValue}
                                 onChange={(val, e) => {e.preventDefault();
@@ -317,7 +317,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Select compact  onChange={this.handleCameraHeightUnitChange} options={unitDefinitionMenu}
                                 defaultValue={cm.getCameraHeightUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(CM.getCameraHeightControl(ctlSetLoc.min), CM.getCameraHeightControl(ctlSetLoc.max), cm.getValueForControl('cameraHeight'))}
                                 format={utl.formatSliderValue}
                                 onChange={(val, e) => {e.preventDefault();
@@ -332,7 +332,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <input onChange={(e) => this.handleCamerasCountChange(e.target.value)} className="short-input"
                                 min={CM.getCamerasCountControl(ctlSetLoc.min)}
                                 max={CM.getCamerasCountControl(ctlSetLoc.max)}
-                                value={cm.getCamerasCount()}
+                                defaultValue={cm.getCamerasCount()}
                                 type={inputTypesName[CM.getCamerasCountControl(ctlSetLoc.inputTypes)]}
                                 step={CM.getCamerasCountControl(ctlSetLoc.step)}/>
                         </div>

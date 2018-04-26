@@ -267,18 +267,11 @@ export default class DisplayAndViewer extends Generic {
         this.displayCameraOffset = offset;
         this.displayCameraLeft = left;
     }
-
     setDisplayCameraLeft(value: number, camerasCount: number) {
         this._setDisplayCameraLeftOffset(value, this.displayCameraOffset, camerasCount);
     }
-    importDisplayCameraLeft(value: number) {
-        this.displayCameraLeft = value;
-    }
     setDisplayCameraOffset(value: number, camerasCount: number) {
         this._setDisplayCameraLeftOffset(this.displayCameraLeft, value, camerasCount);
-    }
-    importDisplayCameraOffset(value: number) {
-        this.displayCameraOffset = value;
     }
     setDisplayLPI(value: number) {
         this.displayLPI = value;

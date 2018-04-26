@@ -344,7 +344,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadDistanceUnitChange}
                                 defaultValue={DAWi.getHeadDistanceUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
                                     DAW.getHeadDistanceControl(ctlSetLoc.max), DAWi.getValueForControl('headDistance'))}
                                 format={utl.formatSliderValue}
@@ -370,7 +370,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadPositionUnitChange}
                                 defaultValue={DAWi.getHeadPositionUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(DAW.getHeadPositionControl(ctlSetLoc.min), DAW.getHeadPositionControl(ctlSetLoc.max),
                                     DAWi.getValueForControl('headPosition'))}
                                 format={utl.formatSliderValue}

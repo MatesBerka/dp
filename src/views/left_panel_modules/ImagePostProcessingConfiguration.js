@@ -145,7 +145,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesKeystoneUnitChange}
                                 defaultValue={imgPro.getImagesKeystoneUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
                                     IPR.getImagesKeystoneControl(ctlSetLoc.max), imgPro.getValueForControl('imagesKeystone'))}
                                 format={utl.formatSliderValue}
@@ -168,7 +168,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesStretchUnitChange}
                                 defaultValue={imgPro.getImagesStretchUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesStretchControl(ctlSetLoc.min),
                                     IPR.getImagesStretchControl(ctlSetLoc.max), imgPro.getValueForControl('imagesStretch'))}
                                 format={utl.formatSliderValue}
@@ -191,7 +191,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesShiftUnitChange}
                                 defaultValue={imgPro.getImagesShiftUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesShiftControl(ctlSetLoc.min),
                                     IPR.getImagesShiftControl(ctlSetLoc.max), imgPro.getValueForControl('imagesShift'))}
                                 format={utl.formatSliderValue}
@@ -212,7 +212,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesZoomUnitChange}
                                 defaultValue={imgPro.getImagesZoomUnit()} />
                         </Input>
-                        <Slider min={0} max={100} step={1}
+                        <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesZoomControl(ctlSetLoc.min),
                                     IPR.getImagesZoomControl(ctlSetLoc.max), imgPro.getValueForControl('imagesZoom'))}
                                 format={utl.formatSliderValue}
