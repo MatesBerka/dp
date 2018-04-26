@@ -186,7 +186,7 @@ class VisualizationBuilder {
         let objects = sceneObjectDAO.getActiveRecord();
         if (this.cameraSideView) { // height and depth
             let vec = [0, -vertices[0][1], vertices[0][0]];
-            for (oi = 0; oi < objects.length; oi++) {
+            for (oi = (objects.length - 1); oi >= 0; oi--) {
                 let verCopy = [vec.slice()];
                 // $FlowFixMe
                 VisualizationBuilder._reverseTransformObject(verCopy, objects[oi]);
@@ -199,7 +199,7 @@ class VisualizationBuilder {
             }
         } else { // width and depth
             let vec = [vertices[0][1], 0, vertices[0][0]];
-            for (oi = 0; oi < objects.length; oi++) {
+            for (oi = (objects.length - 1); oi >= 0; oi--) {
                 let verCopy = [vec.slice()];
                 // $FlowFixMe
                 VisualizationBuilder._reverseTransformObject(verCopy, objects[oi]);
