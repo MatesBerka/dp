@@ -804,15 +804,6 @@ export class DrawingHelper {
         }
     }
     /**
-     * Clears entered canvas.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} width
-     * @param {number} height
-     */
-    static clearCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        ctx.clearRect(0, 0, width, height);
-    }
-    /**
      * Clears entered canvas with specified color.
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} width

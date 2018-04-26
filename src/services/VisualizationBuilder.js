@@ -517,7 +517,7 @@ class VisualizationBuilder {
      * @param {number} height
      */
     renderViewerVisualization(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        DrawingHelper.clearCanvas(ctx, width, height);
+        DrawingHelper.clearCanvasWithCustomColor(ctx, width, height, "#ffffff");
         let dw = this.DAW.getDisplayWidth();
         let display = {
             center: [0, 0, 0],
@@ -611,7 +611,7 @@ class VisualizationBuilder {
      * @param {number} height
      */
     renderCameraVisualization(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        DrawingHelper.clearCanvas(ctx, width, height);
+        DrawingHelper.clearCanvasWithCustomColor(ctx, width, height, "#ffffff");
         let cameras = this._getCamerasDefinition();
         let positions = vecOpr.getRulerPositions(ctx, this.activeCameraTrns);
         let cameraSideView;
