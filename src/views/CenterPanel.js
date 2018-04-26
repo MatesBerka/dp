@@ -465,8 +465,9 @@ export default class CenterPanel extends React.Component<Props, State> {
                             <Button color='red' inverted onClick={this.handleCloseDeleteModel}><Icon name='delete'/>No</Button>
                         </Modal.Actions>
                     </Modal>
-                    <Modal trigger={<Button circular positive icon='add' onClick={this.handleAddModelOpen} size='mini'/>}
-                        open={this.state.modalAddModelIsOpen} onClose={this.handleAddModelClose} size='small'>
+                    <Popup trigger={<Button circular positive icon='add' onClick={this.handleAddModelOpen} size='mini'/>}
+                           content='Add new scene.' inverted />
+                    <Modal open={this.state.modalAddModelIsOpen} onClose={this.handleAddModelClose} size='small'>
                         <Modal.Header>Add new scene</Modal.Header>
                         <Modal.Content>
                             <div className="ui labeled input">
