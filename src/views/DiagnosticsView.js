@@ -68,6 +68,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
         }.bind(this);
 
         this.diagnosticsUpdateListener = function(payload) {
+            diagnosticsService.updateDiagnostics();
             this.forceUpdate();
         }.bind(this);
 

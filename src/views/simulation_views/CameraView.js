@@ -43,6 +43,7 @@ export default class CameraView extends React.Component<Props, State> {
     // there is no reason to store these variables in Component state since they are used for decision making
     // or computation by internal code
     translating: boolean = false;
+    focusedObjectID: number;
     focusedObj: SceneObject;
     trnsStartX: number = 0;
     trnsStartY: number = 0;
@@ -67,6 +68,7 @@ export default class CameraView extends React.Component<Props, State> {
     exportListener: Function;
     importListener: Function;
     getCenterPanelSettingsListener: Function;
+    sceneObjectDeletedListener: Function;
     /**
      * Component constructor
      */
@@ -151,6 +153,11 @@ export default class CameraView extends React.Component<Props, State> {
             ];
         }.bind(this);
 
+        this.sceneObjectDeletedListener = function(payload) {
+            if ((this.focusedObjectID === payload.deletedObjectID) && (this.state.objCtrlShow === 'block'))
+                this.setState({ objCtrlShow: 'none' });
+        }.bind(this);
+
         dispatcher.register('getCenterPanelSettings', this.getCenterPanelSettingsListener);
         dispatcher.register('exporting', this.exportListener);
         dispatcher.register('importing', this.importListener);
@@ -158,6 +165,7 @@ export default class CameraView extends React.Component<Props, State> {
         dispatcher.register('modelDelete', this.modelDelete);
         dispatcher.register('paste', this.pasteListener);
         dispatcher.register('configurationUpdate', this.viewUpdateListener);
+        dispatcher.register('sceneObjectDeleted', this.sceneObjectDeletedListener);
     };
     /**
      * After the component is removed from the DOM unregister listeners
@@ -170,6 +178,7 @@ export default class CameraView extends React.Component<Props, State> {
         dispatcher.unregister('modelDelete', this.modelDelete);
         dispatcher.unregister('paste', this.pasteListener);
         dispatcher.unregister('configurationUpdate', this.viewUpdateListener);
+        dispatcher.unregister('sceneObjectDeleted', this.sceneObjectDeletedListener);
     }
     /**
      * Re-render camera visualization after component update.
@@ -322,6 +331,7 @@ export default class CameraView extends React.Component<Props, State> {
             let obj = visualizationBuilder.getSelectedObject(ex, ey);
             if (obj != null) {
                 this.showObjectControl(obj[0]);
+                this.focusedObjectID = obj[1];
                 dispatcher.dispatch('objectSelected', {selectObjID: obj[1]})
             }
         }
@@ -688,7 +698,7 @@ export default class CameraView extends React.Component<Props, State> {
                 <div id="scene-object-control" onMouseDown={this.handleObjectStartTranslate} onTouchStart={this.handleObjectStartTranslate}
                      style={{width: objCtrlWidth, height: objCtrlHeight, top: objCtrlPosY, left: objCtrlPosX, display: objCtrlShow}}>
                      {/*style={{transform: `rotate(${objCtrlRot}deg)`, width: objCtrlWidth, height: objCtrlHeight, top: objCtrlPosY, left: objCtrlPosX, display: objCtrlShow}}>*/}
-                    <Button circular color="red" icon='close' id="object-control-close" onMouseUp={this.handleCloseObjectControl} onTouchEnd={this.handleCloseObjectControl}
+                    <Button circular color="grey" icon='close' id="object-control-close" onMouseUp={this.handleCloseObjectControl} onTouchEnd={this.handleCloseObjectControl}
                         onMouseDown={(e)=>e.stopPropagation()} onTouchStart={(e)=>{e.stopPropagation();e.preventDefault()}} size='mini'/>
                     <Button circular color="green" icon='undo' id="object-control-rotate" onMouseDown={this.handleObjectStartRotate} onTouchStart={this.handleObjectStartRotate} size='mini'/>
                     <Button circular color="green" icon='resize vertical' id="object-control-scale" onMouseDown={this.handleObjectStartScale} onTouchStart={this.handleObjectStartScale} size='mini'/>

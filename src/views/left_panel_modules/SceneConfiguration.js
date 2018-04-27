@@ -114,8 +114,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
      */
     handleAddNewObject = () => {
         let modelObjects = sceneObjectDAO.addNewObject();
-        this.setState({ modelObjects: modelObjects });
-        this.distributeUpdate();
+        this.setState({ modelObjects: modelObjects }, this.distributeUpdate);
     };
     /**
      * Removes model form set and ensures that all related entities are removed as well.
@@ -124,6 +123,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
     removeObject = (objectID: number) => {
         let modelObjects = sceneObjectDAO.removeObject(objectID);
         this.setState({ modelObjects: modelObjects });
+        dispatcher.dispatch('sceneObjectDeleted', {deletedObjectID: objectID});
         this.distributeUpdate();
     };
     /**
@@ -229,7 +229,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
             <div key={modelID} className="object-item">
                 <Accordion.Title active={openObjectSettings.has(modelID)} index={modelID} onClick={this.handleToggleObjectSettings}>
                     <Icon name='dropdown'/><h3>Object Configuration</h3>
-                    <Button negative compact onClick={this.removeObject} size='mini'>
+                    <Button negative compact onClick={this.removeObject.bind(this, modelID)} size='mini'>
                         Delete
                     </Button>
                 </Accordion.Title>
