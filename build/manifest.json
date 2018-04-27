@@ -1,0 +1,23 @@
+{
+  "short_name": "Stereoscopy Simulator",
+  "name": "Stereoscopy Simulator",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },{
+      "src": "favicon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },{
+      "src": "favicon-152.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    }
+  ],
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
