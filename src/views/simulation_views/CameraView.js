@@ -332,7 +332,7 @@ export default class CameraView extends React.Component<Props, State> {
             if (obj != null) {
                 this.showObjectControl(obj[0]);
                 this.focusedObjectID = obj[1];
-                dispatcher.dispatch('objectSelected', {selectObjID: obj[1]})
+                dispatcher.dispatch('sceneObjectSelected', {selectObjID: obj[1]})
             }
         }
     };
