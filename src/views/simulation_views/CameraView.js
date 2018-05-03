@@ -34,7 +34,7 @@ export default class CameraView extends React.Component<Props, State> {
     OBJ_CTRL_PADDING: number = 10;
     OBJ_CTRL_MIN_WIDTH: number = 70;
     OBJ_CTRL_MMN_HEIGHT: number = 70;
-    OBJ_MIN_DISTANCE: number = 0.1;
+    OBJ_MIN_DISTANCE: number = 0.001;
 
     DRAW_CAMERA_GRID_DEFAULT: boolean = false;
     CAMERA_SIDE_VIEW_DEFAULT: boolean = false;
@@ -43,6 +43,7 @@ export default class CameraView extends React.Component<Props, State> {
     // there is no reason to store these variables in Component state since they are used for decision making
     // or computation by internal code
     translating: boolean = false;
+    selfConfigurationUpdate: boolean = false;
     focusedObjectID: number;
     focusedObj: SceneObject;
     trnsStartX: number = 0;
@@ -101,6 +102,12 @@ export default class CameraView extends React.Component<Props, State> {
         this.updateVisualization(this.state.activeModelID);
         // register event listeners
         this.viewUpdateListener = function(payload) {
+            if (!this.selfConfigurationUpdate) {
+                this.setState({objCtrlShow: 'none'});
+            } else {
+                this.selfConfigurationUpdate = false;
+            }
+
             visualizationBuilder.renderCameraVisualization(this.cameraCanvasCTX, this.props.width, this.props.height);
         }.bind(this);
 
@@ -425,6 +432,7 @@ export default class CameraView extends React.Component<Props, State> {
         if (this.state.models[this.state.activeModelID].cameraSideView) { this.focusedObj.setObjectRotX(deg); } else {  this.focusedObj.setObjectRotY(deg); }
         // this.setState({ objCtrlRot: deg });
         visualizationBuilder.updateScene();
+        this.selfConfigurationUpdate = true;
         dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
@@ -510,6 +518,7 @@ export default class CameraView extends React.Component<Props, State> {
         });
 
         visualizationBuilder.updateScene();
+        this.selfConfigurationUpdate = true;
         dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
@@ -563,6 +572,7 @@ export default class CameraView extends React.Component<Props, State> {
         this.focusedObj.setDepth(newDepth);
 
         visualizationBuilder.updateScene();
+        this.selfConfigurationUpdate = true;
         dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
 
@@ -615,6 +625,7 @@ export default class CameraView extends React.Component<Props, State> {
         }
 
         visualizationBuilder.updateScene();
+        this.selfConfigurationUpdate = true;
         dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
 
@@ -674,6 +685,7 @@ export default class CameraView extends React.Component<Props, State> {
         });
 
         visualizationBuilder.updateScene();
+        this.selfConfigurationUpdate = true;
         dispatcher.dispatch('sceneConfigurationUpdate', {});
         dispatcher.dispatch('configurationUpdate', {});
     };
