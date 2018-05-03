@@ -61,7 +61,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
             this.setState({ openObjectSettings: openObjectSettings });
         }.bind(this);
 
-        dispatcher.register('objectSelected', this.selectedObjListener);
+        dispatcher.register('sceneObjectSelected', this.selectedObjListener);
         dispatcher.register('modelSwitch', this.modelSwitchListener);
         dispatcher.register('paste', this.modelSwitchListener);
         dispatcher.register('sceneConfigurationUpdate', this.sceneConfigurationUpdate);
@@ -70,7 +70,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
      * After the component is removed from the DOM unregister listeners
      */
     componentWillUnmount() {
-        dispatcher.unregister('objectSelected', this.selectedObjListener);
+        dispatcher.unregister('sceneObjectSelected', this.selectedObjListener);
         dispatcher.unregister('modelSwitch', this.modelSwitchListener);
         dispatcher.register('paste', this.modelSwitchListener);
         dispatcher.unregister('sceneConfigurationUpdate', this.sceneConfigurationUpdate);

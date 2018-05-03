@@ -67,7 +67,7 @@ export default class LeftPanel extends React.Component<Props, State> {
             clipboard: new Map(),
             openSettings: new Set([0]), // we want tab with index 0 to be open by default
             isPanelSettingsOpen: false,
-            useDoubleColumn: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            useDoubleColumn: false
         };
     }
     /**

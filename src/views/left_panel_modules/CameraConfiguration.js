@@ -165,22 +165,16 @@ export default class CameraConfiguration extends React.Component<Props, State> {
         }
     };
     handleFocalLengthCorrectionToggle = (e: Object, data: Object) => {
-        if (data.checked) {
-            this.state.cm.setFocalLengthCorrection(data.checked);
-            this.distributeUpdate();
-        }
+        this.state.cm.setFocalLengthCorrection(data.checked);
+        this.distributeUpdate();
     };
     handleKeepCamerasAngleToggle = (e: Object, data: Object) => {
-        if (data.checked) {
-            this.state.cm.setKeepCamerasAngle(data.checked);
-            this.distributeUpdate();
-        }
+        this.state.cm.setKeepCamerasAngle(data.checked);
+        this.distributeUpdate();
     };
     handleKeepObjectSizeToggle = (e: Object, data: Object) => {
-        if (data.checked) {
-            this.state.cm.setKeepObjectSize(data.checked);
-            this.distributeUpdate();
-        }
+        this.state.cm.setKeepObjectSize(data.checked);
+        this.distributeUpdate();
     };
 
     /**

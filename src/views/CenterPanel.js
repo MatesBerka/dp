@@ -143,7 +143,9 @@ export default class CenterPanel extends React.Component<Props, State> {
         this.pasteListener = function(payload) {
             let models = this.state.models;
             if (payload.hasOwnProperty('centerPanelC')) {
+                let name = models[this.state.activeModelID].name; // keep model name
                 models[this.state.activeModelID] = Object.assign({}, payload['centerPanelC']);
+                models[this.state.activeModelID].name = name;
                 this.updateViewsSize(this.state.activeModelID);
             }
         }.bind(this);
