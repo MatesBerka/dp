@@ -331,8 +331,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                     </Button>
                 </Accordion.Title>
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
-                    <Popup trigger={<Button positive content='Add object' icon='add' labelPosition='right' onClick={this.handleAddNewObject} size='mini'/>}
-                           content='Added objects can be also selected and transformed in cameras view.' inverted />
+                   <Button positive content='Add object' icon='add' labelPosition='right' onClick={this.handleAddNewObject} size='mini'/>
                     <Accordion fluid id="simulation-objects-list">{ modelObjects.map(objectView) }</Accordion>
                 </Accordion.Content>
             </div>

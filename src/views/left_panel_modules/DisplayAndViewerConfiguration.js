@@ -102,8 +102,11 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleDisplayStereoPPLChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayStereoPPL(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setDisplayStereoPPL(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleDisplayCameraLeftChange = (value: number) => {
@@ -120,20 +123,29 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleDisplayLPIChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayLPI(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setDisplayLPI(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleDisplayDPIChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayDPI(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setDisplayDPI(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleDisplayViewAngleChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayViewAngle(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue > 0) {
+                this.state.DAWi.setDisplayViewAngle(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleHeadOptimalDistanceChange = (value: number) => {
@@ -144,20 +156,29 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
     };
     handleDisplayWidthChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayWidth(parseFloat(value) * unitDefinition[this.state.DAWi.getDisplayWidthUnit()].value);
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setDisplayWidth(newValue * unitDefinition[this.state.DAWi.getDisplayWidthUnit()].value);
+                this.distributeUpdate();
+            }
         }
     };
     handleDisplayAspectChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setDisplayAspect(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setDisplayAspect(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleViewingComfortChange = (value: number) => {
         if (value) {
-            this.state.DAWi.setViewingComfort(parseFloat(value));
-            this.distributeUpdate();
+            let newValue = parseFloat(value);
+            if (newValue >= 0) {
+                this.state.DAWi.setViewingComfort(newValue);
+                this.distributeUpdate();
+            }
         }
     };
     handleHeadDistanceChange = (value: number) => {

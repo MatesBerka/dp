@@ -125,7 +125,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
         return (
             <div className="configuration-item">
                 <Accordion.Title active={openSettings.has(this.TAB_INDEX)} index={this.TAB_INDEX} onClick={toggleSettings}>
-                    <Icon name='dropdown'/><h4>Images postprocessing</h4>
+                    <Icon name='dropdown'/><h4>Images Postprocessing</h4>
                     <Button positive compact onClick={(e) => copySettings(e, postProcessingDAO)} size='mini'>
                         Copy
                     </Button>
