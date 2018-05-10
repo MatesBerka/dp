@@ -239,7 +239,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                         <div className="ui mini labeled input">
                             <label className="ui label label">Object Type:</label>
                             <Select compact onChange={(e, data) => this.handleObjectTypeChange(data.value, modelID)}
-                                options={objTypeIdxMenu} defaultValue={objModel.getObjectType()} style={{minWidth: '120px'}} />
+                                options={objTypeIdxMenu} value={objModel.getObjectType()} style={{minWidth: '120px'}} />
                         </div>
                     </div>
                     <div className="option-group-line">
@@ -250,7 +250,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[SO.getWidthControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getValueForControl('width')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={(e, data) => this.handleObjectWidthUnitChange(data.value, modelID)}
-                                defaultValue={objModel.getWidthUnit()} />
+                                value={objModel.getWidthUnit()} />
                         </Input><br/>
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
                             <Label>Depth:</Label>
@@ -259,7 +259,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[SO.getDepthControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getValueForControl('depth')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={(e, data) => this.handleObjectDepthUnitChange(data.value, modelID)}
-                                defaultValue={objModel.getDepthUnit()} />
+                                value={objModel.getDepthUnit()} />
                         </Input><br/>
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
                             <Popup trigger={<Label>Aspect:</Label>}
@@ -279,7 +279,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[SO.getCenterXControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getValueForControl('centerX')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={(e, data) => this.handleObjectCenterXUnitChange(data.value, modelID)}
-                                defaultValue={objModel.getCenterXUnit()} />
+                                value={objModel.getCenterXUnit()} />
                         </Input><br/>
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
                             <Label>Y:</Label>
@@ -288,7 +288,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[SO.getCenterYControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getValueForControl('centerY')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={(e, data) => this.handleObjectCenterYUnitChange(data.value, modelID)}
-                                defaultValue={objModel.getCenterYUnit()} />
+                                value={objModel.getCenterYUnit()} />
                         </Input><br/>
                         <Input labelPosition='right' style={{float: 'none', display: 'inline-flex'}} size='mini'>
                             <Label>Z:</Label>
@@ -297,7 +297,7 @@ export default class SceneConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[SO.getCenterZControl(ctlSetLoc.inputTypes)]}
                                 value={objModel.getValueForControl('centerZ')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={(e, data) => this.handleObjectCenterZUnitChange(data.value, modelID)}
-                                defaultValue={objModel.getCenterZUnit()} />
+                                value={objModel.getCenterZUnit()} />
                         </Input>
                     </div>
                     <div className="option-group-line"><h5>Object rotation:</h5></div>

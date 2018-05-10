@@ -143,7 +143,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                                 onChange={(e) => this.handleImagesKeystoneChange(e.target.value)}
                                 className="short-input" style={{ borderRight: 0}}/>
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesKeystoneUnitChange}
-                                defaultValue={imgPro.getImagesKeystoneUnit()} />
+                                value={imgPro.getImagesKeystoneUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesKeystoneControl(ctlSetLoc.min),
@@ -166,7 +166,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                                 onChange={(e) => this.handleImagesStretchChange(e.target.value)} className="short-input"
                                 style={{borderRight: 0}}/>
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesStretchUnitChange}
-                                defaultValue={imgPro.getImagesStretchUnit()} />
+                                value={imgPro.getImagesStretchUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesStretchControl(ctlSetLoc.min),
@@ -189,7 +189,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                                 onChange={(e) => this.handleImagesShiftChange(e.target.value)} className="short-input"
                                 style={{borderRight: 0}}/>
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesShiftUnitChange}
-                                defaultValue={imgPro.getImagesShiftUnit()} />
+                                value={imgPro.getImagesShiftUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesShiftControl(ctlSetLoc.min),
@@ -210,7 +210,7 @@ export default class ImagePostProcessingConfiguration extends React.Component<Pr
                                    type={inputTypesName[IPR.getImagesZoomControl(ctlSetLoc.inputTypes)]}
                                 onChange={(e) => this.handleImagesZoomChange(e.target.value)}  style={{borderRight: 0}}/>
                             <Select compact options={percUnitDefinitionMenu} onChange={this.handleImagesZoomUnitChange}
-                                defaultValue={imgPro.getImagesZoomUnit()} />
+                                    value={imgPro.getImagesZoomUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(IPR.getImagesZoomControl(ctlSetLoc.min),

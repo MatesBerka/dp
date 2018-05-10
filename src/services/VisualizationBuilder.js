@@ -538,8 +538,8 @@ class VisualizationBuilder {
         drawingHelper.drawDisplay(ctx, this.activeViewerTrns, viewerSideView, display);
         // draw fatigue-free zone
         if (this.statVals.getVergenceDistanceFar()[0] < 100 && this.statVals.getVergenceDistanceFar()[0] > 0)
-            DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceFar()[0] - this.DAW.getHeadDistance(), "#ff8080", 'far focus', 15);
-        DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceNear()[0] - this.DAW.getHeadDistance(), "#8080ff", 'near focus', 5);
+            DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceFar()[0] - this.DAW.getHeadDistance(), "#ff8080", 'comfort far', 15);
+        DrawingHelper.drawZLine(ctx, this.activeViewerTrns, this.statVals.getVergenceDistanceNear()[0] - this.DAW.getHeadDistance(), "#8080ff", 'comfort near', 5);
         // draw reconstruction. this must be line this
         if (this.drawReconstructionRays) {
             if (this.DAW.getDisplayType() !== 'stereoscopic')
@@ -592,12 +592,12 @@ class VisualizationBuilder {
         let N = this.cmVals.getFNumber();
         // first NEAR
         zNear = s*f*f/(f*f + N*coc*(s-f));
-        DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zNear - s, "#8080ff", 'near depth', 30);
+        DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zNear - s, "#8080ff", 'DOF near', 30);
         // now FAR
         tmp = f*f - N*coc*(s-f);
         if (tmp > 0) { // else image is sharp to infinity
             zFar = (s*f*f)/tmp;
-            DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zFar - s, "#ff8080", 'far depth', 40);
+            DrawingHelper.drawZLine(ctx, this.activeCameraTrns, zFar - s, "#ff8080", 'DOF far', 40);
         }
 
         this.statVals.setCamerasZNear(zNear);

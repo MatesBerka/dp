@@ -187,9 +187,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                                 {/*<label><strong>Vergence Range:</strong></label>*/}
                             {/*</div>*/}
                             <div className="diagnostics-line">
-                                <label><strong>Vergence rel. to display: </strong></label><span>{this._convert(stats.getVergenceMinRel())}
-                                cm to {this._convert(stats.getVergenceMaxRel())} cm ({this._convert(stats.getVergenceMinRelD())}
-                                to {this._convert(stats.getVergenceMaxRelD())} D)</span>
+                                <label><strong>Zone of comfort (depth range): </strong></label><span>{this._convert(stats.getVergenceMinRel())} cm to {this._convert(stats.getVergenceMaxRel())} cm ({this._convert(stats.getVergenceMinRelD())} to {this._convert(stats.getVergenceMaxRelD())} D)</span>
                             </div>
                             {/*<div className="diagnostics-line">*/}
                                 {/*<label><strong>Absolute: </strong></label><span>{this._convert(stats.getVergenceMinAbs())}*/}
@@ -220,7 +218,7 @@ export default class DiagnosticsView extends React.Component<Props, State> {
                         <div className="diagnostics-block">
                             <h3>Cameras view</h3>
                             <div className="diagnostics-line">
-                                <Popup trigger={<label><strong>Depth of field: </strong></label>}
+                                <Popup trigger={<label><strong>Depth of field (DOF): </strong></label>}
                                     content='Values are measured from the cameras to the focus point.' inverted />
                                 <br/>
                                 <span>Near: {stats.getCamerasZNear().toPrecision(4)} m</span><br/>

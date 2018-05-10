@@ -222,7 +222,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 onChange={(e) => this.handleFocalLengthChange(e.target.value)}
                                 className="short-input" style={{borderRight: 0}} />
                             <Select compact onChange={this.handleFocalLengthUnitChange} options={unitDefinitionMenu}
-                                    defaultValue={cm.getFocalLengthUnit()} />
+                                    value={cm.getFocalLengthUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                             value={utl.updateRangeLog(CM.getFocalLengthControl(ctlSetLoc.min), CM.getFocalLengthControl(ctlSetLoc.max), cm.getValueForControl('focalLength'))}
@@ -248,7 +248,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 value={cm.getValueForControl('cameraDistance')} className="short-input"
                                 step={CM.getCameraDistanceControl(ctlSetLoc.step)} style={{ borderRight: 0}}/>
                             <Select compact onChange={this.handleCameraDistanceUnitChange} options={unitDefinitionMenu}
-                                defaultValue={cm.getCameraDistanceUnit()} />
+                                value={cm.getCameraDistanceUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(CM.getCameraDistanceControl(ctlSetLoc.min), CM.getCameraDistanceControl(ctlSetLoc.max), cm.getValueForControl('cameraDistance'))}
@@ -269,7 +269,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 value={cm.getValueForControl('cameraSeparation')} className="short-input"
                                 step={CM.getCameraSeparationControl(ctlSetLoc.step)} style={{borderRight: 0}}/>
                             <Select compact onChange={this.handleCameraSeparationUnitChange} options={unitDefinitionMenu}
-                                defaultValue={cm.getCameraSeparationUnit()} />
+                                value={cm.getCameraSeparationUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(CM.getCameraSeparationControl(ctlSetLoc.min), CM.getCameraSeparationControl(ctlSetLoc.max), cm.getValueForControl('cameraSeparation'))}
@@ -288,7 +288,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 value={cm.getValueForControl('cameraCrossing')} className="short-input"
                                 step={CM.getCameraCrossingControl(ctlSetLoc.step)} style={{borderRight: 0}}/>
                             <Select compact  onChange={this.handleCameraCrossingUnitChange} options={unitDefinitionMenu}
-                                defaultValue={cm.getCameraCrossingUnit()} />
+                                value={cm.getCameraCrossingUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(CM.getCameraCrossingControl(ctlSetLoc.min), CM.getCameraCrossingControl(ctlSetLoc.max), cm.getValueForControl('cameraCrossing'))}
@@ -309,7 +309,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                                 type={inputTypesName[CM.getCameraHeightControl(ctlSetLoc.inputTypes)]} className="short-input"
                                 step={CM.getCameraHeightControl(ctlSetLoc.step)} style={{borderRight: 0}}/>
                             <Select compact  onChange={this.handleCameraHeightUnitChange} options={unitDefinitionMenu}
-                                defaultValue={cm.getCameraHeightUnit()} />
+                                value={cm.getCameraHeightUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(CM.getCameraHeightControl(ctlSetLoc.min), CM.getCameraHeightControl(ctlSetLoc.max), cm.getValueForControl('cameraHeight'))}
@@ -350,7 +350,7 @@ export default class CameraConfiguration extends React.Component<Props, State> {
                             <Popup trigger={<label className="ui label label">Camera Type:</label>}
                                    content='Determines camera sensor orientation.' inverted />
                             <Select compact onChange={(e, data) => this.handleCameraTypeChange(data.value)}
-                                options={cameraTypes} defaultValue={cm.getCameraType()} />
+                                options={cameraTypes} value={cm.getCameraType()} />
                         </div>
                     </div>
 

@@ -1,13 +1,16 @@
 # Stereoscopy Simulator
 
-Stereoscopy Simulator was created for students to help them better understand how stereoscopy works and for experienced photographers to help them with their experiments.
+Stereoscopy Simulator was created for students to help them better understand how stereoscopy works and for experienced photographers to help them with their work.
 
-Temporarily hosted [here](http://dp.marpaweb.eu).
+Temporarily hosted [here](http://dp.marpaweb.eu) (without HTTPS)
+and here [here](https://matesberka.github.io/dp/build/) (with HTTPS).
+
+Source code located [here](https://github.com/MatesBerka/dp/).
 ### Used packages
 
 Stereoscopy Simulator uses following packages.
 * [FileSaver.js] - FileSaver.js is the solution to saving files on the client-side.
-* [Flow] - A static type checker for JavaScript.
+* [Flow] - A static type checker for JavaScript.m
 * [React] - React is a JavaScript library for building user interfaces.
 * [Rangeslider] - A fast & lightweight react component as a drop in replacement for HTML5 input range slider element.
 * [Semantic UI React] - A UI framework designed for theming.
@@ -15,7 +18,7 @@ Stereoscopy Simulator uses following packages.
 
 ### Installation
 
-Stereoscopy Simulator requires [Node.js](https://nodejs.org/) v5.6+ to run (for dev. environment).
+Stereoscopy Simulator requires [Node.js](https://nodejs.org/) v5.6+ to run (for dev. environment) and [npm](https://www.npmjs.com/) v5.2+.
 
 Install all the dependencies with following command.
 
@@ -39,10 +42,19 @@ Production ready version can be created with this command. Generated application
 ```sh
 $ npm run build
 ```
-In current configuration application expects, that the homepage URL will look like this `/stereoscopy-simulator/build`. Otherwise it will not be able to correctly load related files (JS, CSS).
-This can be changes in package.json file with `homepage` attribute.
+**In current configuration application expects, that the homepage URL will look like this `/stereoscopy-simulator/build`.** Otherwise it will not be able to correctly load related files (JS, CSS).
+This can be changes in `package.json` file with `homepage` attribute.
 
-© [Petr Lobaz](http://www.kiv.zcu.cz/cz/katedra/osoby-seznam/osoba-detail.html?login=lobaz), University of West Bohemia.
+Example with full path:
+```js
+  "homepage": "http://mywebsite.com/relativepath",
+```
+
+Example with root:
+```js
+  "homepage": "/",
+```
+Or attribute `homepage` can be removed from `package.json` if app is hosted at the server root.
 
 [FileSaver.js]: <https://www.npmjs.com/package/file-saver>
 [Flow]: <https://flow.org/>

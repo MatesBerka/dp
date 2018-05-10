@@ -236,7 +236,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                 <Accordion.Content active={openSettings.has(this.TAB_INDEX)}>
                     <Input size='mini' className="option-group-line">
                         <Select onChange={this.handleDisplayTypeChange} options={displayTypesMenu} compact
-                            defaultValue={DAWi.getDisplayType()} size='mini' id="display-type-select"/>
+                            value={DAWi.getDisplayType()} size='mini' id="display-type-select"/>
                     </Input>
                     <div id="stereoscopic-display-settings" style={{display: ((DAWi.getDisplayType() === displayTypes.stereoscopic) ? 'block': 'none')}}>
                         <div className="option-group-line">
@@ -312,7 +312,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                                     type={inputTypesName[DAW.getHeadOptimalDistanceControl(ctlSetLoc.inputTypes)]}
                                     value={DAWi.getValueForControl('headOptimalDistance')} className="short-input"/>
                                 <Select compact options={unitDefinitionMenu} onChange={this.handleHeadOptimalDistanceUnitChange}
-                                    defaultValue={DAWi.getHeadOptimalDistanceUnit()} />
+                                    value={DAWi.getHeadOptimalDistanceUnit()} />
                             </Input>
                         </div>
                     </div>
@@ -326,7 +326,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                                 type={inputTypesName[DAW.getDisplayWidthControl(ctlSetLoc.inputTypes)]}
                                 value={DAWi.getValueForControl('displayWidth')} className="short-input"/>
                             <Select compact options={unitDefinitionMenu} onChange={this.handleDisplayWidthUnitChange}
-                                defaultValue={DAWi.getDisplayWidthUnit()} />
+                                value={DAWi.getDisplayWidthUnit()} />
                         </Input>
                     </div>
                     <div className="option-group-line">
@@ -363,7 +363,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                                 step={DAW.getHeadDistanceControl(ctlSetLoc.step)}
                                 value={DAWi.getValueForControl('headDistance')} className="short-input" style={{ borderRight: 0}}/>
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadDistanceUnitChange}
-                                defaultValue={DAWi.getHeadDistanceUnit()} />
+                                value={DAWi.getHeadDistanceUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLog(DAW.getHeadDistanceControl(ctlSetLoc.min),
@@ -389,7 +389,7 @@ export default class DisplayAndViewerConfiguration extends React.Component<Props
                                 step={DAW.getHeadPositionControl(ctlSetLoc.step)}
                                 value={DAWi.getValueForControl('headPosition')} className="short-input" style={{ borderRight: 0}}/>
                             <Select compact options={unitDefinitionMenu} onChange={this.handleHeadPositionUnitChange}
-                                defaultValue={DAWi.getHeadPositionUnit()} />
+                                value={DAWi.getHeadPositionUnit()} />
                         </Input>
                         <Slider min={0} max={100} step={1} tooltip={false}
                                 value={utl.updateRangeLin(DAW.getHeadPositionControl(ctlSetLoc.min), DAW.getHeadPositionControl(ctlSetLoc.max),
