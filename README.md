@@ -26,6 +26,9 @@ Install all the dependencies with following command.
 $ cd stereoscopy-simulator
 $ npm install
 ```
+
+Installed dependencies will be stored in node_modules folder. Unfortunately my dependencies have a lot of other dependencies so the folder can be quite large.
+
 ### Development
 I order to start development version execute following command.
 ```sh
@@ -54,7 +57,7 @@ Example with root:
 ```js
   "homepage": "/",
 ```
-Or attribute `homepage` can be removed from `package.json` if app is hosted at the server root.
+Or attribute `homepage` can be removed from `package.json` if app is hosted at the the root.
 
 [FileSaver.js]: <https://www.npmjs.com/package/file-saver>
 [Flow]: <https://flow.org/>
